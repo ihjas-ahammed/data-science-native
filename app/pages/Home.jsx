@@ -60,10 +60,7 @@ const Home = () => {
 
   return (
     <ScrollView className="flex-1">
-      <View className="max-w-5xl ">
-        <View className="mb-8 w-full flex items-center justify-center ">
-          <Text className="text-3xl font-bold text-white ">Notes</Text>
-        </View>
+      <View className="max-w-5xl p-5">
 
         {/* Semester 2 */}
         <View className="grid md:grid-cols-3 gap-3 mb-4">

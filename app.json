@@ -3,7 +3,7 @@
     "name": "Notes",
     "slug": "data-science-native",
     "scheme": "org",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -19,10 +19,12 @@
         "backgroundColor": "#000000"
       },
       "package": "me.ihjas.notes",
-      "versionCode": 2,
+      "versionCode": 3,
       "permissions": [
+        "INTERNET",
         "INTERNET"
-      ]
+      ],
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "favicon": "./assets/icon.png",
@@ -30,7 +32,14 @@
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#ffffff"
+        }
+      ]
     ],
     "extra": {
       "router": {
@@ -38,6 +47,14 @@
       },
       "eas": {
         "projectId": "f98e6168-8ce2-4498-856d-8dee633447f7"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/f98e6168-8ce2-4498-856d-8dee633447f7"
+    },
+    "ios": {
+      "runtimeVersion": {
+        "policy": "appVersion"
       }
     }
   }

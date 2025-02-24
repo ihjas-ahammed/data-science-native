@@ -13,14 +13,10 @@ const WebViewComponent = () => {
     const isExpoGo = Constants.appOwnership === 'expo';
 
     // Use different base paths based on environment
-    const basePath = isExpoGo
-        ? 'https://ihjas-ahammed.github.io/'
-        : 'file:///android_asset/';
+    const basePath = 'https://ihjas-ahammed.github.io/';
 
     // Construct the final URI
-    const assetPath = isExpoGo
-        ? `${basePath}${fullPath}`
-        : `${basePath}/${fullPath}`;
+    const assetPath = `${basePath}${fullPath}`
 
     /*'.markdown-body {
                 max-width: 100%;

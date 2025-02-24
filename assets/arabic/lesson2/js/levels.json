@@ -1,0 +1,411 @@
+{
+    "1": [
+      {
+        "question": "Who is the author of the poem?",
+        "options": [
+          "Ahmed Shawqi",
+          "Nizar Qabbani",
+          "Mahmoud Darwish",
+          "Badr Shakir al-Sayyab"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "What does the poet invite the traveler to do?",
+        "options": [
+          "Stop with him",
+          "Sing a song",
+          "Walk away",
+          "Stay silent"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "Which elements are said to tremble in the poem?",
+        "options": [
+          "The earth and sky",
+          "The trees and water",
+          "The stars and moon",
+          "The wind and sea"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "What phrase is used to describe the reciter in the poem?",
+        "options": [
+          "Mother of the book",
+          "Voice of the people",
+          "Heart of the verse",
+          "Soul of the land"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "According to the poem, what effect does witnessing creation have on doubt?",
+        "options": [
+          "It erases doubt and denial",
+          "It increases curiosity",
+          "It creates confusion",
+          "It leads to anger"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "Where does the poet mention the presence of groves?",
+        "options": [
+          "Among some of its maids",
+          "Near the mountains",
+          "By the river",
+          "In the city"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "Which description is used to highlight beauty in the poem?",
+        "options": [
+          "A smile that fills the world with brightness",
+          "A stormy night",
+          "A silent whisper",
+          "A gloomy sky"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "What is compared to a mirror in the poem?",
+        "options": [
+          "The plant",
+          "The river",
+          "The sky",
+          "The earth"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "What do the trembling earth and sky signify in the poem?",
+        "options": [
+          "The grandeur of the Creator",
+          "An impending disaster",
+          "A natural phenomenon",
+          "A seasonal change"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "What overall emotion does the poem evoke?",
+        "options": [
+          "Celebration of divine creation",
+          "Melancholy",
+          "Anger",
+          "Indifference"
+        ],
+        "correct": 0
+      }
+    ],
+    "2": [
+      {
+        "question": "What is the meaning of the Arabic word 'طبيعة'?",
+        "options": [
+          "Nature",
+          "Art",
+          "Culture",
+          "Science"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "What is the meaning of the Arabic word 'بديع'?",
+        "options": [
+          "Ordinary",
+          "Wondrous",
+          "Dull",
+          "Simple"
+        ],
+        "correct": 1
+      },
+      {
+        "question": "What is the meaning of the Arabic word 'آيات'?",
+        "options": [
+          "Stories",
+          "Signs",
+          "Verses",
+          "Commands"
+        ],
+        "correct": 1
+      },
+      {
+        "question": "What is the meaning of the Arabic word 'آثار'?",
+        "options": [
+          "Footprints",
+          "Monuments",
+          "Colors",
+          "Sounds"
+        ],
+        "correct": 1
+      },
+      {
+        "question": "What is the meaning of the Arabic word 'ملوك'?",
+        "options": [
+          "Kings",
+          "Prophets",
+          "Warriors",
+          "Singers"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "What is the meaning of the Arabic word 'أدلة'?",
+        "options": [
+          "Evidences",
+          "Stories",
+          "Poems",
+          "Myths"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "What is the meaning of the Arabic word 'أحبار'?",
+        "options": [
+          "Teachers",
+          "Scholars",
+          "Farmers",
+          "Merchants"
+        ],
+        "correct": 1
+      },
+      {
+        "question": "What is the meaning of the Arabic word 'خمائل'?",
+        "options": [
+          "Deserts",
+          "Forests",
+          "Groves",
+          "Mountains"
+        ],
+        "correct": 2
+      },
+      {
+        "question": "What is the meaning of the Arabic word 'خلخال'?",
+        "options": [
+          "Ring",
+          "Necklace",
+          "Anklet",
+          "Bracelet"
+        ],
+        "correct": 2
+      },
+      {
+        "question": "What is the meaning of the Arabic word 'سوار'?",
+        "options": [
+          "Earring",
+          "Bracelet",
+          "Hat",
+          "Shoe"
+        ],
+        "correct": 1
+      }
+    ],
+    "3": [
+      {
+        "question": "What effect does the trembling of the sky and earth have in the poem?",
+        "options": [
+          "It creates fear",
+          "It highlights the grandeur of the Creator",
+          "It signifies an earthquake",
+          "It shows chaos"
+        ],
+        "correct": 1
+      },
+      {
+        "question": "The phrase 'mother of the book' in the poem refers to:",
+        "options": [
+          "The reciter",
+          "The Quran",
+          "Nature",
+          "The poet"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "What literary device is predominantly used in the poem?",
+        "options": [
+          "Metaphor",
+          "Simile",
+          "Personification",
+          "Alliteration"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "What is the main theme of the poem?",
+        "options": [
+          "Nature's beauty as a sign of divine creation",
+          "War and peace",
+          "Love and loss",
+          "Time and memory"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "Which two elements are mentioned as trembling in the poem?",
+        "options": [
+          "Wind and water",
+          "Earth and sky",
+          "Fire and air",
+          "Trees and mountains"
+        ],
+        "correct": 1
+      },
+      {
+        "question": "How does the poet describe the effect of the divine work on the observer?",
+        "options": [
+          "It induces fear",
+          "It erases doubt",
+          "It brings confusion",
+          "It causes indifference"
+        ],
+        "correct": 1
+      },
+      {
+        "question": "The reference to 'the King of kings' in the poem is most likely an allusion to:",
+        "options": [
+          "A historical ruler",
+          "God",
+          "A poet",
+          "Nature itself"
+        ],
+        "correct": 1
+      },
+      {
+        "question": "What does the poet compare to a mirror in the poem?",
+        "options": [
+          "The sky",
+          "The earth",
+          "The plant",
+          "The water"
+        ],
+        "correct": 2
+      },
+      {
+        "question": "Which aspect of nature is used to demonstrate the Creator’s work?",
+        "options": [
+          "The sound of the wind",
+          "The tremble of the earth and sky",
+          "The fragrance of flowers",
+          "The color of the sunset"
+        ],
+        "correct": 1
+      },
+      {
+        "question": "What is the tone of the poem?",
+        "options": [
+          "Melancholic",
+          "Celebratory",
+          "Sarcastic",
+          "Ironic"
+        ],
+        "correct": 1
+      }
+    ],
+    "4": [
+      {
+        "question": "How does the poet integrate nature and divinity in the poem?",
+        "options": [
+          "By separating them clearly",
+          "By using nature as a metaphor for divine work",
+          "By ignoring nature's influence",
+          "By describing nature's imperfections"
+        ],
+        "correct": 1
+      },
+      {
+        "question": "What role does the reciter play in the poem's imagery?",
+        "options": [
+          "He criticizes nature",
+          "He acts as a mediator between nature and the divine",
+          "He is indifferent",
+          "He commands nature to change"
+        ],
+        "correct": 1
+      },
+      {
+        "question": "The trembling of the sky and earth in the poem most likely symbolizes:",
+        "options": [
+          "A natural disaster",
+          "The overwhelming power of creation",
+          "The fragility of life",
+          "The instability of nature"
+        ],
+        "correct": 1
+      },
+      {
+        "question": "How is the concept of 'evidence' used in the poem?",
+        "options": [
+          "As a call for scientific inquiry",
+          "As a demonstration of divine artistry",
+          "As a criticism of human knowledge",
+          "As a description of natural phenomena"
+        ],
+        "correct": 1
+      },
+      {
+        "question": "In the poem, which element best conveys the sense of awe?",
+        "options": [
+          "The trembling earth",
+          "The simplicity of language",
+          "The absence of conflict",
+          "The structured rhyme scheme"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "What effect does the repetition in the poem have?",
+        "options": [
+          "It creates monotony",
+          "It emphasizes key themes",
+          "It confuses the reader",
+          "It detracts from the message"
+        ],
+        "correct": 1
+      },
+      {
+        "question": "How does the poet use contrasts in the poem?",
+        "options": [
+          "By comparing the grand and the humble",
+          "By avoiding any contrasts",
+          "By focusing only on positive imagery",
+          "By mixing unrelated themes"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "What is implied by referring to nature as 'the mother of the book'?",
+        "options": [
+          "Nature is the source of wisdom",
+          "Nature is irrelevant",
+          "Nature is harsh",
+          "Nature is mutable"
+        ],
+        "correct": 0
+      },
+      {
+        "question": "The poet's choice of imagery primarily serves to:",
+        "options": [
+          "Entertain",
+          "Persuade the reader of nature’s divinity",
+          "Criticize modern society",
+          "Document historical events"
+        ],
+        "correct": 1
+      },
+      {
+        "question": "Which of the following best describes the structure of the poem?",
+        "options": [
+          "Free verse with no clear structure",
+          "Structured with regular stanzas and rhyme",
+          "A prose narrative",
+          "A haiku format"
+        ],
+        "correct": 1
+      }
+    ]
+  }
+  

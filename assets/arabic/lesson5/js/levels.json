@@ -1,0 +1,410 @@
+{
+        "1": [
+            {
+                "question": "Where did Hamid go on Saturday?",
+                "options": [
+                    "To the market",
+                    "To the school",
+                    "To Hussain's house",
+                    "To the doctor"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "Why was Hussain absent from school?",
+                "options": [
+                    "He was sleeping",
+                    "He was sick",
+                    "He was traveling",
+                    "He was playing"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "Who informed Hamid about Hussain's illness?",
+                "options": [
+                    "His father",
+                    "His mother",
+                    "His brother Ali",
+                    "The doctor"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "What did Hamid do when he arrived at Hussain's house?",
+                "options": [
+                    "He entered directly",
+                    "He greeted and asked for permission",
+                    "He ate food",
+                    "He played with Hussain"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "What was Hussain complaining about?",
+                "options": [
+                    "A stomach ache",
+                    "A leg pain",
+                    "A headache and dizziness",
+                    "An earache"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "Who examined Hussain?",
+                "options": [
+                    "Hamid",
+                    "Ali",
+                    "The doctor",
+                    "His father"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "How did the doctor measure Hussain's temperature?",
+                "options": [
+                    "With his hand",
+                    "With a stethoscope",
+                    "(Implicitly by a thermometer, though not explicitly stated)",
+                    "He didn't measure the temperature"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "What did the doctor advise Hussain's father?",
+                "options": [
+                    "To buy him toys",
+                    "To keep him away from cold water",
+                    "To take him for an outing",
+                    "To feed him a lot"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "Why did Hamid leave Hussain's house quickly?",
+                "options": [
+                    "He was hungry",
+                    "He was scared",
+                    "So as not to burden the sick person",
+                    "He was angry"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "Who is Abul Hasan Ali Nadwi?",
+                "options": [
+                    "A famous doctor",
+                    "A scholar and Islamic caller (preacher)",
+                    "A soccer player",
+                    "A famous actor"
+                ],
+                "correct": 1
+            }
+        ],
+        "2": [
+            {
+                "question": "What is the meaning of the word 'مَحْمُومٌ' (Mahmoom)?",
+                "options": [
+                    "Happy",
+                    "Sick with fever",
+                    "Hungry",
+                    "Asleep"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "What is the meaning of the word 'يَعُودَهُ' (Ya'oodahu) in the sentence 'أَنْ يَعُودَهُ' (An Ya'oodahu)?",
+                "options": [
+                    "To hit him",
+                    "To visit him",
+                    "To leave him",
+                    "To feed him"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "What is the meaning of the word 'مُضْطَجِعًا' (Mudtajian)?",
+                "options": [
+                    "Standing",
+                    "Sitting",
+                    "Lying down",
+                    "Running"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "What is the meaning of the word 'دَنَا' (Dana)?",
+                "options": [
+                    "Moved away",
+                    "Moved closer",
+                    "Shouted",
+                    "Got angry"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "What is the meaning of the word 'الصُّدَاعَ' (As-Suda'a)?",
+                "options": [
+                    "Stomach ache",
+                    "Headache",
+                    "Leg pain",
+                    "Back pain"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "What is the meaning of the word 'الدُّوَارَ' (Ad-Duwaar)?",
+                "options": [
+                    "Feeling of hunger",
+                    "Feeling of thirst",
+                    "Feeling of dizziness",
+                    "Feeling of pain"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "What is the meaning of the word 'طَهُورٌ' (Tahoor) in the sentence 'لاَ بَأْسَ طَهُورٌ إِنْ شَاءَ اللَّهُ' (La Ba'sa Tahoor Insha'Allah)?",
+                "options": [
+                    "Sickness",
+                    "Purification and cleansing from sins",
+                    "Medicine",
+                    "Food"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "What is the meaning of the word 'جَسَّ' (Jassa) in the sentence 'فَجَسَّ يَدَ حُسَيْنٍ' (Fa Jassa Yada Hussain)?",
+                "options": [
+                    "Touched",
+                    "Hit",
+                    "Cut",
+                    "Washed"
+                ],
+                "correct": 0
+            },
+            {
+                "question": "What is the meaning of the word 'يُجَنِّبَهُ' (Yujannibahu) in the sentence 'يُجَنِّبَهُ مِنَ الْمَاءِ الْبَارِدِ' (Yujannibahu Mina Al-Ma'i Al-Barid)?",
+                "options": [
+                    "To bring him closer",
+                    "To keep him away",
+                    "To give him",
+                    "To make him drink"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "What is the meaning of the word 'شَقَّ' (Shaqqa) in the sentence 'شَقَّ عَلَيْهِ' (Shaqqa 'Alayh)?",
+                "options": [
+                    "Made it easy for him",
+                    "Made it difficult and tiring for him",
+                    "Made him happy",
+                    "Helped him"
+                ],
+                "correct": 1
+            }
+        ],
+        "3": [
+            {
+                "question": "Why did Hamid decide to visit Hussain?",
+                "options": [
+                    "Because he likes to play with him",
+                    "Because he likes his father",
+                    "Because he is his friend and he wanted to check on him",
+                    "Because he wants to take something from him"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "What can we infer from Hussain's statement, 'It became severe on Friday and lessened at night'?",
+                "options": [
+                    "That his illness was mild",
+                    "That his illness fluctuated in its severity",
+                    "That he was not sick",
+                    "That he was happy"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "Why did the doctor express relief after examining Hussain?",
+                "options": [
+                    "Because he found Hussain playing",
+                    "Because he found Hussain eating",
+                    "Because he found signs of improvement in Hussain's condition",
+                    "Because he was a friend of Hussain's father"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "What is the reason for Hussain's weakness?",
+                "options": [
+                    "Playing a lot",
+                    "Sickness and lack of food",
+                    "Drinking cold water",
+                    "Going out in the open air"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "Why did the doctor recommend giving Hussain milk, barley water, and fruit juice?",
+                "options": [
+                    "Because they are delicious",
+                    "Because they are nutritious and easy to digest",
+                    "Because they are cheap",
+                    "Because they are difficult to digest"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "Why is visiting the sick considered a good deed in Islam?",
+                "options": [
+                    "Because it only makes the sick person happy",
+                    "Because it brings joy to the sick person's heart, makes them feel cared for, and strengthens social bonds",
+                    "Because it helps spread diseases",
+                    "Because it wastes time"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "What is the importance of the etiquette of visiting that Hamid followed?",
+                "options": [
+                    "It bothers the sick person and their family",
+                    "It respects the sick person's feelings and their need for rest",
+                    "It prolongs the visit",
+                    "It reduces the importance of the visit"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "What do we learn from Hamid's concern not to stay long at Hussain's?",
+                "options": [
+                    "Lack of care for the sick person",
+                    "Respecting the sick person's privacy and their need for rest",
+                    "Fear of the illness",
+                    "Dislike of the sick person"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "What is the moral value that we learn from the story of visiting the sick?",
+                "options": [
+                    "Selfishness",
+                    "Arrogance",
+                    "Compassion and empathy for others",
+                    "Envy"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "What is the expected impact of Hamid's visit on Hussain's morale?",
+                "options": [
+                    "His sadness will increase",
+                    "His illness will worsen",
+                    "It will make him feel happy and provide him with moral support",
+                    "It will not affect him"
+                ],
+                "correct": 2
+            }
+        ],
+        "4": [
+            {
+                "question": "What is the synonym of the word 'مَوْعِدُهُ' (Maw'iduhu) in the context of the text?",
+                "options": [
+                    "His place",
+                    "His appointed time",
+                    "His name",
+                    "His job"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "What is the antonym of the word 'أَطَالَ' (Atala) in the context of the text?",
+                "options": [
+                    "Obeyed",
+                    "Fed",
+                    "Shortened",
+                    "Completed"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "What is the plural of the word 'عَابِدَ' (Aabid) in the context of the text?",
+                "options": [
+                    "Aabidoon",
+                    "Ubbaad",
+                    "Awa'id",
+                    "Eeyad"
+                ],
+                "correct": 3
+            },
+            {
+                "question": "What type of expression is the sentence 'لاَ بَأْسَ طَهُورٌ إِنْ شَاءَ اللَّهُ' (La Ba'sa Tahoor Insha'Allah)?",
+                "options": [
+                    "Interrogative sentence",
+                    "Imperative sentence",
+                    "A supplication (prayer)",
+                    "Exclamatory sentence"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "What is the figure of speech used in the sentence 'وَقَدْ ضَعُفَتْ كَثِيرًا كَانّي مَرِيضٌ مُنْذُ أَيَّامٍ' (Wa Qad Da'ufat Katheeran Ka'anni Mareedun Munzu Ayyam)?",
+                "options": [
+                    "Simile",
+                    "Implied Simile",
+                    "Concise Simile (Baligh Simile)",
+                    "There is no simile"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "What is the purpose of the author using the word 'أَنْصَرِفُ' (Ansaref) instead of 'أَذْهَبُ' (Athhab)?",
+                "options": [
+                    "To emphasize the speed of departure",
+                    "To emphasize the politeness of leaving and taking permission",
+                    "To emphasize his dislike of the sick person",
+                    "There is no specific purpose"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "What is the metaphorical meaning of the word 'السَّمَّاعَةِ' (As-Samma'ah) in the context of the text?",
+                "options": [
+                    "The ear",
+                    "A device for recording sounds",
+                    "The doctor's instrument for examining the chest",
+                    "The telephone"
+                ],
+                "correct": 2
+            },
+            {
+                "question": "What is the linguistic root of the word 'الاِرْتِيَاحَ' (Al-Irtiyah)?",
+                "options": [
+                    "Rooh (Spirit)",
+                    "Reeh (Wind)",
+                    "Raah (Rest)",
+                    "Rayyah (To rest something)"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "What is the value highlighted by the phrase 'وَأَعُودُ إِنْ شَاءَ اللهُ غَدًا' (Wa A'oodu Insha'Allah Ghaddan)?",
+                "options": [
+                    "The value of honesty",
+                    "The value of faithfulness",
+                    "The value of courage",
+                    "The value of generosity"
+                ],
+                "correct": 1
+            },
+            {
+                "question": "What is the significance of mentioning the author's profession 'Abul Hasan Ali Nadwi' at the end of the text?",
+                "options": [
+                    "Only to introduce the author",
+                    "To enhance the credibility of the text and show the importance of knowledge and scholars",
+                    "To indicate that the author is a doctor",
+                    "There is no specific significance"
+                ],
+                "correct": 1
+            }
+        ]
+    }

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Data Visualization</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css" rel="stylesheet">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --text-primary: #c9d1d9;
+      --text-secondary: #8b949e;
+      --border-color: #30363d;
+      --accent-color: #2ea043;
+      --accent-hover: #3fb950;
+      --heading-color: #58a6ff;
+    }
+
+    body {
+      background: var(--bg-primary);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      color: var(--text-primary);
+    }
+
+    .container {
+      width: 95%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 10px;
+    }
+
+    .section {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      border: 1px solid var(--border-color);
+    }
+
+    .section h3 {
+      font-size: 1.8rem;
+      margin-top: 0;
+      color: var(--heading-color);
+    }
+
+    .editor-container {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin: 20px 0;
+      background: var(--bg-primary);
+      position: relative;
+      overflow: hidden;
+    }
+    
+
+    .run-button {
+      background: var(--accent-color);
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      cursor: pointer;
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1;
+    }
+
+    .run-button:hover {
+      background: var(--accent-hover);
+    }
+
+    .run-button:disabled {
+      background: var(--text-secondary);
+      cursor: not-allowed;
+    }
+
+    .explanation {
+      background: rgba(56, 139, 253, 0.1);
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      color: var(--text-primary);
+      border: 1px solid var(--heading-color);
+    }
+
+    .output-container {
+      position: relative;
+      min-height: 100px;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .output {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 16px;
+      overflow-x: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .output img {
+      max-width: 100%;
+      height: auto;
+      cursor: zoom-in;
+      transition: transform 0.3s ease;
+    }
+
+    .output img.zoomed {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1.5);
+      max-height: 90vh;
+      max-width: 90vw;
+      z-index: 1000;
+      cursor: zoom-out;
+      box-shadow: 0 0 0 100vmax rgba(0,0,0,0.8);
+    }
+
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(13, 17, 23, 0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .progress {
+      background-color: var(--border-color);
+      height: 4px;
+      width: 80%;
+      max-width: 300px;
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress .determinate {
+      background-color: var(--accent-color);
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: width 0.3s linear;
+    }
+
+    .loading-text {
+      margin-top: 16px;
+      color: var(--text-primary);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        width: 100%;
+        padding: 10px;
+      }
+
+      .section {
+        padding: 16px;
+      }
+
+      .section h3 {
+        font-size: 1.5rem;
+      }
+
+      .CodeMirror {
+        font-size: 13px;
+        padding: 12px;
+      }
+
+      .run-button {
+        padding: 6px 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2 class="blue-text text-darken-2">Interactive Data Visualization</h2>
+    <div id="sections-container"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.23.2/full/pyodide.js"></script>
+  <script>
+    let pyodideReadyPromise = null;
+
+    function createSection(sectionData) {
+      const sectionDiv = document.createElement('div');
+      sectionDiv.className = 'section';
+      sectionDiv.id = sectionData.id;
+
+      const title = document.createElement('h3');
+      title.textContent = sectionData.title;
+      sectionDiv.appendChild(title);
+
+      const explanationDiv = document.createElement('div');
+      explanationDiv.className = 'explanation';
+      explanationDiv.innerHTML = sectionData.explanation;
+      sectionDiv.appendChild(explanationDiv);
+
+      const editorContainer = document.createElement('div');
+      editorContainer.className = 'editor-container';
+
+      const textarea = document.createElement('textarea');
+      textarea.className = 'code-editor';
+      textarea.textContent = sectionData.code;
+      editorContainer.appendChild(textarea);
+
+      const runButton = document.createElement('button');
+      runButton.className = 'run-button';
+      runButton.innerHTML = '<i class="material-icons" style="color: white;">play_arrow</i>';
+      runButton.onclick = function() {
+        runCode(runButton);
+      };
+      editorContainer.appendChild(runButton);
+
+      sectionDiv.appendChild(editorContainer);
+
+      const outputContainer = document.createElement('div');
+      outputContainer.className = 'output-container';
+
+      const outputDiv = document.createElement('div');
+      outputDiv.className = 'output';
+      outputDiv.style.display = 'none';
+      outputContainer.appendChild(outputDiv);
+
+      const loadingOverlay = document.createElement('div');
+      loadingOverlay.className = 'loading-overlay';
+      loadingOverlay.style.display = 'none';
+      loadingOverlay.innerHTML = `
+        <div class="progress">
+          <div class="determinate" style="width: 0%"></div>
+        </div>
+        <div class="loading-text">Initializing...</div>
+      `;
+      outputContainer.appendChild(loadingOverlay);
+
+      sectionDiv.appendChild(outputContainer);
+
+      return sectionDiv;
+    }
+
+    document.addEventListener('click', function(e) {
+      if (e.target.tagName === 'IMG' && e.target.closest('.output')) {
+        e.target.classList.toggle('zoomed');
+        if (!e.target.classList.contains('zoomed')) {
+          e.target.style.transform = '';
+        }
+      }
+    });
+
+    async function updateLoadingProgress(loadingOverlay, progress) {
+      const progressBar = loadingOverlay.querySelector('.determinate');
+      progressBar.style.width = `${progress}%`;
+    }
+
+    async function updateLoadingText(loadingText, text) {
+      loadingText.textContent = text;
+    }
+
+    async function runCode(button) {
+      const section = button.closest('.section');
+      const editorElement = section.querySelector('.CodeMirror').CodeMirrorInstance;
+      const output = section.querySelector('.output');
+      const outputContainer = section.querySelector('.output-container')
+      const loadingOverlay = section.querySelector('.loading-overlay');
+      const loadingText = loadingOverlay.querySelector('.loading-text');
+
+      
+      button.disabled = true;
+      output.style.display = 'block';
+      outputContainer.style.display = 'block'
+      output.innerHTML = '';
+      loadingOverlay.style.display = 'flex';
+
+      try {
+        if(pyodideReadyPromise == null) pyodideReadyPromise = loadPyodide()
+        let pyodide = await pyodideReadyPromise;
+        
+        const packages = [
+          { name: 'micropip', text: 'Loading package manager...', progress: 20 },
+          { name: 'matplotlib', text: 'Loading visualization library...', progress: 40 },
+          { name: 'scipy', text: 'Loading scientific computing library...', progress: 60 },
+          { name: 'seaborn', text: 'Loading statistical visualization...', progress: 80 },
+          { name: 'pandas', text: 'Loading data analysis library...', progress: 90 }
+        ];
+
+        await updateLoadingText(loadingText, 'Initializing Python environment...');
+        await updateLoadingProgress(loadingOverlay, 10);
+        
+        for (const pkg of packages) {
+          await updateLoadingText(loadingText, pkg.text);
+          await updateLoadingProgress(loadingOverlay, pkg.progress);
+          if (pkg.name === 'micropip') {
+            await pyodide.loadPackage(pkg.name);
+            const micropip = pyodide.pyimport("micropip");
+          } else {
+            const micropip = pyodide.pyimport("micropip");
+            await micropip.install(pkg.name);
+          }
+        }
+
+        await updateLoadingText(loadingText, 'Running your code...');
+        await updateLoadingProgress(loadingOverlay, 100);
+
+        const setupCode = `
+import sys, io, base64
+import matplotlib
+matplotlib.use('agg')
+import matplotlib.pyplot as plt
+from js import document
+
+class StdoutCatcher:
+    def write(self, s):
+        if s.strip():
+            output_div.innerHTML += s.replace("\\n", "<br>")
+    def flush(self):
+        pass
+
+sys.stdout = StdoutCatcher()
+
+def custom_show():
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', dpi=100, bbox_inches='tight')
+    buf.seek(0)
+    img_data = base64.b64encode(buf.read()).decode('utf-8')
+    img_tag = f'<img src="data:image/png;base64,{img_data}" alt="Plot" title="Click to zoom"/>'
+    output_div.innerHTML += img_tag
+    plt.clf()
+
+plt.show = custom_show
+        `;
+
+        pyodide.globals.set('output_div', output);
+        await pyodide.runPythonAsync(setupCode);
+        await pyodide.runPythonAsync(editorElement.getValue());
+
+      } catch (err) {
+        output.innerHTML = `<div style="color: #f85149;">${err}</div>`;
+      } finally {
+        loadingOverlay.style.display = 'none';
+        button.disabled = false;
+      }
+    }
+
+    fetch('mod2.2.sections.json')
+      .then(response => response.json())
+      .then(data => {
+        const sectionsContainer = document.getElementById('sections-container');
+        data.forEach(sectionData => {
+          const sectionElement = createSection(sectionData);
+          sectionsContainer.appendChild(sectionElement);
+        });
+        
+        document.querySelectorAll('.code-editor').forEach(textarea => {
+          const editor = CodeMirror.fromTextArea(textarea, {
+            mode: 'python',
+            lineNumbers: false,
+            indentUnit: 4,
+            tabSize: 4,
+            viewportMargin: Infinity,
+            lineWrapping: false,
+            theme: 'default'
+          });
+          textarea.nextElementSibling.CodeMirrorInstance = editor;
+        });
+      })
+      .catch(error => console.error('Error loading sections:', error));
+  </script>
+  <script type="module">
+    // Import the necessary functions from the Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getAnalytics, logEvent, setUserProperties } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
+    import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
+    // Your Firebase configuration (REPLACE WITH YOUR ACTUAL CONFIG)
+    const firebaseConfig = {
+      apiKey: "AIzaSyAnjWWep4dtxvn1YKtmdU7A002X2NAvlX0",
+      authDomain: "data-science-ef878.firebaseapp.com",
+      databaseURL: "https://data-science-ef878-default-rtdb.firebaseio.com",
+      projectId: "data-science-ef878",
+      storageBucket: "data-science-ef878.firebasestorage.app",
+      messagingSenderId: "1010841233830",
+      appId: "1:1010841233830:web:e7aa0b516ace71c1720767",
+      measurementId: "G-FL7XZR6X7Q"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    // Automatically log the 'page_view' event
+    logEvent(analytics, 'page_view');
+    console.log("Automatic page_view event logged.");
+
+    // Example: Set a user property after a 5-second delay
+    setTimeout(() => {
+      setUserProperties(analytics, { user_type: 'new_user' });
+      console.log("User property set after delay.");
+      getLastUpdate()
+    }, 500);
+
+    function getLastUpdate() {
+      // Initialize the Realtime Database instance
+      const db = getDatabase(app);
+      // Create a reference to 'last_update' at the root of the database
+      const lastUpdateRef = ref(db, 'last-update');
+
+      // Retrieve the value from the database
+      get(lastUpdateRef)
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            const value = snapshot.val();
+            console.log("Last update:", value);
+          } else {
+            console.log("No data available at 'last_update'");
+          }
+        })
+        .catch((error) => {
+          console.error("Error getting 'last_update' value:", error);
+        });
+    }
+  </script>
+</body>
+</html>

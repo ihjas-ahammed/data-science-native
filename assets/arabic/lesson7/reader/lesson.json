@@ -1,0 +1,210 @@
+[
+  {
+    "sentence": "المعلم : ما الصداقة يا علي؟",
+    "meaning": "Teacher: What is friendship, Ali?",
+    "words": [
+      {
+        "word": "الصداقة",
+        "meaning": "Friendship"
+      }
+    ]
+  },
+  {
+    "sentence": "علي : الصديق هو الشخص الذي يعرف جميع أسرارك. ويتمنى لك كل الخير، ويخبرك بكل ما يشعر به. والعلاقة بينك وبينه تكون قائمة على الود والألفة.",
+    "meaning": "Ali: A friend is someone who knows all your secrets, wishes you all the best, and tells you everything they feel. The relationship between you and him is based on affection and intimacy.",
+    "words": [
+      {
+        "word": "الصديق",
+        "meaning": "Friend"
+      },
+      {
+        "word": "أسرارك",
+        "meaning": "Your secrets"
+      },
+      {
+        "word": "الود",
+        "meaning": "Affection"
+      },
+      {
+        "word": "الألفة",
+        "meaning": "Intimacy"
+      }
+    ]
+  },
+  {
+    "sentence": "المعلم : من هو الصديق الصالح يا علي ؟",
+    "meaning": "Teacher: Who is a good friend, Ali?",
+    "words": [
+      {
+        "word": "الصديق الصالح",
+        "meaning": "Good friend"
+      }
+    ]
+  },
+  {
+    "sentence": "علي : الصديق الصالح هو مَنْ يَدْفَعُكَ لِعَمل الخير. والتقرب من الله، ويخاف عليك، ولا يحسدك.",
+    "meaning": "Ali: A good friend is someone who encourages you to do good deeds, get closer to God, cares about you, and doesn't envy you.",
+    "words": [
+      {
+        "word": "يَدْفَعُكَ",
+        "meaning": "Encourages you"
+      },
+      {
+        "word": "الخير",
+        "meaning": "Good deeds"
+      },
+      {
+        "word": "يحسدك",
+        "meaning": "Envy you"
+      }
+    ]
+  },
+  {
+    "sentence": "المعلم : وماذا قال نبينا عن اختيار الصديق ؟",
+    "meaning": "Teacher: What did our Prophet say about choosing a friend?",
+    "words": [
+      {
+        "word": "نبينا",
+        "meaning": "Our Prophet"
+      },
+      {
+        "word": "اختيار الصديق",
+        "meaning": "Choosing a friend"
+      }
+    ]
+  },
+  {
+    "sentence": "علي : قال النَّبِيُّ عليه الصلاة والسلام: \"المرء على دين خليله، فَلْيَنْظُرْ أحدكم من يخالل\".",
+    "meaning": "Ali: The Prophet, peace be upon him, said: \"A person is on the religion of his close friend, so let each of you look at whom he takes as a friend.\"",
+    "words": [
+      {
+        "word": "المرء",
+        "meaning": "A person"
+      },
+      {
+        "word": "خليله",
+        "meaning": "His close friend"
+      },
+      {
+        "word": "يخالل",
+        "meaning": "Takes as a friend"
+      }
+    ]
+  },
+  {
+    "sentence": "المعلم : بارك الله فيك يا بني.",
+    "meaning": "Teacher: May God bless you, my son.",
+    "words": [
+      {
+        "word": "بارك الله فيك",
+        "meaning": "May God bless you"
+      },
+      {
+        "word": "بني",
+        "meaning": "My son"
+      }
+    ]
+  },
+  {
+    "sentence": "منى : أمي. هل يمكننا الحديث معاً عن التسامح ؟",
+    "meaning": "Mona: Mom, can we talk about tolerance?",
+    "words": [
+      {
+        "word": "التسامح",
+        "meaning": "Tolerance"
+      }
+    ]
+  },
+  {
+    "sentence": "الأم : بالتأكيد يا ابنتي، فالتسامح هو العفو عند المقدرة. وعدم رد الإساءة بالإساءة، وهو مفهوم أخلاقي، دعا إليه كافة الرسل والأنبياء.",
+    "meaning": "Mother: Of course, my daughter. Tolerance is forgiveness when you are capable of punishing, and not repaying evil with evil. It is a moral concept that all messengers and prophets called for.",
+    "words": [
+      {
+        "word": "التسامح",
+        "meaning": "Tolerance"
+      },
+      {
+        "word": "العفو",
+        "meaning": "Forgiveness"
+      },
+      {
+        "word": "الإساءة",
+        "meaning": "Evil"
+      }
+    ]
+  },
+  {
+    "sentence": "منى : وما فائدة التسامح يا أمي ؟",
+    "meaning": "Mona: What is the benefit of tolerance, Mom?",
+    "words": [
+      {
+        "word": "فائدة التسامح",
+        "meaning": "Benefit of tolerance"
+      }
+    ]
+  },
+  {
+    "sentence": "الأم : التسامح يا ابنتي يُساعد على تحقيق الوحدة والتماسك بين المجتمعات والقضاء على الخلافات. كما يعني احترام ثقافة وعقيدة وقيم وآراء الآخرين. والتخلي عن رغبتنا في إيقاع الأذى بهم.",
+    "meaning": "Mother: Tolerance, my daughter, helps to achieve unity and cohesion among societies and eliminate disputes. It also means respecting the culture, beliefs, values, and opinions of others, and giving up our desire to harm them.",
+    "words": [
+      {
+        "word": "الوحدة",
+        "meaning": "Unity"
+      },
+      {
+        "word": "التماسك",
+        "meaning": "Cohesion"
+      },
+      {
+        "word": "الخلافات",
+        "meaning": "Disputes"
+      },
+      {
+        "word": "احترام",
+        "meaning": "Respect"
+      },
+      {
+        "word": "الأذى",
+        "meaning": "Harm"
+      }
+    ]
+  },
+  {
+    "sentence": "منى : ما سبب عدم وجود هذه الصفة الحميدة في الوقت الحالي ؟",
+    "meaning": "Mona: What is the reason for the absence of this noble quality at the present time?",
+    "words": [
+      {
+        "word": "الصفة الحميدة",
+        "meaning": "Noble quality"
+      }
+    ]
+  },
+  {
+    "sentence": "الأم : أظن يا ابنتي أن السبب الرئيسي هو عدم الالتزام بالأخلاق الحميدة والنهج النبوي الذي يحثنا على التسامح والاحترام المتبادل مع الأشخاص مهما كان هناك اختلاف، لأن التسامح هو ما يجعل منا بشراً في النهاية.",
+    "meaning": "Mother: I think, my daughter, that the main reason is the lack of commitment to good morals and the Prophetic approach that urges us to be tolerant and have mutual respect with people, no matter how different they are, because tolerance is what makes us human in the end.",
+    "words": [
+      {
+        "word": "الأخلاق الحميدة",
+        "meaning": "Good morals"
+      },
+      {
+        "word": "التسامح",
+        "meaning": "Tolerance"
+      },
+      {
+        "word": "الاحترام المتبادل",
+        "meaning": "Mutual respect"
+      }
+    ]
+  },
+  {
+    "sentence": "منى : شكراً لك يا أمي فقد استفدت من الحديث معك كثيراً.",
+    "meaning": "Mona: Thank you, Mom. I have benefited a lot from talking to you.",
+    "words": [
+      {
+        "word": "استفدت",
+        "meaning": "Benefited"
+      }
+    ]
+  }
+]

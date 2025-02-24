@@ -1,0 +1,266 @@
+<!DOCTYPE  html>
+<html  lang="en">
+
+<head>
+	<meta  charset="UTF-8">
+	<meta  http-equiv="X-UA-Compatible"  content="IE=Edge">
+	<meta  name="viewport"  content="width=device-width,  initial-scale=1">
+	<title>Limits  &  Derivatives</title>
+	<!--  HTML  -->
+	<!--  Custom  Styles  -->
+	<style>
+		body  {
+			padding:  0;
+			margin:  0;
+		}
+		
+		header  {
+			position:  fixed;
+			display:  flex;
+			top:  0;
+			left:  0;
+			right:  0;
+			height:  64px;
+			background:  #99ee;
+			backdrop-filter:  blur(10px);
+			color:  #fff;
+			justify-content:  center;
+			align-items:  center;
+			text-shadow:  0px  0px  10px  #0005;
+			box-shadow:  0px  5px  10px  #0005;
+		}
+		
+		header  h1  {
+			font-size:  20pt;
+			font-family:  sans-serif;
+		}
+		
+		body  {
+			background:  #ddf;
+		}
+		
+		main  {
+			background:  #fff;
+			margin:  0  15px;
+			margin-bottom:  50px;
+			border-radius:  5px;
+			display:  flex;
+			padding:  20px;
+			flex-direction:  column;
+			margin-top:  79px;
+		}
+		
+		.fact  {
+			width:  fit-content;
+			flex-direction:  column;
+			display:  flex;
+			align-items:  center;
+		}
+		
+		
+		main  h1  {
+			font-size:  15pt;
+		}
+		
+		main  h2  {
+			font-size:  12pt;
+		}
+		
+		main  button  {
+			background:  #99e;
+			color:  #fff;
+			padding:  8px  30px;
+			border:  none;
+			border-radius:  50px;
+			margin:  auto;
+			box-shadow:  0px  0px  5px  #0005;
+			text-transform:  uppercase;
+			font-weight:  bold;
+			transition-duration:  100ms;
+		}
+		
+		main  button:active  {
+			box-shadow:  0px  0px  10px  #0005;
+			scale:  1.01;
+		}
+		
+		main.game  {
+			display:  none;
+		}
+		
+		
+		.game  .qs  {
+			text-align:  center;
+		}
+		
+		.game  .ans  button  {
+			margin:  4px  5px;
+			width:  100%;
+			padding:  10px;
+			text-transform:  none;
+		}
+		
+		.game  .ans  {
+			margin:  15px;
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<h1>Limits  &  Derivatives</h1>
+	</header>
+	<main  class="home">
+		<h1>Derivatives  of  Standard  Functions</h1>
+		<ol  class="dvt">
+			<li>x<sup>n  </sup>=  nx<sup>n-1</sup></li>
+			<li>cosx  =  -sinx</li>
+			<li>sinx  =  cosx</li>
+			<li>cotx  =  -cosec<sup>2</sup>x</li>
+			<li>tanx  =  sec<sup>2</sup>x</li>
+			<li>secx  =  tanx.secx</li>
+			<li>cosecx  =  -cotx.cosecx</li>
+		</ol>
+		<h1>Trignometric  Results</h1>
+		<ol  class="trg">
+			<h2>Set  1</h2>
+			<li>sin(A+B)  =  sinA.cosB  +  cosA.sinB</li>
+			<li>sin(A-B)  =  sinA.cosB  -  cosA.sinB</li>
+			<li>cos(A+B)  =  cosA.cosB  -  sinA.sinB</li>
+			<li>cos(A-B)  =  cosA.cosB  +  sinA.sinB</li>
+			<li>tan(A+B)  =  (tanA  +  tanB)  /  (1  -  tanA.tanB)</li>
+			<li>tan(A-B)  =  (tanA  -  tanB)  /  (1  +  tanA.tanB)</li>
+			<li>cot(A+B)  =  (cotA.cotB  -  1)  /  (cotA  +  cotB)</li>
+			<li>cot(A-B)  =  (cotA.cotB  +  1)  /  (cotB  -  cotA)</li>
+			<h2>Set  2</h2>
+			<li>sin(A+B)  +  sin(A-B)  =  2sinA.cosB</li>
+			<li>sin(A+B)  -  sin(A-B)  =  2cosA.sinB</li>
+			<li>cos(A+B)  +  cos(A-B)  =  2cosA.cosB</li>
+			<li>cos(A+B)  -  cos(A-B)  =  -2sinA.sinB</li>
+			<h2>Set  3</h2>
+			<li>sinC  +  sinD  =  2sin((C+D)/2).cos((C-D)/2)</li>
+			<li>sinC  -  sinD  =  2cos((C+D)/2).sin((C-D)/2)</li>
+			<li>cosC  +  cosD  =  2cos((C+D)/2).cos((C-D)/2)</li>
+			<li>cosC  -  cosD  =  -2sin((C+D)/2).sin((C-D)/2)</li>
+			<h1>Set  4</h1>
+			<li>sin2A  =  2sin.cosA</li>
+			<li>sin2A  =  2tanA/(1+tan<sup>2</sup>A)</li>
+			<li>cos2A  =  cos<sup>2</sup>A  -  sin<sup>2</sup>A</li>
+			<li>cos2A  =  2cos<sup>2</sup>A  -  1</li>
+			<li>cos2A  =  1  -  2sin<sup>2</sup>A</li>
+			<li>cos2A  =  (1-tan<sup>2</sup>A)/(1+tan<sup>2</sup>A)</li>
+			<li>tan2A  =  2tanA/(1-tan<sup>2</sup>A)</li>
+			<h2>Set  5</h2>
+			<li>sin<sup>2</sup>A  =  (1-cos2A)/2</li>
+			<li>cos<sup>2</sup>A  =  (1+cos2A)/2</li>
+			<li>tan<sup>2</sup>A  =  (1-cos2A)/(1+cos2A)</li>
+			<h2>Set  6</h2>
+			<li>sin3A  =  3sinA  -  4sin<sup>3</sup>A</li>
+			<li>cos3A  =  4cos<sup>3</sup>A  -  3cosA</li>
+			<li>tan3A  =  (3tanA  -  tan<sup>3</sup>A)/(1-3tan<sup>2</sup>A)</li>
+		</ol>
+		<button  onclick="start()">Start  Test</button>
+	</main>
+
+	<main  class="game">
+		<div  class="qs">
+			Question
+		</div>
+		<div  class="ans"><!--  
+            <button  class="opt">
+                ans  1
+            </button>  -->
+		</div>
+		<button  onclick="closeIt()">Close</button>
+	</main>
+
+	<script>
+		const  home  =  document.querySelector(".home");
+const  game  =  document.querySelector(".game");
+
+
+function  start(){
+    home.style.display  =  "none";
+    game.style.display  =  "flex";
+    
+    updateQs();
+}
+
+function  closeIt(){
+    
+    game.style.display  =  "none";
+    home.style.display  =  "flex";
+}
+
+function  updateQs(){
+    var  dvt  =  parseData("dvt");
+    var  trg  =  parseData("trg")
+    
+
+    var  tar  =  [dvt,trg];
+    var  ek  =  Math.round(Math.random());
+    var  fm  =  tar[ek];
+    var  ak  =  Math.round(Math.random()*(fm.length-1));
+    var  fmq  =  fm[ak];
+    
+    var  qs  =  fmq[0];
+    if(ek  ==  0)  qs  =  "Derivative  of  "+fmq[0];
+    var  ans  =  fmq[1];
+    
+    var  qobj  =  document.querySelector(".game  .qs");
+    qobj.innerHTML  =  qs;
+    
+    var  aobj  =  document.querySelector(".game  .ans");
+    var  c  =  "";
+    var  anm  =  Math.round(Math.random()*3);
+    var  clst  =  [];
+    var  mk  =  ak;
+    for(var  x  =  0;x  <  4;x++){
+        if  (x  ==  anm)  {
+            clst[x]  =  "<button  class='opt  ans'  onclick='updateQs()'>"  +  ans  +  "</button>";
+            continue;
+        }
+        mk  +=  1;
+        while(mk  >=  fm.length){
+        	mk  =  0;
+        }
+        
+        var  rand  =  fm[mk][1];
+        
+        clst[x]  =  "<button  class='opt'>"+rand+"</button>";
+        
+    }
+    
+    
+    for(var  i  in  clst){
+    	c  +=  clst[i];
+    }
+    aobj.innerHTML  =  c;
+}
+function  parseData(cls){
+    var  rt  =  [];
+    var  m  =  0;
+    var  em  =  document.querySelectorAll("ol."+cls+"  li");
+    for(var  x  in  em){
+        var  el  =  em[x];
+        if(el.innerHTML  !=  null){
+            rt[m]  =  el.innerHTML.split("=");
+            m++;
+        }
+    }
+    return  rt;
+}
+
+start();
+	</script>
+</body>
+
+</html>
+
+<!--  
+
+Help-2sin
+For  factors.
+
+<span  class="fact"><span>dx<sup>n</sup></span><span  class="dvidr"/><span>dx</span></span>
+-->

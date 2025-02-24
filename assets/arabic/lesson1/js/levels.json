@@ -1,0 +1,506 @@
+{
+        "1":  [
+                {
+                        "type":  "basic",
+                        "question":  "Who  is  Taha  Hussein?",
+                        "options":  [
+                                "A  modern  poet",
+                                "A  prominent  Egyptian  writer  and  intellectual",
+                                "A  political  leader",
+                                "A  religious  scholar"
+                        ],
+                        "correct":  1,
+                        "explanation":  "Taha  Hussein  (1889-1973)  was  a  prominent  Egyptian  writer,  intellectual,  and  literary  critic."
+                },
+                {
+                        "type":  "basic",
+                        "question":  "What  is  \"The  Days\"  (الأيام)?",
+                        "options":  [
+                                "A  collection  of  poems",
+                                "An  autobiography",
+                                "A  political  manifesto",
+                                "A  religious  text"
+                        ],
+                        "correct":  1,
+                        "explanation":  "\"The  Days\"  is  Taha  Hussein's  autobiography  and  one  of  his  most  famous  works."
+                },
+                {
+                        "type":  "basic",
+                        "question":  "What  is  the  main  topic  of  this  excerpt?",
+                        "options":  [
+                                "A  father's  love  for  his  daughter",
+                                "The  importance  of  education",
+                                "The  beauty  of  nature",
+                                "The  struggles  of  life"
+                        ],
+                        "correct":  0,
+                        "explanation":  "The  excerpt  focuses  on  the  deep  affection  and  protective  instincts  of  a  father  towards  his  daughter."
+                },
+                {
+                        "type":  "basic",
+                        "question":  "How  old  is  the  daughter  in  the  text?",
+                        "options":  [
+                                "5",
+                                "9",
+                                "12",
+                                "15"
+                        ],
+                        "correct":  1,
+                        "explanation":  "The  text  states  that  the  daughter  is  in  the  ninth  year  of  her  life  (في  التاسعة  من  عمرك)."
+                },
+                {
+                        "type":  "basic",
+                        "question":  "What  is  the  significance  of  Taha  Hussein  in  Arabic  literature?",
+                        "options":  [
+                                "He  introduced  new  poetic  forms.",
+                                "He  wrote  the  first  Arabic  novel.",
+                                "He  was  a  leading  figure  in  the  Arab  Renaissance.",
+                                "He  translated  many  Western  works  into  Arabic."
+                        ],
+                        "correct":  2,
+                        "explanation":  "Taha  Hussein  was  a  key  figure  in  the  Nahda  (Arab  Renaissance),  contributing  to  the  modernization  of  Arabic  literature."
+                },
+                {
+                        "type":  "basic",
+                        "question":  "What  personal  challenge  did  Taha  Hussein  face?",
+                        "options":  [
+                                "He  grew  up  in  poverty.",
+                                "He  lost  his  sight  at  a  young  age.",
+                                "He  was  exiled  from  his  country.",
+                                "He  was  imprisoned  for  his  beliefs."
+                        ],
+                        "correct":  1,
+                        "explanation":  "Taha  Hussein  lost  his  sight  as  a  child,  a  fact  that  often  influenced  his  writing."
+                },
+                {
+                        "type":  "basic",
+                        "question":  "What  is  the  general  tone  of  the  excerpt?",
+                        "options":  [
+                                "Angry  and  critical",
+                                "Sad  and  mournful",
+                                "Loving  and  protective",
+                                "Humorous  and  lighthearted"
+                        ],
+                        "correct":  2,
+                        "explanation":  "The  father  expresses  deep  affection  and  a  desire  to  protect  his  daughter,  creating  a  loving  and  protective  tone."
+                },
+                {
+                        "type":  "basic",
+                        "question":  "What  does  the  father  want  to  protect  his  daughter  from?",
+                        "options":  [
+                                "Bad  influences",
+                                "The  hardships  of  life",
+                                "Academic  pressure",
+                                "Social  expectations"
+                        ],
+                        "correct":  1,
+                        "explanation":  "The  father  aims  to  shield  his  daughter  from  the  difficulties  and  sorrows  he  experienced  in  his  own  life."
+                },
+                {
+                        "type":  "basic",
+                        "question":  "What  does  the  father  believe  about  children  at  his  daughter's  age?",
+                        "options":  [
+                                "They  are  easily  influenced  by  their  peers.",
+                                "They  idolize  their  parents.",
+                                "They  are  naturally  rebellious.",
+                                "They  are  eager  to  learn  about  the  world."
+                        ],
+                        "correct":  1,
+                        "explanation":  "The  text  suggests  that  children  at  this  age  often  see  their  parents  as  role  models  and  want  to  be  like  them."
+                },
+                {
+                        "type":  "basic",
+                        "question":  "What  does  the  father  imply  about  his  own  childhood?",
+                        "options":  [
+                                "It  was  filled  with  joy  and  happiness.",
+                                "It  was  marked  by  challenges  and  hardships.",
+                                "It  was  ordinary  and  uneventful.",
+                                "It  was  spent  traveling  the  world."
+                        ],
+                        "correct":  1,
+                        "explanation":  "The  father  hints  that  his  childhood  was  difficult,  and  he  wants  to  prevent  his  daughter  from  experiencing  the  same."
+                }
+        ],
+        "2":  [
+                {
+                        "type":  "vocabulary",
+                        "question":  "What  does  سَاذِجَة  mean?",
+                        "options":  [
+                                "Pure",
+                                "Naive",
+                                "Kind",
+                                "Best"
+                        ],
+                        "correct":  1,
+                        "explanation":  "سَاذِجَة  (saadhijah)  means  naive  or  innocent  in  Arabic."
+                },
+                {
+                        "type":  "vocabulary",
+                        "arabic":  "طَيِّبة  النفس",
+                        "question":  "Translate  this  phrase:",
+                        "options":  [
+                                "Pure  heart",
+                                "Kind  soul",
+                                "Strong  mind",
+                                "Great  wisdom"
+                        ],
+                        "correct":  1,
+                        "explanation":  "طَيِّبة  النفس  means  \"kind-souled\"  or  \"of  kind  soul\"."
+                },
+                {
+                        "type":  "vocabulary",
+                        "question":  "What  does    يُفاخرون    mean?",
+                        "options":  [
+                                "To  admire",
+                                "To  boast",
+                                "To  convince",
+                                "To  protect"
+                        ],
+                        "correct":  1,
+                        "explanation":  "يُفاخرون  (yufaakhiroon)  means  to  boast  or  take  pride  in  something."
+                },
+                {
+                        "type":  "vocabulary",
+                        "arabic":  "أقرانهم",
+                        "question":  "Translate  this  word:",
+                        "options":  [
+                                "Parents",
+                                "Peers",
+                                "Teachers",
+                                "Siblings"
+                        ],
+                        "correct":  1,
+                        "explanation":  "أقرانهم  (aqraanuhum)  means  \"their  peers\"."
+                },
+                {
+                        "type":  "vocabulary",
+                        "question":  "What  does    يبذل    mean?",
+                        "options":  [
+                                "To  give",
+                                "To  take",
+                                "To  hide",
+                                "To  forget"
+                        ],
+                        "correct":  0,
+                        "explanation":  "يبذل  (yabdhulu)  means  to  exert,  give,  or  expend  effort."
+                },
+                {
+                        "type":  "vocabulary",
+                        "arabic":  "المشقة",
+                        "question":  "What  does  this  word  mean?",
+                        "options":  [
+                                "Happiness",
+                                "Hardship",
+                                "Effort",
+                                "Childhood"
+                        ],
+                        "correct":  1,
+                        "explanation":  "المشقة  (al-mashaqah)  means  hardship  or  difficulty."
+                },
+                {
+                        "type":  "vocabulary",
+                        "question":  "What  does    يطيق    mean?",
+                        "options":  [
+                                "To  endure",
+                                "To  play",
+                                "To  learn",
+                                "To  grow"
+                        ],
+                        "correct":  0,
+                        "explanation":  "يطيق  (yateegu)  means  to  be  able  to  bear  or  endure  something."
+                },
+                {
+                        "type":  "vocabulary",
+                        "arabic":  "ليجنبك",
+                        "question":  "Translate  this  word:",
+                        "options":  [
+                                "To  help  you",
+                                "To  teach  you",
+                                "To  spare  you  from",
+                                "To  give  you"
+                        ],
+                        "correct":  2,
+                        "explanation":  "ليجنبك  (lijanibak)  means  \"to  spare  you  from\"  something."
+                },
+                {
+                        "type":  "vocabulary",
+                        "question":  "What  does    صبيا    mean?",
+                        "options":  [
+                                "A  young  boy",
+                                "A  young  girl",
+                                "A  father",
+                                "A  teacher"
+                        ],
+                        "correct":  0,
+                        "explanation":  "صبيا  (sabyaa)  means  a  young  boy."
+                },
+                {
+                        "type":  "vocabulary",
+                        "arabic":  "قدوة  حسنة",
+                        "question":  "Translate  this  phrase:",
+                        "options":  [
+                                "Good  example",
+                                "Kind  heart",
+                                "Strong  will",
+                                "Happy  life"
+                        ],
+                        "correct":  0,
+                        "explanation":  "قدوة  حسنة  (qidwah  hasanah)  means  \"good  example\"  or  \"role  model\"."
+                }
+        ],
+        "3":  [
+                {
+                        "type":  "theme",
+                        "question":  "What  is  one  of  the  main  themes  in  \"To  My  Daughter\"?",
+                        "options":  [
+                                "A  father's  protective  love",
+                                "Political  commentary",
+                                "Historical  events",
+                                "Scientific  discoveries"
+                        ],
+                        "correct":  0,
+                        "explanation":  "The  text  strongly  emphasizes  the  father's  protective  love  and  desire  to  shield  his  daughter  from  hardships."
+                },
+                {
+                        "type":  "theme",
+                        "question":  "How  does  the  father  view  his  daughter?",
+                        "options":  [
+                                "As  naive  and  pure-hearted",
+                                "As  rebellious  and  difficult",
+                                "As  mature  and  worldly",
+                                "As  talented  and  ambitious"
+                        ],
+                        "correct":  0,
+                        "explanation":  "The  father  sees  his  daughter  as  innocent  and  pure-hearted,  wanting  to  protect  her  innocence."
+                },
+                {
+                        "type":  "theme",
+                        "question":  "Which  statement  best  describes  the  father's  feelings  about  the  passage  of  time?",
+                        "options":  [
+                                "He  embraces  aging  and  the  wisdom  it  brings.",
+                                "He  fears  the  future  and  the  uncertainties  it  holds.",
+                                "He  is  nostalgic  for  his  own  childhood.",
+                                "He  wants  to  slow  down  time  to  savor  his  daughter's  youth."
+                        ],
+                        "correct":  3,
+                        "explanation":  "The  father  reflects  on  his  own  past  and  expresses  a  desire  to  preserve  his  daughter's  innocence,  suggesting  a  wish  to  slow  down  time."
+                },
+                {
+                        "type":  "theme",
+                        "question":  "What  is  the  significance  of  the  father's  reflection  on  his  own  childhood?",
+                        "options":  [
+                                "To  show  how  much  he  has  changed",
+                                "To  emphasize  the  universality  of  childhood  experiences",
+                                "To  contrast  his  experiences  with  his  daughter's",
+                                "To  express  regret  for  his  past  mistakes"
+                        ],
+                        "correct":  2,
+                        "explanation":  "By  reflecting  on  his  own  past,  the  father  highlights  the  difference  between  his  difficult  childhood  and  the  innocent  world  he  wants  for  his  daughter."
+                },
+                {
+                        "type":  "theme",
+                        "question":  "What  is  the  father's  attitude  towards  his  daughter's  idealized  view  of  him?",
+                        "options":  [
+                                "He  is  amused  by  it.",
+                                "He  is  uncomfortable  with  it.",
+                                "He  encourages  it.",
+                                "He  is  indifferent  to  it."
+                        ],
+                        "correct":  0,
+                        "explanation":  "While  the  father  appreciates  his  daughter's  admiration,  he  also  recognizes  that  it  is  based  on  a  limited  understanding  of  him  and  the  world."
+                },
+                {
+                        "type":  "theme",
+                        "question":  "How  does  the  text  portray  the  innocence  of  childhood?",
+                        "options":  [
+                                "As  something  to  be  cherished  and  protected",
+                                "As  a  phase  to  be  quickly  outgrown",
+                                "As  a  source  of  ignorance  and  naivety",
+                                "As  a  time  of  carefree  play  and  exploration"
+                        ],
+                        "correct":  0,
+                        "explanation":  "The  father  clearly  values  his  daughter's  innocence  and  wants  to  shield  her  from  the  harsh  realities  of  the  world."
+                },
+                {
+                        "type":  "theme",
+                        "question":  "What  is  the  role  of  hardship  in  the  text?",
+                        "options":  [
+                                "It  is  seen  as  a  necessary  part  of  life.",
+                                "It  is  something  to  be  avoided  at  all  costs.",
+                                "It  is  a  source  of  strength  and  resilience.",
+                                "It  is  a  test  of  faith  and  character."
+                        ],
+                        "correct":  1,
+                        "explanation":  "The  father's  primary  goal  is  to  protect  his  daughter  from  the  hardships  he  experienced,  suggesting  a  desire  to  prevent  suffering."
+                },
+                {
+                        "type":  "theme",
+                        "question":  "How  does  the  father's  perspective  as  a  writer  influence  the  text?",
+                        "options":  [
+                                "He  uses  vivid  imagery  and  metaphors.",
+                                "He  focuses  on  factual  details  and  events.",
+                                "He  employs  a  formal  and  academic  tone.",
+                                "He  incorporates  elements  of  fantasy  and  fiction."
+                        ],
+                        "correct":  0,
+                        "explanation":  "As  a  writer,  Taha  Hussein  uses  evocative  language  and  imagery  to  convey  his  emotions  and  create  a  powerful  impact  on  the  reader."
+                },
+                {
+                        "type":  "theme",
+                        "question":  "What  is  the  significance  of  the  title  \"To  My  Daughter\"?",
+                        "options":  [
+                                "It  highlights  the  personal  and  intimate  nature  of  the  text.",
+                                "It  suggests  that  the  text  is  intended  as  a  guide  for  all  young  girls.",
+                                "It  indicates  that  the  text  is  a  fictional  story.",
+                                "It  implies  that  the  text  is  a  formal  letter  of  instruction."
+                        ],
+                        "correct":  0,
+                        "explanation":  "The  title  emphasizes  the  direct  address  to  the  daughter,  creating  a  sense  of  personal  connection  and  intimacy."
+                },
+                {
+                        "type":  "theme",
+                        "question":  "What  is  the  overall  message  of  the  excerpt?",
+                        "options":  [
+                                "Life  is  full  of  challenges  that  must  be  overcome.",
+                                "Parents  should  always  strive  to  protect  their  children.",
+                                "Childhood  innocence  is  precious  and  fleeting.",
+                                "Education  is  the  key  to  a  successful  future."
+                        ],
+                        "correct":  2,
+                        "explanation":  "The  excerpt  conveys  the  idea  that  childhood  innocence  is  valuable  and  should  be  cherished,  as  it  is  temporary  and  easily  lost."
+                }
+        ],
+        "4":  [
+                {
+                        "type":  "analysis",
+                        "question":  "What  literary  device  does  Hussein  use  when  asking  rhetorical  questions?",
+                        "options":  [
+                                "To  show  his  daughter's  perspective",
+                                "To  emphasize  the  father-daughter  relationship",
+                                "To  create  dramatic  tension",
+                                "To  critique  society"
+                        ],
+                        "correct":  1,
+                        "explanation":  "The  rhetorical  questions  serve  to  highlight  the  close  bond  between  father  and  daughter."
+                },
+                {
+                        "type":  "analysis",
+                        "question":  "What  is  the  effect  of  the  rhetorical  questions  used  in  the  text?",
+                        "options":  [
+                                "They  create  a  sense  of  doubt  and  uncertainty.",
+                                "They  challenge  the  reader  to  question  their  own  beliefs.",
+                                "They  engage  the  reader  and  emphasize  the  father's  point.",
+                                "They  introduce  different  perspectives  on  the  topic."
+                        ],
+                        "correct":  2,
+                        "explanation":  "The  rhetorical  questions  draw  the  reader  in  and  reinforce  the  father's  assertions  about  his  daughter's  perception  of  him."
+                },
+                {
+                        "type":  "analysis",
+                        "question":  "How  does  the  author's  use  of  language  contribute  to  the  tone  of  the  excerpt?",
+                        "options":  [
+                                "The  use  of  formal  language  creates  a  distant  and  authoritative  tone.",
+                                "The  use  of  simple  language  makes  the  text  accessible  to  a  young  audience.",
+                                "The  use  of  poetic  language  evokes  a  sense  of  love  and  tenderness.",
+                                "The  use  of  humorous  language  creates  a  lighthearted  and  playful  atmosphere."
+                        ],
+                        "correct":  2,
+                        "explanation":  "Taha  Hussein  employs  elegant  and  expressive  language  that  contributes  to  the  loving  and  protective  tone  of  the  passage."
+                },
+                {
+                        "type":  "analysis",
+                        "question":  "What  is  the  purpose  of  the  father's  detailed  description  of  his  daughter's  innocence?",
+                        "options":  [
+                                "To  provide  a  realistic  portrayal  of  childhood",
+                                "To  contrast  her  innocence  with  the  harshness  of  the  world",
+                                "To  foreshadow  her  future  development",
+                                "To  criticize  societal  expectations  of  children"
+                        ],
+                        "correct":  1,
+                        "explanation":  "By  emphasizing  his  daughter's  innocence,  the  father  implicitly  contrasts  it  with  the  difficulties  and  complexities  of  the  adult  world."
+                },
+                {
+                        "type":  "analysis",
+                        "question":  "How  does  the  father's  use  of  imagery  enhance  the  text?",
+                        "options":  [
+                                "It  creates  a  vivid  picture  of  the  daughter's  physical  appearance.",
+                                "It  evokes  a  sense  of  the  father's  emotional  state.",
+                                "It  provides  a  detailed  description  of  the  setting.",
+                                "It  symbolizes  the  complexities  of  the  father-daughter  relationship."
+                        ],
+                        "correct":  1,
+                        "explanation":  "While  not  explicitly  visual  due  to  the  author's  blindness,  the  imagery  conveys  the  father's  feelings  and  the  emotional  atmosphere  of  the  text."
+                },
+                {
+                        "type":  "analysis",
+                        "question":  "What  is  the  significance  of  the  line  \"ليجنبك  حياته  حين  كان  صبيا\"?",
+                        "options":  [
+                                "It  shows  the  father's  regret  for  his  past  actions.",
+                                "It  highlights  the  father's  determination  to  protect  his  daughter.",
+                                "It  suggests  that  the  father  is  envious  of  his  daughter's  innocence.",
+                                "It  implies  that  the  father  wants  his  daughter  to  experience  hardship."
+                        ],
+                        "correct":  1,
+                        "explanation":  "This  line  emphasizes  the  father's  active  efforts  to  shield  his  daughter  from  the  kind  of  suffering  he  endured  as  a  child."
+                },
+                {
+                        "type":  "analysis",
+                        "question":  "What  is  the  effect  of  the  repetition  of  \"ألست\"  in  the  second  paragraph?",
+                        "options":  [
+                                "It  creates  a  sense  of  rhythm  and  flow.",
+                                "It  emphasizes  the  father's  questioning  tone.",
+                                "It  reinforces  the  father's  assumptions  about  his  daughter's  beliefs.",
+                                "It  highlights  the  daughter's  uncertainty  and  confusion."
+                        ],
+                        "correct":  2,
+                        "explanation":  "The  repetition  of  \"ألست\"  (aren't  you)  strengthens  the  father's  rhetorical  questions  and  their  impact  on  the  reader."
+                },
+                {
+                        "type":  "analysis",
+                        "question":  "How  does  the  author  create  a  sense  of  intimacy  in  the  text?",
+                        "options":  [
+                                "By  addressing  the  daughter  directly",
+                                "By  using  complex  metaphors  and  similes",
+                                "By  focusing  on  universal  themes",
+                                "By  providing  historical  context"
+                        ],
+                        "correct":  0,
+                        "explanation":  "The  direct  address  to  the  daughter  (\"يا  ابنتي\"  -  \"Oh  my  daughter\")  establishes  a  personal  and  intimate  tone  throughout  the  passage."
+                },
+                {
+                        "type":  "analysis",
+                        "question":  "It  introduces  a  new  theme  that  will  be  explored  later.",
+                        "options":  [
+                                "It  creates  a  sense  of  closure  and  finality.",
+                                "It  calls  the  reader  to  action.",
+                                "It  leaves  the  reader  with  a  lingering  question."
+                        ],
+                        "correct":  0,
+                        "explanation":  "The  last  sentence  provides  a  sense  of  finality  to  the  excerpt,  concluding  the  father's  initial  thoughts  and  feelings."
+                },
+                {
+                        "type":  "analysis",
+                        "question":  "How  does  the  excerpt  reflect  Taha  Hussein's  own  life  experiences?",
+                        "options":  [
+                                "The  father's  protective  instincts  may  stem  from  Hussein's  own  challenges  with  vision  loss.",
+                                "The  setting  of  the  story  is  based  on  Hussein's  childhood  village.",
+                                "The  characters  in  the  story  are  based  on  Hussein's  family  members.",
+                                "The  excerpt  explores  the  themes  of  education  and  social  reform  that  Hussein  advocated  for."
+                        ],
+                        "correct":  0,
+                        "explanation":  "Hussein's  own  experiences  with  disability  and  overcoming  adversity  likely  influenced  his  desire  to  protect  his  daughter  from  hardship."
+                },
+                {
+                        "type":  "analysis",
+                        "question":  "What  is  the  significance  of  the  phrase  \"ونفسك  الحلوة\"  used  to  describe  the  daughter?",
+                        "options":  [
+                                "It  emphasizes  her  physical  beauty.",
+                                "It  highlights  her  kind  and  gentle  nature.",
+                                "It  suggests  her  innocence  and  purity.",
+                                "It  foreshadows  her  future  happiness."
+                        ],
+                        "correct":  2,
+                        "explanation":  "\"ونفسك  الحلوة\"  (\"your  sweet  soul\")  reinforces  the  idea  of  the  daughter's  inner  goodness  and  innocence."
+                }
+        ]
+}

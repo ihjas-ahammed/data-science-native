@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Science</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top App Bar -->
+        <div class="top-app-bar">
+            <button id="backButton" class="menu-btn" disabled>
+                <span class="material-icons">arrow_back</span>
+            </button>
+            <div class="app-title">Data Science</div>
+            <div class="top-actions">
+                <div class="lives">
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                </div>
+                <div class="score">0</div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-fill" data-level="1"></div>
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Content containers for each tab -->
+            <div id="english-tab" class="tab-content active">
+                <div class="level-select">
+                    <!-- Level cards will be generated dynamically -->
+                </div>
+
+                <div id="question-container" class="question-container" style="display: none;">
+                    <div class="question"></div>
+                    <div class="options"></div>
+                    <div class="feedback"></div>
+                    <div class="nav-buttons">
+                        <button class="nav-btn" id="prevBtn">
+                            <span class="material-icons">arrow_back</span>
+                            Previous
+                        </button>
+                        <button class="nav-btn" id="nextBtn">
+                            Next
+                            <span class="material-icons">arrow_forward</span>
+                        </button>
+                        <button class="nav-btn" onclick="restartLevel()">
+                            <span class="material-icons">refresh</span>
+                            Restart
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="arabic-tab" class="tab-content">
+                <div class="level-select-ar">
+                    <!-- Arabic level cards will be generated dynamically -->
+                </div>
+
+                <div id="question-container-ar" class="question-container" style="display: none;">
+                    <div class="question"></div>
+                    <div class="options"></div>
+                    <div class="feedback"></div>
+                    <div class="nav-buttons">
+                        <button class="nav-btn" id="prevBtn-ar">
+                            <span class="material-icons">arrow_back</span>
+                            السابق
+                        </button>
+                        <button class="nav-btn" id="nextBtn-ar">
+                            التالي
+                            <span class="material-icons">arrow_forward</span>
+                        </button>
+                        <button class="nav-btn" onclick="restartLevelAr()">
+                            <span class="material-icons">refresh</span>
+                            إعادة
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="reader-tab" class="tab-content">
+                <iframe id="lesson-reader" src="reader/index.html" frameborder="0"></iframe>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav" style="display: none;">
+            <button class="nav-item active" onclick="switchTab('english')">
+                <span class="material-icons">translate</span>
+                <span class="nav-label">English</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('arabic')">
+                <span class="material-icons">language</span>
+                <span class="nav-label">Arabic</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('reader')">
+                <span class="material-icons">menu_book</span>
+                <span class="nav-label">Reader</span>
+            </button>
+        </nav>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

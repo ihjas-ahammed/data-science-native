@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arabic Lesson Reader</title>
+    <!-- Add Noto Naskh Arabic font - one of the best for Arabic readability -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+   <!-- Adding Scheherazade New as fallback - also great for diacritics -->
+    <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+    <link href="main.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Arabic Lesson Reader</h1>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+                <div class="progress-text" id="progressText">0/0</div>
+            </div>
+            <div class="controls">
+                <button id="prevBtn" class="nav-btn">Previous</button>
+                <button id="nextBtn" class="nav-btn">Next</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="lesson-content">
+                <div class="arabic-text" id="arabicText"></div>
+                <div class="english-text" id="englishText"></div>
+                
+                <div class="word-meanings">
+                    <h3>Word Meanings</h3>
+                    <table id="wordTable">
+                        <thead>
+                            <tr>
+                                <th>Arabic Word</th>
+                                <th>English Meaning</th>
+                            </tr>
+                        </thead>
+                        <tbody id="wordTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="keyboard-shortcuts">
+                <p>Use ← → arrow keys to navigate between sentences</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

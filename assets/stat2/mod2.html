@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continuous Random Variables and Their Probability Distributions</title>
+    <!-- GitHub Markdown CSS -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css"
+        integrity="sha384-zh0CIslj+VczCZtlzBcjt5ppRcsAmDnRem7ESsYwWwg3m/OaJ2l4x7YBZl9Kxxib" crossorigin="anonymous">
+    <!-- Showdown -->
+    <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
+    <!-- The loading of KaTeX is deferred to speed up page rendering -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"
+        integrity="sha384-Rma6DA2IPUwhNxmrB/7S3Tno0YY7sFu9WSYMCuulLhIqYSGZ2gKCJWIqhBWqMQfh"
+        crossorigin="anonymous"></script>
+
+    <!-- To automatically render math in text elements, include the auto-render extension: -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+        integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+    <!-- Highlight.js for Code Syntax Highlighting -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <style>
+        body {
+            background: #282d32;
+            padding: 20px;
+            display: flex;
+            color:#fff;
+            justify-content: center;
+        }
+
+        .markdown-body {
+            max-width: 100%;
+            padding: 30px;
+            background: rgb(0, 0, 0);
+            color:#fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <article id="content" class="markdown-body"></article>
+    <script>
+        // Custom Showdown extension for KaTeX rendering, supporting inline math like $x$
+        
+        // Fetch and render Markdown with KaTeX math rendering
+        fetch("mod2") // Replace with your Markdown file path
+            .then(response => response.text())
+            .then(md => {
+                let converter = new showdown.Converter({
+                    tables: true,
+                    ghCodeBlocks: true,
+                    tasklists: true,
+                    literalMidWordUnderscores: true,
+                    extensions: []
+                });
+                document.getElementById("content").innerHTML = converter.makeHtml(md);
+                document.querySelectorAll("pre code").forEach(block => hljs.highlightElement(block));
+                renderMathInElement(document.body, {
+                        // customised options
+                        // • auto-render specific keys, e.g.:
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false },
+                            { left: '\\(', right: '\\)', display: false },
+                            { left: '\\[', right: '\\]', display: true }
+                        ],
+                        // • rendering keys, e.g.:
+                        throwOnError: false
+                    });
+            });
+
+    </script>
+    <script type="module">
+        // Import the necessary functions from the Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getAnalytics, logEvent, setUserProperties } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
+        import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+    
+        // Your Firebase configuration (REPLACE WITH YOUR ACTUAL CONFIG)
+        const firebaseConfig = {
+          apiKey: "AIzaSyAnjWWep4dtxvn1YKtmdU7A002X2NAvlX0",
+          authDomain: "data-science-ef878.firebaseapp.com",
+          databaseURL: "https://data-science-ef878-default-rtdb.firebaseio.com",
+          projectId: "data-science-ef878",
+          storageBucket: "data-science-ef878.firebasestorage.app",
+          messagingSenderId: "1010841233830",
+          appId: "1:1010841233830:web:e7aa0b516ace71c1720767",
+          measurementId: "G-FL7XZR6X7Q"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    
+        // Automatically log the 'page_view' event
+        logEvent(analytics, 'page_view');
+        console.log("Automatic page_view event logged.");
+    
+        // Example: Set a user property after a 5-second delay
+        setTimeout(() => {
+          setUserProperties(analytics, { user_type: 'new_user' });
+          console.log("User property set after delay.");
+          getLastUpdate()
+        }, 500);
+    
+        function getLastUpdate() {
+          // Initialize the Realtime Database instance
+          const db = getDatabase(app);
+          // Create a reference to 'last_update' at the root of the database
+          const lastUpdateRef = ref(db, 'last-update');
+    
+          // Retrieve the value from the database
+          get(lastUpdateRef)
+            .then((snapshot) => {
+              if (snapshot.exists()) {
+                const value = snapshot.val();
+                console.log("Last update:", value);
+              } else {
+                console.log("No data available at 'last_update'");
+              }
+            })
+            .catch((error) => {
+              console.error("Error getting 'last_update' value:", error);
+            });
+        }
+      </script>
+</body>
+
+</html>

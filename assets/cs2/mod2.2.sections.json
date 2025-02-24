@@ -1,0 +1,75 @@
+[
+    {
+      "id": "histogram",
+      "title": "Histogram",
+      "explanation": "<p>A histogram is a graphical representation that organizes a group of data points into user-specified ranges. It shows the frequency of data points that fall into each range. Histograms are particularly useful for:</p><ul><li>Visualizing the distribution of continuous data</li><li>Identifying the central tendency, spread, and skewness of data</li><li>Detecting outliers and patterns in the data distribution</li></ul><p>This example creates a simple table using a dictionary containing a list of scores. The histogram plots how many scores fall within each range, illustrating the distribution of the data.</p>",
+      "code": "import matplotlib.pyplot as plt\n\n# Create a simple table using a dictionary\ndata = {\"Scores\": [88, 92, 79, 85, 90, 95, 78, 82, 88, 91, 87, 93, 77, 84, 89]}\n\n# Plot histogram\nplt.figure(figsize=(10, 6))\nplt.hist(data[\"Scores\"], bins=5, color='skyblue', edgecolor='black')\nplt.title('Histogram of Scores')\nplt.xlabel('Score')\nplt.ylabel('Frequency')\nplt.grid(True, alpha=0.3)\nplt.show()"
+    },
+    {
+      "id": "boxplot",
+      "title": "Box Plot",
+      "explanation": "<p>A box plot (or box-and-whisker plot) provides a visual summary of the distribution of a dataset. It shows:</p><ul><li>The median (middle line)</li><li>The quartiles (box edges)</li><li>The range of the data (whiskers)</li><li>Any potential outliers (points)</li></ul><p>This example builds a simple table with scores categorized by group using a dictionary. The box plot compares the distribution of scores across different groups, highlighting the median, quartiles, and any outliers.</p>",
+      "code": "import matplotlib.pyplot as plt\n\n# Create a simple table with group data\ndata = {\n    \"Group\": ['A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C'],\n    \"Score\": [88, 92, 79, 85, 90, 95, 78, 82, 88]\n}\n\n# Separate scores by group\ngroups = sorted(set(data[\"Group\"]))\nbox_data = [ [data[\"Score\"][i] for i in range(len(data[\"Group\"])) if data[\"Group\"][i] == grp] for grp in groups ]\n\n# Create box plot\nplt.figure(figsize=(10, 6))\nplt.boxplot(box_data, labels=groups)\nplt.title('Box Plot of Scores by Group')\nplt.ylabel('Score')\nplt.grid(True, alpha=0.3)\nplt.show()"
+    },
+    {
+      "id": "qqplot",
+      "title": "Quantile-Quantile Plot",
+      "explanation": "<p>A Quantile-Quantile (Q-Q) plot is used to compare the distribution of a dataset with a theoretical distribution by plotting their quantiles against each other. It helps in assessing whether the data follows a specified distribution.</p><p>This example uses a simple dictionary with numerical values to create a Q-Q plot. It compares the quantiles of the provided values to a normal distribution to assess if the data roughly follows a normal pattern.</p>",
+      "code": "import matplotlib.pyplot as plt\nimport scipy.stats as stats\n\n# Create a simple table with numerical values\ndata = {\"Values\": [22, 27, 24, 30, 28, 25, 32, 29, 23, 26, 31, 27, 28, 24, 29, 26, 30, 25, 28, 29]}\n\n# Create Q-Q plot\nplt.figure(figsize=(8, 6))\nstats.probplot(data[\"Values\"], dist='norm', plot=plt)\nplt.title('Q-Q Plot of Values')\nplt.show()"
+    },
+    {
+      "id": "scatter",
+      "title": "Scatter Plot",
+      "explanation": "<p>A scatter plot visualizes the relationship between two numerical variables by displaying data points on a two-dimensional plane. It is useful for identifying correlations and trends.</p><p>This example creates a simple table using a dictionary containing 'Age' and 'Score'. The scatter plot visualizes the relationship between age and score to help identify any correlations.</p>",
+      "code": "import matplotlib.pyplot as plt\n\n# Create a simple table with Age and Score\ndata = {\n    \"Age\": [23, 27, 31, 22, 29, 35, 28, 40, 19, 30],\n    \"Score\": [88, 92, 85, 79, 90, 95, 88, 91, 76, 89]\n}\n\n# Create scatter plot\nplt.figure(figsize=(10, 6))\nplt.scatter(data[\"Age\"], data[\"Score\"], color='green', alpha=0.6)\nplt.title('Scatter Plot: Age vs Score')\nplt.xlabel('Age')\nplt.ylabel('Score')\nplt.grid(True, alpha=0.3)\nplt.show()"
+    },
+    {
+      "id": "heatmap",
+      "title": "Heat Map",
+      "explanation": "<p>A heat map displays matrix-style data using colors to represent different values. It is especially useful for visualizing the intensity of values across two dimensions.</p><p>This example constructs a simple table using a dictionary that records sales data by day and meal time. The data is pivoted into a matrix, and a heat map is generated to show the intensity of sales across different days and meals.</p>",
+      "code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport seaborn as sns\n\n# Create a simple table with sales data\ndata = {\n    \"Day\": [\"Mon\", \"Mon\", \"Tue\", \"Tue\", \"Wed\", \"Wed\", \"Thu\", \"Thu\", \"Fri\", \"Fri\"],\n    \"Meal\": [\"Breakfast\", \"Lunch\", \"Breakfast\", \"Lunch\", \"Breakfast\", \"Lunch\", \"Breakfast\", \"Lunch\", \"Breakfast\", \"Lunch\"],\n    \"Sales\": [150, 200, 170, 210, 160, 205, 180, 220, 190, 230]\n}\n\n# Convert to DataFrame and pivot the data\ndf = pd.DataFrame(data)\npivot_table = df.pivot('Meal', 'Day', 'Sales')\n\n# Create heat map\nplt.figure(figsize=(8, 6))\nsns.heatmap(pivot_table, annot=True, fmt='d', cmap='viridis')\nplt.title('Heat Map of Sales by Day and Meal')\nplt.show()"
+    },
+    {
+      "id": "bubblechart",
+      "title": "Bubble Chart",
+      "explanation": "<p>A bubble chart is similar to a scatter plot but adds a third dimension by varying the size of the markers. It is ideal for visualizing relationships between three numeric variables.</p><p>This example uses a simple dictionary representing billing data with 'Total Bill', 'Tip', and 'Party Size'. The bubble chart maps the total bill on the x-axis, tip on the y-axis, and uses party size to determine the bubble size, showcasing the relationship among the three variables.</p>",
+      "code": "import matplotlib.pyplot as plt\n\n# Create a simple table with billing data\ndata = {\n    \"Total Bill\": [50, 60, 70, 40, 80],\n    \"Tip\": [5, 7, 6, 4, 8],\n    \"Party Size\": [2, 3, 2, 2, 4]\n}\n\n# Create bubble chart\nplt.figure(figsize=(10, 6))\nplt.scatter(data[\"Total Bill\"], data[\"Tip\"], s=[size * 50 for size in data[\"Party Size\"]], alpha=0.5, color='purple')\nplt.title('Bubble Chart: Total Bill vs Tip')\nplt.xlabel('Total Bill')\nplt.ylabel('Tip')\nplt.show()"
+    },
+    {
+      "id": "barchart",
+      "title": "Bar Chart",
+      "explanation": "<p>A bar chart is used to compare quantities across different categories by representing data with rectangular bars. It is great for highlighting differences among groups.</p><p>This example creates a simple table using a dictionary with categorical data and corresponding values. The bar chart then compares these values across different categories, making differences clear at a glance.</p>",
+      "code": "import matplotlib.pyplot as plt\n\n# Create a simple table with categorical data\ndata = {\n    \"Category\": ['A', 'B', 'C', 'D'],\n    \"Value\": [23, 45, 56, 78]\n}\n\n# Create bar chart\nplt.figure(figsize=(8, 6))\nplt.bar(data[\"Category\"], data[\"Value\"], color='orange', edgecolor='black')\nplt.title('Bar Chart of Categories')\nplt.xlabel('Category')\nplt.ylabel('Value')\nplt.show()"
+    },
+    {
+      "id": "distributionplot",
+      "title": "Distribution Plot",
+      "explanation": "<p>A distribution plot visualizes the distribution of a single variable, often including both a histogram and a kernel density estimate (KDE) to provide insights into the data's underlying distribution.</p><p>This example defines a simple table using a dictionary with a list of numerical values. It then uses a distribution plot to combine a histogram with a KDE, highlighting the frequency and the density of the values.</p>",
+      "code": "import matplotlib.pyplot as plt\nimport seaborn as sns\n\n# Create a simple table with numerical values\ndata = {\"Values\": [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5]}\n\n# Create distribution plot\nplt.figure(figsize=(10, 6))\nsns.histplot(data[\"Values\"], kde=True, color='red')\nplt.title('Distribution Plot of Values')\nplt.xlabel('Value')\nplt.ylabel('Frequency')\nplt.show()"
+    },
+    {
+      "id": "pairplot",
+      "title": "Pair Plot",
+      "explanation": "<p>A pair plot visualizes pairwise relationships in a dataset, allowing for quick comparisons between multiple numerical variables. It is particularly useful in exploratory data analysis.</p><p>This example creates a simple table using a dictionary with multiple features and a group label. After converting the dictionary into a pandas DataFrame, a pair plot is generated to visualize pairwise relationships, with colors differentiating the groups to help identify patterns.</p>",
+      "code": "import pandas as pd\nimport seaborn as sns\nimport matplotlib.pyplot as plt\n\n# Create a simple table with multiple features\ndata = {\n    \"Feature1\": [1, 2, 3, 4, 5],\n    \"Feature2\": [2, 3, 4, 5, 6],\n    \"Feature3\": [5, 4, 3, 2, 1],\n    \"Group\": ['A', 'A', 'B', 'B', 'A']\n}\n\n# Convert to DataFrame\ndf = pd.DataFrame(data)\n\n# Create pair plot\nsns.pairplot(df, hue='Group')\nplt.suptitle('Pair Plot of Features', y=1.02)\nplt.show()"
+    },
+    {
+      "id": "linegraph",
+      "title": "Line Graph",
+      "explanation": "<p>A line graph is ideal for showing trends over time or continuous data by connecting data points with a line. It is commonly used in time series analysis.</p><p>This example builds a simple time series table using a dictionary with time points and corresponding values. The line graph connects these points, illustrating trends and changes in the data over time.</p>",
+      "code": "import matplotlib.pyplot as plt\n\n# Create a simple time series table\ndata = {\n    \"Time\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],\n    \"Value\": [3, 4, 6, 8, 7, 9, 10, 12, 11, 13]\n}\n\n# Create line graph\nplt.figure(figsize=(10, 6))\nplt.plot(data[\"Time\"], data[\"Value\"], marker='o', color='blue')\nplt.title('Line Graph: Value over Time')\nplt.xlabel('Time')\nplt.ylabel('Value')\nplt.grid(True, alpha=0.3)\nplt.show()"
+    },
+    {
+      "id": "piechart",
+      "title": "Pie Chart",
+      "explanation": "<p>A pie chart represents data as slices of a circle, where each slice's size is proportional to its corresponding value. It is useful for showing relative proportions.</p><p>This example creates a simple table using a dictionary with a few fruit categories and their counts. The pie chart visualizes the proportion of each category, providing a quick overview of the distribution.</p>",
+      "code": "import matplotlib.pyplot as plt\n\n# Create a simple table with categorical data\ndata = {\n    \"Category\": ['Apples', 'Bananas', 'Cherries', 'Dates'],\n    \"Count\": [15, 30, 45, 10]\n}\n\n# Create pie chart\nplt.figure(figsize=(8, 8))\nplt.pie(data[\"Count\"], labels=data[\"Category\"], autopct='%1.1f%%', startangle=140,\n        colors=['gold', 'yellowgreen', 'lightcoral', 'lightskyblue'])\nplt.title('Pie Chart of Fruit Distribution')\nplt.axis('equal')\nplt.show()"
+    },
+    {
+      "id": "areachart",
+      "title": "Area Chart",
+      "explanation": "<p>An area chart is similar to a line graph but emphasizes the magnitude of values by filling the area below the line. It is useful for visualizing cumulative totals over time.</p><p>This example creates a simple time series table using a dictionary and then plots an area chart. The area under the line is filled with color, emphasizing the cumulative magnitude of the values over time.</p>",
+      "code": "import matplotlib.pyplot as plt\n\n# Create a simple time series table\ndata = {\n    \"Time\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],\n    \"Value\": [1, 3, 4, 8, 7, 9, 10, 14, 13, 16]\n}\n\n# Create area chart\nplt.figure(figsize=(10, 6))\nplt.fill_between(data[\"Time\"], data[\"Value\"], color='skyblue', alpha=0.4)\nplt.plot(data[\"Time\"], data[\"Value\"], color='Slateblue', alpha=0.6)\nplt.title('Area Chart: Value over Time')\nplt.xlabel('Time')\nplt.ylabel('Value')\nplt.show()"
+    }
+  ]
+  

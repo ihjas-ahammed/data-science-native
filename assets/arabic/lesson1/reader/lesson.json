@@ -1,0 +1,582 @@
+[
+  {
+    "sentence": "الوحدة الأولى",
+    "meaning": "Unit One",
+    "words": [
+      {
+        "word": "الوحدة",
+        "meaning": "Unit"
+      },
+      {
+        "word": "الأولى",
+        "meaning": "First"
+      }
+    ]
+  },
+  {
+    "sentence": "إلى ابنتي - طه حسين",
+    "meaning": "To my daughter - Taha Hussein",
+    "words": [
+      {
+        "word": "ابنتي",
+        "meaning": "my daughter"
+      },
+      {
+        "word": "طه حسين",
+        "meaning": "Taha Hussein"
+      }
+    ]
+  },
+  {
+    "sentence": "إنك يا ابنتي لساذجة سليمة القلب طيبة النفس",
+    "meaning": "My daughter, you are naive, pure of heart, and good-natured",
+    "words": [
+      {
+        "word": "لساذجة",
+        "meaning": "naive"
+      },
+      {
+        "word": "سليمة القلب",
+        "meaning": "pure of heart"
+      },
+      {
+        "word": "طيبة النفس",
+        "meaning": "good-natured"
+      }
+    ]
+  },
+  {
+    "sentence": "أنتِ في التاسعة من عُمرك",
+    "meaning": "You are nine years old",
+    "words": [
+      {
+        "word": "التاسعة",
+        "meaning": "ninth"
+      },
+      {
+        "word": "عُمرك",
+        "meaning": "your age"
+      }
+    ]
+  },
+  {
+    "sentence": "في هذه السن التي يعجب فيها الأطفال بآبائهم وأمهاتهم، ويتخذونهم مثلا عليا في الحياة",
+    "meaning": "At this age where children admire their fathers and mothers, and take them as role models in life",
+    "words": [
+      {
+        "word": "السن",
+        "meaning": "age"
+      },
+      {
+        "word": "يعجب",
+        "meaning": "admire"
+      },
+      {
+        "word": "الأطفال",
+        "meaning": "children"
+      },
+      {
+        "word": "آبائهم",
+        "meaning": "their fathers"
+      },
+      {
+        "word": "أمهاتهم",
+        "meaning": "their mothers"
+      },
+      {
+        "word": "مثلا عليا",
+        "meaning": "role models"
+      }
+    ]
+  },
+  {
+    "sentence": "يتأثرونهم في القول والعمل، ويحاولون أن يكونوا مثلهم في كل شيء",
+    "meaning": "They are influenced by them in word and deed, and try to be like them in everything",
+    "words": [
+      {
+        "word": "يتأثرونهم",
+        "meaning": "influenced by them"
+      },
+      {
+        "word": "القول",
+        "meaning": "word"
+      },
+      {
+        "word": "العمل",
+        "meaning": "deed"
+      },
+      {
+        "word": "مثلهم",
+        "meaning": "like them"
+      }
+    ]
+  },
+  {
+    "sentence": "ويفاخرون بهم إذا تحدثوا إلى أقرانهم أثناء اللعب",
+    "meaning": "They boast about them when they talk to their peers while playing",
+    "words": [
+      {
+        "word": "يفاخرون",
+        "meaning": "boast"
+      },
+      {
+        "word": "أقرانهم",
+        "meaning": "their peers"
+      },
+      {
+        "word": "اللعب",
+        "meaning": "playing"
+      }
+    ]
+  },
+  {
+    "sentence": "ويخيل إليهم أنهم كانوا أثناء طفولتهم كما هم الآن مثلا عليا يصلحون أن يكونوا قدوة حسنة وأسوة صالحة",
+    "meaning": "They imagine that they were, during their childhood, as they are now, ideal examples fit to be a good role model",
+    "words": [
+      {
+        "word": "يخيل",
+        "meaning": "imagine"
+      },
+      {
+        "word": "طفولتهم",
+        "meaning": "their childhood"
+      },
+      {
+        "word": "قدوة",
+        "meaning": "role model"
+      },
+      {
+        "word": "أسوة",
+        "meaning": "example"
+      }
+    ]
+  },
+  {
+    "sentence": "أليس الأمر كما أقول؟",
+    "meaning": "Isn't it as I say?",
+    "words": [
+      {
+        "word": "أليس",
+        "meaning": "isn't it"
+      },
+      {
+        "word": "الأمر",
+        "meaning": "matter"
+      }
+    ]
+  },
+  {
+    "sentence": "ألستِ ترين أن أباكِ خير الرجال وأكرمهم؟",
+    "meaning": "Don't you see that your father is the best of men and the most generous of them?",
+    "words": [
+      {
+        "word": "ترين",
+        "meaning": "you see"
+      },
+      {
+        "word": "أباكِ",
+        "meaning": "your father"
+      },
+      {
+        "word": "خير الرجال",
+        "meaning": "best of men"
+      },
+      {
+        "word": "أكرمهم",
+        "meaning": "most generous"
+      }
+    ]
+  },
+  {
+    "sentence": "ألستِ ترين أنه قد كان كذلك خير الأطفال وأنبلهم؟",
+    "meaning": "Don't you see that he was also the best of children and the noblest of them?",
+    "words": [
+      {
+        "word": "خير الأطفال",
+        "meaning": "best of children"
+      },
+      {
+        "word": "أنبلهم",
+        "meaning": "noblest of them"
+      }
+    ]
+  },
+  {
+    "sentence": "ألستِ مقتنعة أنه كان يعيش أو تعيشين أو خيرا مما تعيشين؟",
+    "meaning": "Aren't you convinced that he lived, or you live, better than you are living now?",
+    "words": [
+      {
+        "word": "مقتنعة",
+        "meaning": "convinced"
+      },
+      {
+        "word": "يعيش",
+        "meaning": "live"
+      },
+      {
+        "word": "خيرا",
+        "meaning": "better"
+      }
+    ]
+  },
+  {
+    "sentence": "ألستِ تحبين أن تعيشي الآن كما كان يعيش أبوكِ حين كان في الثامنة من عمره؟",
+    "meaning": "Don't you like to live now as your father used to live when he was eight years old?",
+    "words": [
+      {
+        "word": "تحبين",
+        "meaning": "you like"
+      },
+      {
+        "word": "الثامنة",
+        "meaning": "eighth"
+      }
+    ]
+  },
+  {
+    "sentence": "ومع ذلك فإن أباكِ يبذل من الجهد ما يملك وما لايملك، ويتكلف من المشقة ما يطيق ومالا يطيق، ليجنبكِ حياته حين كان صبيا",
+    "meaning": "However, your father exerts what effort he can and cannot, and bears hardship that he can and cannot endure, to spare you his life when he was a boy",
+    "words": [
+      {
+        "word": "يبذل",
+        "meaning": "exerts"
+      },
+      {
+        "word": "الجهد",
+        "meaning": "effort"
+      },
+      {
+        "word": "يملك",
+        "meaning": "he can"
+      },
+      {
+        "word": "المشقة",
+        "meaning": "hardship"
+      },
+      {
+        "word": "يطيق",
+        "meaning": "endure"
+      },
+      {
+        "word": "ليجنبكِ",
+        "meaning": "to spare you"
+      }
+    ]
+  },
+  {
+    "sentence": "لقد عرفته يا ابنتي في هذا الطور من أطوار حياته",
+    "meaning": "I knew him, my daughter, in this phase of his life",
+    "words": [
+      {
+        "word": "عرفته",
+        "meaning": "knew him"
+      },
+      {
+        "word": "الطور",
+        "meaning": "phase"
+      },
+      {
+        "word": "أطوار",
+        "meaning": "phases"
+      }
+    ]
+  },
+  {
+    "sentence": "ولو أني حدثتكِ بما كان عليه حينئذٍ لكذبتِ كثيرا من ظنكِ",
+    "meaning": "And if I told you what he was like then, you would have denied much of your assumptions",
+    "words": [
+      {
+        "word": "حدثتكِ",
+        "meaning": "told you"
+      },
+      {
+        "word": "حينئذٍ",
+        "meaning": "then"
+      },
+      {
+        "word": "لكذبتِ",
+        "meaning": "you would have denied"
+      },
+      {
+        "word": "ظنكِ",
+        "meaning": "your assumptions"
+      }
+    ]
+  },
+  {
+    "sentence": "ولخيبتِ كثيرا من أملكِ",
+    "meaning": "and you would have disappointed much of your hope",
+    "words": [
+      {
+        "word": "خيبتِ",
+        "meaning": "disappointed"
+      },
+      {
+        "word": "أملكِ",
+        "meaning": "your hope"
+      }
+    ]
+  },
+  {
+    "sentence": "ولفتحتِ إلى قلبكِ الساذج ونفسكِ الحلوةِ باباً من أبواب الحزن",
+    "meaning": "and you would have opened to your naive heart and your sweet soul a door of sadness",
+    "words": [
+      {
+        "word": "قلبكِ",
+        "meaning": "your heart"
+      },
+      {
+        "word": "الساذج",
+        "meaning": "naive"
+      },
+      {
+        "word": "نفسكِ",
+        "meaning": "your soul"
+      },
+      {
+        "word": "الحلوةِ",
+        "meaning": "sweet"
+      },
+      {
+        "word": "الحزن",
+        "meaning": "sadness"
+      }
+    ]
+  },
+  {
+    "sentence": "حرامٌ أن يفتح إليها وأنتِ في هذا الطور اللذيذ من الحياة",
+    "meaning": "which is forbidden to be opened to it while you are in this delightful phase of life",
+    "words": [
+      {
+        "word": "حرامٌ",
+        "meaning": "forbidden"
+      },
+      {
+        "word": "اللذيذ",
+        "meaning": "delightful"
+      },
+      {
+        "word": "الطور",
+        "meaning": "phase"
+      },
+      {
+        "word": "الحياة",
+        "meaning": "life"
+      }
+    ]
+  },
+  {
+    "sentence": "ولكني لن أحدثكِ بشيءٍ مما كان عليه أبوكِ في ذلك الطور الآن",
+    "meaning": "But I will not tell you anything about what your father was like in that phase now",
+    "words": [
+      {
+        "word": "أحدثكِ",
+        "meaning": "tell you"
+      },
+      {
+        "word": "بشيءٍ",
+        "meaning": "anything"
+      }
+    ]
+  },
+  {
+    "sentence": "لن أحدثكِ بشيءٍ من هذا حتى تتقدم بكِ السن قليلا، فتستطيعي أن تقرئي وتفهمي وتحكمي، ويومئذٍ تستطيعين أن تعرفي أن أباكِ أحبكِ حقا، وجد في إسعادكِ حقا، ووفق بعض التوفيق لأن يجنبكِ طفولته وصباه",
+    "meaning": "I will not tell you anything about this until you get a little older, so you can read, understand, and judge. Then you will be able to know that your father truly loved you, and he truly worked hard to make you happy, and he had some success in sparing you his childhood and youth",
+    "words": [
+      {
+        "word": "تتقدم",
+        "meaning": "get older"
+      },
+      {
+        "word": "تقرئي",
+        "meaning": "read"
+      },
+      {
+        "word": "تفهمي",
+        "meaning": "understand"
+      },
+      {
+        "word": "تحكمي",
+        "meaning": "judge"
+      },
+      {
+        "word": "أحبكِ",
+        "meaning": "loved you"
+      },
+      {
+        "word": "إسعادكِ",
+        "meaning": "make you happy"
+      },
+      {
+        "word": "التوفيق",
+        "meaning": "success"
+      },
+      {
+        "word": "طفولته",
+        "meaning": "his childhood"
+      },
+      {
+        "word": "صباه",
+        "meaning": "his youth"
+      }
+    ]
+  },
+  {
+    "sentence": "من \"الأيام\" طه حسين (بتصرف)",
+    "meaning": "From \"Al-Ayyam\" - Taha Hussein (Adapted)",
+    "words": [
+      {
+        "word": "الأيام",
+        "meaning": "Al-Ayyam"
+      },
+      {
+        "word": "بتصرف",
+        "meaning": "adapted"
+      }
+    ]
+  },
+  {
+    "sentence": "طه حسين: أديب وناقد وروائي ومؤرخ، اشتهر بلقب عميد الأدب العربي",
+    "meaning": "Taha Hussein: A writer, critic, novelist, and historian, famous as the Dean of Arabic Literature",
+    "words": [
+      {
+        "word": "أديب",
+        "meaning": "writer"
+      },
+      {
+        "word": "ناقد",
+        "meaning": "critic"
+      },
+      {
+        "word": "روائي",
+        "meaning": "novelist"
+      },
+      {
+        "word": "مؤرخ",
+        "meaning": "historian"
+      },
+      {
+        "word": "اشتهر",
+        "meaning": "became famous"
+      },
+      {
+        "word": "عميد",
+        "meaning": "dean"
+      },
+      {
+        "word": "الأدب العربي",
+        "meaning": "Arabic literature"
+      }
+    ]
+  },
+  {
+    "sentence": "وُلِد في محافظة \"المنيا\" بمصر عام 1889م",
+    "meaning": "He was born in the governorate of \"Minya\" in Egypt in 1889",
+    "words": [
+      {
+        "word": "وُلِد",
+        "meaning": "was born"
+      },
+      {
+        "word": "محافظة",
+        "meaning": "governorate"
+      },
+      {
+        "word": "المنيا",
+        "meaning": "Minya"
+      }
+    ]
+  },
+  {
+    "sentence": "وأصيب بمرض في عَينيه وهو صغيرٌ مما أدى إلى فُقدان بَصَرِه",
+    "meaning": "He contracted a disease in his eyes when he was young, which led to the loss of his eyesight",
+    "words": [
+      {
+        "word": "أصيب",
+        "meaning": "contracted"
+      },
+      {
+        "word": "مرض",
+        "meaning": "disease"
+      },
+      {
+        "word": "عَينيه",
+        "meaning": "his eyes"
+      },
+      {
+        "word": "فُقدان",
+        "meaning": "loss"
+      },
+      {
+        "word": "بَصَرِه",
+        "meaning": "his eyesight"
+      }
+    ]
+  },
+  {
+    "sentence": "التحق طه في بداية تعليمه بكُتّاب قريته ثم سافر إلى جامعة الأزهر ليُكمل دراسته",
+    "meaning": "Taha joined at the beginning of his education the \"Kuttab\" of his village, then he traveled to Al-Azhar University to complete his studies",
+    "words": [
+      {
+        "word": "التحق",
+        "meaning": "joined"
+      },
+      {
+        "word": "بداية تعليمه",
+        "meaning": "beginning of his education"
+      },
+      {
+        "word": "كُتّاب",
+        "meaning": "Kuttab (traditional school)"
+      },
+      {
+        "word": "قريته",
+        "meaning": "his village"
+      },
+      {
+        "word": "ليُكمل",
+        "meaning": "to complete"
+      },
+      {
+        "word": "دراسته",
+        "meaning": "his studies"
+      }
+    ]
+  },
+  {
+    "sentence": "ثم التحق بالجامعة المصرية وكتب فيها رسالة الدكتوراه عن أبي العلاء المعري",
+    "meaning": "He then joined the Egyptian University and wrote his doctoral thesis on Abu al-Alaa al-Ma'arri",
+    "words": [
+      {
+        "word": "الجامعة المصرية",
+        "meaning": "Egyptian University"
+      },
+      {
+        "word": "رسالة الدكتوراه",
+        "meaning": "doctoral thesis"
+      },
+      {
+        "word": "أبي العلاء المعري",
+        "meaning": "Abu al-Alaa al-Ma'arri"
+      }
+    ]
+  },
+  {
+    "sentence": "سافر طه حسين إلى أوروبا فرنسا",
+    "meaning": "Taha Hussein traveled to Europe - France",
+    "words": [
+      {
+        "word": "سافر",
+        "meaning": "traveled"
+      },
+      {
+        "word": "أوروبا",
+        "meaning": "Europe"
+      },
+      {
+        "word": "فرنسا",
+        "meaning": "France"
+      }
+    ]
+  }
+]

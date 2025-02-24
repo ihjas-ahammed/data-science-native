@@ -1,0 +1,20 @@
+
+
+from the notes I send you, create q&a with as a json array of following format   
+
+   {  
+              "question": "According to the text, how does Ali define a friend?",  
+              "options": [  
+                  "A person who knows all your secrets, wishes you well, and openly shares feelings",  
+                  "A person who hides your secrets",  
+                  "Someone who always agrees with you",  
+                  "Someone who never shares any thoughts"  
+              ],  
+              "correct": 0  
+          } 
+
+
+ also make them a single json file without the squre brackest of an array but commas so U can copy easily without errors
+
+
+make as much as questions as yiu can which are effective to memorise the topic

@@ -1,0 +1,36 @@
+
+{
+    "1": [
+      {
+        "question": "Example question text?",
+        "options": [
+          "Option 1",
+          "Option 2",
+          "Option 3",
+          "Option 4"
+        ],
+        "correct": 0
+      }
+      // ... more questions for section 1
+    ],
+    "2": [
+      {
+        "question": "Another example question?",
+        "options": [
+          "Option A",
+          "Option B",
+          "Option C",
+          "Option D"
+        ],
+        "correct": 1
+      }
+      // ... more questions for section 2
+    ]
+    // ... additional sections as needed
+  }
+  
+  
+  create a json like above with the following, we need two one for english and one in arabic as forlevel two it asks word meamings in arabic on english version and on arabic version it asks just word meamings 
+  we need four level, ten qestion each level and sepearte jsons for each like questios.json and questions.en json
+
+  

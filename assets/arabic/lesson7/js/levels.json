@@ -1,0 +1,410 @@
+{
+    "1": [
+        {
+            "question": "According to the text, how does Ali define a friend?",
+            "options": [
+                "A person who knows all your secrets, wishes you well, and openly shares feelings",
+                "A person who hides your secrets",
+                "Someone who always agrees with you",
+                "Someone who never shares any thoughts"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "Which quality is NOT mentioned as a part of true friendship?",
+            "options": [
+                "Affection",
+                "Intimacy",
+                "Deception",
+                "Well-wishing"
+            ],
+            "correct": 2
+        },
+        {
+            "question": "According to Ali, what does a good friend encourage?",
+            "options": [
+                "Engaging in harmful actions",
+                "Performing good deeds and getting closer to God",
+                "Keeping secrets at all costs",
+                "Avoiding responsibilities"
+            ],
+            "correct": 1
+        },
+        {
+            "question": "What does Ali imply about sharing emotions in a friendship?",
+            "options": [
+                "Friends should never reveal their emotions",
+                "Friends express their feelings openly",
+                "Friends hide their emotions",
+                "Friends only show anger"
+            ],
+            "correct": 1
+        },
+        {
+            "question": "How should a friend deal with your secrets according to the dialogue?",
+            "options": [
+                "Reveal them to others",
+                "Keep them confidential",
+                "Gossip about them",
+                "Use them against you"
+            ],
+            "correct": 1
+        },
+        {
+            "question": "What question does the teacher ask Ali about friendship?",
+            "options": [
+                "What is friendship, Ali?",
+                "What is tolerance, Ali?",
+                "What is forgiveness, Ali?",
+                "What is unity, Ali?"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "How does Ali relate a good friend to religious values?",
+            "options": [
+                "By ignoring moral guidance",
+                "By encouraging good deeds and closeness to God",
+                "By being indifferent to morality",
+                "By promoting competition"
+            ],
+            "correct": 1
+        },
+        {
+            "question": "On what basis does the text say that the relationship between friends is built?",
+            "options": [
+                "On financial gain",
+                "On affection and intimacy",
+                "On rivalry",
+                "On criticism"
+            ],
+            "correct": 1
+        },
+        {
+            "question": "What does the text imply about how friends share their feelings?",
+            "options": [
+                "They remain silent",
+                "They speak their minds openly",
+                "They hide their true emotions",
+                "They only express negativity"
+            ],
+            "correct": 1
+        },
+        {
+            "question": "Which quality does Ali emphasize as important in a friend?",
+            "options": [
+                "Deceit",
+                "Loyalty and care",
+                "Indifference",
+                "Envy"
+            ],
+            "correct": 1
+        }
+    ],
+    "2": [
+        {
+            "question": "What is the meaning of the Arabic word 'الصَّدَاقَةُ'?",
+            "options": [
+                "Friendship",
+                "Tolerance",
+                "Forgiveness",
+                "Unity"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "What is the meaning of the Arabic word 'التَّسَامُح'?",
+            "options": [
+                "Tolerance",
+                "Friendship",
+                "Honesty",
+                "Kindness"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "What does the word 'العَفو' mean?",
+            "options": [
+                "Forgiveness",
+                "Friendship",
+                "Trust",
+                "Respect"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "What is the meaning of 'wad' (expressed as 'الوِداد')?",
+            "options": [
+                "Affection",
+                "Hostility",
+                "Envy",
+                "Apathy"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "What does the phrase 'الأخلاق الحميدة' mean?",
+            "options": [
+                "Good morals",
+                "Bad behavior",
+                "Indifference",
+                "Greed"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "What is the meaning of 'النهج النبوي'?",
+            "options": [
+                "Prophetic approach",
+                "Modern trends",
+                "Traditional methods",
+                "Innovative strategies"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "What does 'التماسك' mean?",
+            "options": [
+                "Cohesion",
+                "Disintegration",
+                "Division",
+                "Fragmentation"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "What is the meaning of 'خليل' (in context)?",
+            "options": [
+                "Close friend",
+                "Enemy",
+                "Acquaintance",
+                "Relative"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "What does the word 'النبي' mean?",
+            "options": [
+                "The Prophet",
+                "The teacher",
+                "The friend",
+                "The parent"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "What does the word 'احترام' mean?",
+            "options": [
+                "Respect",
+                "Disrespect",
+                "Anger",
+                "Neglect"
+            ],
+            "correct": 0
+        }
+    ],
+    "3": [
+        {
+            "question": "What can be inferred about Ali's view on friendship?",
+            "options": [
+                "It is based solely on personal gain",
+                "It involves mutual care and honesty",
+                "It is about keeping secrets for selfish purposes",
+                "It is irrelevant to religious life"
+            ],
+            "correct": 1
+        },
+        {
+            "question": "Why does Ali stress the importance of a friend who encourages good deeds?",
+            "options": [
+                "Because it benefits personal growth",
+                "Because it reflects moral values",
+                "Because it prevents misbehavior",
+                "Because it ensures social status"
+            ],
+            "correct": 1
+        },
+        {
+            "question": "What underlying value does Mona’s mother emphasize when discussing tolerance?",
+            "options": [
+                "Unity and social cohesion",
+                "Indifference to others",
+                "Competitive spirit",
+                "Isolation"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "How does the conversation suggest that tolerance affects society?",
+            "options": [
+                "It leads to conflicts",
+                "It fosters unity and harmony",
+                "It creates divisions",
+                "It encourages self-interest"
+            ],
+            "correct": 1
+        },
+        {
+            "question": "What does the teacher's inquiry about choosing a friend imply about relationships?",
+            "options": [
+                "That friends do not influence one’s behavior",
+                "That the company one keeps affects personal values",
+                "That friendships are trivial",
+                "That wealth is more important than friendship"
+            ],
+            "correct": 1
+        },
+        {
+            "question": "What does the text imply about the role of forgiveness in tolerance?",
+            "options": [
+                "Forgiveness prevents retaliatory actions",
+                "Forgiveness is unnecessary",
+                "Forgiveness weakens moral resolve",
+                "Forgiveness is unrelated to tolerance"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "How does Ali’s definition of a good friend relate to his religious views?",
+            "options": [
+                "It contradicts religious teachings",
+                "It aligns with encouraging good deeds and closeness to God",
+                "It focuses only on material benefits",
+                "It ignores moral behavior"
+            ],
+            "correct": 1
+        },
+        {
+            "question": "What can be inferred about the importance of communication in friendship from the text?",
+            "options": [
+                "Open communication is highly valued",
+                "Communication is discouraged",
+                "Keeping secrets is paramount",
+                "Only negative feelings are shared"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "Why might Mona have asked her mother about tolerance?",
+            "options": [
+                "To understand the moral value of tolerance",
+                "To find reasons for being intolerant",
+                "To learn about mathematics",
+                "Because she was indifferent"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "What inference can be drawn regarding the impact of tolerance on social conflicts?",
+            "options": [
+                "Tolerance helps eliminate disputes and promotes unity",
+                "Tolerance exacerbates conflicts",
+                "Tolerance has no effect on society",
+                "Tolerance leads to isolation"
+            ],
+            "correct": 0
+        }
+    ],
+    "4": [
+        {
+            "question": "How does the dialogue reflect the integration of moral values into personal relationships?",
+            "options": [
+                "It shows that relationships are influenced by moral and religious teachings",
+                "It suggests that morals are separate from personal relationships",
+                "It focuses solely on financial benefits",
+                "It ignores ethical considerations"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "Analyze the role of dialogue in conveying the themes of friendship and tolerance.",
+            "options": [
+                "It illustrates the practical application of these values in daily life",
+                "It serves only to entertain without deeper meaning",
+                "It confuses the reader with mixed messages",
+                "It focuses solely on abstract ideas"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "What is the significance of the teacher asking, 'What is friendship, Ali?' in the lesson?",
+            "options": [
+                "It opens up personal reflection on the meaning of friendship",
+                "It is merely a rhetorical question",
+                "It distracts from the main topic",
+                "It suggests that friendship is unimportant"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "Evaluate the effectiveness of using a conversational approach to explain complex moral ideas.",
+            "options": [
+                "It simplifies the ideas and makes them accessible",
+                "It oversimplifies complex ideas",
+                "It makes the text confusing",
+                "It detracts from academic seriousness"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "How does the narrative address the balance between individual feelings and societal expectations?",
+            "options": [
+                "It shows that personal emotions and social values must coexist harmoniously",
+                "It neglects individual feelings entirely",
+                "It promotes individualism over community values",
+                "It emphasizes social norms at the expense of personal experience"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "In what way does the text suggest that personal relationships influence moral behavior?",
+            "options": [
+                "It indicates that the company one keeps can shape one’s ethical conduct",
+                "It denies any influence from relationships",
+                "It promotes isolation",
+                "It claims personal behavior is independent of relationships"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "How might the lessons on friendship and tolerance be applied to resolve modern social conflicts?",
+            "options": [
+                "By emphasizing empathy, understanding, and open communication",
+                "By ignoring differences completely",
+                "By promoting isolation",
+                "By encouraging competition"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "Discuss the role of forgiveness as portrayed in the conversation and its contribution to the theme.",
+            "options": [
+                "Forgiveness is essential for overcoming grievances and fostering social cohesion",
+                "Forgiveness is portrayed as a sign of weakness",
+                "Forgiveness is irrelevant",
+                "Forgiveness is criticized as outdated"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "What conclusion can be drawn about the influence of religious teachings on views about friendship and tolerance?",
+            "options": [
+                "Religious teachings significantly shape one’s understanding of these values",
+                "Religious teachings are depicted as irrelevant",
+                "They conflict with personal relationships",
+                "They are mentioned only briefly"
+            ],
+            "correct": 0
+        },
+        {
+            "question": "How does the interplay between the dialogues on friendship and tolerance enrich the overall theme of the unit?",
+            "options": [
+                "It provides a multifaceted perspective on interpersonal relationships and social harmony",
+                "It creates confusion about the main idea",
+                "It detracts from the unit’s focus",
+                "It suggests that the themes are unrelated"
+            ],
+            "correct": 0
+        }
+    ]
+}

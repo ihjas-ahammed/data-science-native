@@ -1,0 +1,988 @@
+[
+  {
+    "sentence": "ذَهَبَ حَامِدٌ إِلَى الْمَدْرَسَةِ يَوْمَ السَّبْتِ فَوَجَدَ أَنَّ صَدِيقَهُ حُسَيْنَا مَا حَضَرَ فِي الْمَدْرَسَةِ,",
+    "meaning": "Hamid went to school on Saturday and found that his friend Hussain was not present at school.",
+    "words": [
+      {
+        "word": "ذَهَبَ",
+        "meaning": "He went"
+      },
+      {
+        "word": "الْمَدْرَسَةِ",
+        "meaning": "The school"
+      },
+      {
+        "word": "يَوْمَ السَّبْتِ",
+        "meaning": "Saturday"
+      },
+      {
+        "word": "فَوَجَدَ",
+        "meaning": "He found"
+      },
+      {
+        "word": "صَدِيقَهُ",
+        "meaning": "His friend"
+      },
+      {
+        "word": "حَضَرَ",
+        "meaning": "To be present, to attend"
+      }
+    ]
+  },
+  {
+    "sentence": "فَسَأَلَ أَخَاهُ عَلِيًّا عَنِ السَّبَبِ,",
+    "meaning": "So he asked his brother Ali about the reason.",
+    "words": [
+      {
+        "word": "سَأَلَ",
+        "meaning": "He asked"
+      },
+      {
+        "word": "أَخَاهُ",
+        "meaning": "His brother"
+      },
+      {
+        "word": "السَّبَبِ",
+        "meaning": "The reason"
+      }
+    ]
+  },
+  {
+    "sentence": "فَقَالَ: إِنَّهُ مَحْمُومٌ مِنْ يَوْمِ الْخَمِيسِ,",
+    "meaning": "He (Ali) said: \"He has been feverish since Thursday.\"",
+    "words": [
+      {
+        "word": "قَالَ",
+        "meaning": "He said"
+      },
+      {
+        "word": "مَحْمُومٌ",
+        "meaning": "Feverish"
+      },
+      {
+        "word": "يَوْمِ الْخَمِيسِ",
+        "meaning": "Thursday"
+      }
+    ]
+  },
+  {
+    "sentence": "فَعَزَمَ حَامِدٌ عَلَى أَنْ يَعُودَهُ فِي الرُّجُوعِ مِنَ الْمَدْرَسَةِ.",
+    "meaning": "So Hamid decided to visit him on his way back from school.",
+    "words": [
+      {
+        "word": "عَزَمَ",
+        "meaning": "He decided, he resolved"
+      },
+      {
+        "word": "يَعُودَهُ",
+        "meaning": "To visit him"
+      },
+      {
+        "word": "الرُّجُوعِ",
+        "meaning": "The return, going back"
+      }
+    ]
+  },
+  {
+    "sentence": "ذَهَبَ حَامِد إِلى بَيْتِ حُسَيْنٍ فَسَلَّمَ وَاسْتَأْذَنَ,",
+    "meaning": "Hamid went to Hussain's house, greeted them, and asked for permission to enter.",
+    "words": [
+      {
+        "word": "بَيْتِ",
+        "meaning": "House"
+      },
+      {
+        "word": "فَسَلَّمَ",
+        "meaning": "He greeted"
+      },
+      {
+        "word": "وَاسْتَأْذَنَ",
+        "meaning": "He asked for permission"
+      }
+    ]
+  },
+  {
+    "sentence": "فَخَرَجَ أَبُو حُسَينٍ,",
+    "meaning": "Hussain's father came out.",
+    "words": [
+      {
+        "word": "خَرَجَ",
+        "meaning": "He went out, he came out"
+      },
+      {
+        "word": "أَبُو",
+        "meaning": "Father"
+      }
+    ]
+  },
+  {
+    "sentence": "قَالَ حَامِدٌ: إِنِّي أُرِيدُ أَنْ أَعُودَ صَدِيقِي حُسَيْنَا فَقَدْ أَخْبَرَنِي عَلِيٌّ أَنَّهُ مَرِيضٌ,",
+    "meaning": "Hamid said: \"I want to visit my friend Hussain, for Ali informed me that he is sick.\"",
+    "words": [
+      {
+        "word": "أُرِيدُ",
+        "meaning": "I want"
+      },
+      {
+        "word": "أَعُودَ",
+        "meaning": "To visit"
+      },
+      {
+        "word": "أَخْبَرَنِي",
+        "meaning": "He informed me"
+      },
+      {
+        "word": "مَرِيضٌ",
+        "meaning": "Sick"
+      }
+    ]
+  },
+  {
+    "sentence": "قَالَ أَبُوهُ: نَعَمْ إِنَّهُ أَصَابَتْهُ الْحُمَّى يَوْمَ الْخَمِيسِ وَيُمْكِنُكَ أَنْ تَعُودَهُ.",
+    "meaning": "His father said: \"Yes, he was struck by fever on Thursday, and you may visit him.\"",
+    "words": [
+      {
+        "word": "أَصَابَتْهُ",
+        "meaning": "It struck him, it affected him"
+      },
+      {
+        "word": "الْحُمَّى",
+        "meaning": "The fever"
+      },
+      {
+        "word": "يُمْكِنُكَ",
+        "meaning": "You can, it is possible for you"
+      }
+    ]
+  },
+  {
+    "sentence": "دَخَلَ حَامِدٌ غُرْفَةَ حُسَيْنٍ, فَرَأَى حُسَيْنَا مُضْطَجِعًا,",
+    "meaning": "Hamid entered Hussain's room and saw Hussain lying down.",
+    "words": [
+      {
+        "word": "دَخَلَ",
+        "meaning": "He entered"
+      },
+      {
+        "word": "غُرْفَةَ",
+        "meaning": "Room"
+      },
+      {
+        "word": "رَأَى",
+        "meaning": "He saw"
+      },
+      {
+        "word": "مُضْطَجِعًا",
+        "meaning": "Lying down"
+      }
+    ]
+  },
+  {
+    "sentence": "فَسَلَّمَ عَلَيْهِ بِلُطْفٍ, وَدَنَا مِنْهُ, وَقَالَ لَهُ: كَيْفَ حَالُكَ يَا أَخِي؟ عَافَاكَ الله !",
+    "meaning": "He greeted him kindly, approached him, and said to him: \"How are you, my brother? May Allah grant you health!\"",
+    "words": [
+      {
+        "word": "بِلُطْفٍ",
+        "meaning": "Kindly, gently"
+      },
+      {
+        "word": "دَنَا",
+        "meaning": "He approached, he came near"
+      },
+      {
+        "word": "حَالُكَ",
+        "meaning": "Your condition, your state"
+      },
+      {
+        "word": "عَافَاكَ",
+        "meaning": "May he grant you health"
+      },
+      {
+        "word": "الله",
+        "meaning": "Go"
+      }
+    ]
+  },
+  {
+    "sentence": "Sentence 1: قَالَ حُسَيْنٌ : قَدْ أَصَابَتْنِي الْحُمَّى يَوْمَ الْخَمِيسِ,",
+    "meaning": "Hussain said: \"The fever struck me on Thursday.\"",
+    "words": [
+      {
+        "word": "قَالَ",
+        "meaning": "He said"
+      },
+      {
+        "word": "أَصَابَتْنِي",
+        "meaning": "It struck me, it affected me"
+      },
+      {
+        "word": "الْحُمَّى",
+        "meaning": "The fever"
+      },
+      {
+        "word": "يَوْمَ الْخَمِيسِ",
+        "meaning": "Thursday"
+      }
+    ]
+  },
+  {
+    "sentence": "وَصَارَتْ شَدِيدَةً يَوْمَ الجُمُعَةِ,",
+    "meaning": "And it became severe on Friday.",
+    "words": [
+      {
+        "word": "صَارَتْ",
+        "meaning": "It became"
+      },
+      {
+        "word": "شَدِيدَةً",
+        "meaning": "Severe, intense"
+      },
+      {
+        "word": "يَوْمَ الجُمُعَةِ",
+        "meaning": "Friday"
+      }
+    ]
+  },
+  {
+    "sentence": "وَخَفَّتْ فِي اللَّيْلِ,",
+    "meaning": "And it lessened during the night.",
+    "words": [
+      {
+        "word": "خَفَّتْ",
+        "meaning": "It lessened, it became lighter, it subsided"
+      },
+      {
+        "word": "اللَّيْلِ",
+        "meaning": "The night"
+      }
+    ]
+  },
+  {
+    "sentence": "وَلَكِنِّي أَشْكُو الصُّدَاءَ بَعْدَ",
+    "meaning": "But I am suffering from a headache still.",
+    "words": [
+      {
+        "word": "لَكِنِّي",
+        "meaning": "But I"
+      },
+      {
+        "word": "أَشْكُو",
+        "meaning": "I complain, I suffer from"
+      },
+      {
+        "word": "الصُّدَاءَ",
+        "meaning": "The headache"
+      },
+      {
+        "word": "بَعْدَ",
+        "meaning": "still"
+      }
+    ]
+  },
+  {
+    "sentence": "وَالدُّوَارَ",
+    "meaning": "And dizziness.",
+    "words": [
+      {
+        "word": "الدُّوَارَ",
+        "meaning": "Dizziness, vertigo"
+      }
+    ]
+  },
+  {
+    "sentence": "وَقَدْ ضَعُفَتْ كَثِيرًا",
+    "meaning": "And I have become very weak.",
+    "words": [
+      {
+        "word": "ضَعُفَتْ",
+        "meaning": "I have become weak."
+      },
+      {
+        "word": "كَثِيرًا",
+        "meaning": "A lot, much, very"
+      }
+    ]
+  },
+  {
+    "sentence": "كَانّي مَرِيضٌ مُنْذُ أَيَّامٍ,",
+    "meaning": "As if I have been sick for many days.",
+    "words": [
+      {
+        "word": "كَانّي",
+        "meaning": "As if I"
+      },
+      {
+        "word": "مَرِيضٌ",
+        "meaning": "Sick"
+      },
+      {
+        "word": "مُنْذُ",
+        "meaning": "Since"
+      },
+      {
+        "word": "أَيَّامٍ",
+        "meaning": "Days"
+      }
+    ]
+  },
+  {
+    "sentence": "وَلَا أَشْتَهِي الطَّعَامَ.",
+    "meaning": "And I have no appetite for food.",
+    "words": [
+      {
+        "word": "أَشْتَهِي",
+        "meaning": "I desire, I have an appetite for"
+      },
+      {
+        "word": "الطَّعَامَ",
+        "meaning": "The food"
+      }
+    ]
+  },
+  {
+    "sentence": "قَالَ حَامِدٌ: لاَ بَأْسَ طَهُورٌ إِنْ شَاءَ اللَّهُ,",
+    "meaning": "Hamid said: \"No problem, it will be a purification, God willing.\"",
+    "words": [
+      {
+        "word": "لاَ بَأْسَ",
+        "meaning": "No problem, it's okay, don't worry"
+      },
+      {
+        "word": "طَهُورٌ",
+        "meaning": "A means of purification"
+      },
+      {
+        "word": "إِنْ شَاءَ اللَّهُ",
+        "meaning": "If God wills, God willing"
+      }
+    ]
+  },
+  {
+    "sentence": "وَهَلْ عَادَكَ طَبِيبٌ؟",
+    "meaning": "And has a doctor visited you?",
+    "words": [
+      {
+        "word": "هَلْ",
+        "meaning": "A question particle"
+      },
+      {
+        "word": "عَادَكَ",
+        "meaning": "Visited you"
+      },
+      {
+        "word": "طَبِيبٌ",
+        "meaning": "A doctor"
+      }
+    ]
+  },
+  {
+    "sentence": "قَالَ حُسَيْنٌ: نَعَمْ قَدْ عَادَنِي طَبِيبٌ أَمْسِ, وَمَوْعِدُهُ الآنَ.",
+    "meaning": "Hussain said: \"Yes, a doctor visited me yesterday, and his appointment is now.\"",
+    "words": [
+      {
+        "word": "نَعَمْ",
+        "meaning": "Yes"
+      },
+      {
+        "word": "عَادَنِي",
+        "meaning": "Visited me"
+      },
+      {
+        "word": "أَمْسِ",
+        "meaning": "Yesterday"
+      },
+      {
+        "word": "مَوْعِدُهُ",
+        "meaning": "His appointment"
+      }
+    ]
+  },
+  {
+    "sentence": "وَلَمْ يَجْلِسٍ حَامِدٌ إِلا قَلِيلاً; حَتَّى حَضَرَ الطَّبِيبُ",
+    "meaning": "Hamid did not sit but for a little while; until the doctor arrived.",
+    "words": [
+      {
+        "word": "يَجْلِسٍ",
+        "meaning": "To sit."
+      },
+      {
+        "word": "قَلِيلاً",
+        "meaning": "A little, a short while"
+      },
+      {
+        "word": "حَتَّى",
+        "meaning": "Until"
+      },
+      {
+        "word": "حَضَرَ",
+        "meaning": "Arrived, was present"
+      }
+    ]
+  },
+  {
+    "sentence": "فَجَسَّ يَدَ حُسَيْنٍ, وَقَاسَ الحَرَارَةَ, وَامْتَحَنَ الصَّدْرَ بِالسَّمَّاعَةِ,",
+    "meaning": "So he felt Hussain's hand, measured the temperature, and examined the chest with the stethoscope.",
+    "words": [
+      {
+        "word": "فَجَسَّ",
+        "meaning": "So he felt"
+      },
+      {
+        "word": "يَدَ",
+        "meaning": "Hand"
+      },
+      {
+        "word": "قَاسَ",
+        "meaning": "He measured"
+      },
+      {
+        "word": "الحَرَارَةَ",
+        "meaning": "The temperature"
+      },
+      {
+        "word": "امْتَحَنَ",
+        "meaning": "He examined, he tested"
+      },
+      {
+        "word": "الصَّدْرَ",
+        "meaning": "The chest"
+      },
+      {
+        "word": "بِالسَّمَّاعَةِ",
+        "meaning": "With the stethoscope"
+      }
+    ]
+  },
+  {
+    "sentence": "وَأَبْدَى الاِرْتِيَاحَ, وَغَيَّرَ فِي الوَصْفَةِ قَلِيلاً, وَقَالَ: إِنَّهُ بَارِيءٌ بِحَمْدِ اللَّهِ.",
+    "meaning": "And he expressed satisfaction, changed the prescription slightly, and said: \"He is recovering, praise be to God.\"",
+    "words": [
+      {
+        "word": "أَبْدَى",
+        "meaning": "He expressed, he showed"
+      },
+      {
+        "word": "الاِرْتِيَاحَ",
+        "meaning": "Satisfaction, relief"
+      },
+      {
+        "word": "غَيَّرَ",
+        "meaning": "He changed"
+      },
+      {
+        "word": "الوَّصْفَةِ",
+        "meaning": "The prescription"
+      },
+      {
+        "word": "بَارِيءٌ",
+        "meaning": "Recovering, getting better"
+      },
+      {
+        "word": "بِحَمْدِ اللَّهِ",
+        "meaning": "Praise be to God"
+      }
+    ]
+  },
+  {
+    "sentence": "وَأَوْصَى أَبَاهُ بِأَنْ يَجْنِيَ حُسَيْنَا مِنَ الْمَاءِ الْبَارِدِ وَالزَّيْتِ, وَالخُرُوجِ فِي الهَوَاءِ, وَالتَّعَبِ,",
+    "meaning": "And he advised his father to keep Hussain away from cold water, oil, going out in the open air, and exertion.",
+    "words": [
+      {
+        "word": "أَوْصَى",
+        "meaning": "He advised, he recommended"
+      },
+      {
+        "word": "أَبَاهُ",
+        "meaning": "His father"
+      },
+      {
+        "word": "يَجْنِيَ",
+        "meaning": "keep away from"
+      },
+      {
+        "word": "الْمَاءِ الْبَارِدِ",
+        "meaning": "Cold water"
+      },
+      {
+        "word": "الزَّيْتِ",
+        "meaning": "The oil"
+      },
+      {
+        "word": "الخُرُوجِ",
+        "meaning": "Going out"
+      },
+      {
+        "word": "الهَوَاءِ",
+        "meaning": "The open air, the air"
+      },
+      {
+        "word": "التَّعَبِ",
+        "meaning": "Exertion, fatigue"
+      }
+    ]
+  },
+  {
+    "sentence": "وَأَنْ يَسْقِيَهُ اللَّبَنَ وَمَاءَ الشَّعِيرِ وَعَصِيرَ الْفَوَاكِهِ",
+    "meaning": "And to give him milk, barley water, and fruit juice to drink.",
+    "words": [
+      {
+        "word": "يَسْقِيَهُ",
+        "meaning": "To give him to drink"
+      },
+      {
+        "word": "اللَّبَنَ",
+        "meaning": "Milk"
+      },
+      {
+        "word": "مَاءَ الشَّعِيرِ",
+        "meaning": "Barley water"
+      },
+      {
+        "word": "عَصِيرَ الْفَوَاكِهِ",
+        "meaning": "Fruit juice"
+      }
+    ]
+  },
+  {
+    "sentence": "وَجَلَسَ حَامِدٌ قَلِيلاً, وَقَالَ: إِنَّ الْعَابِدَ إِذَا أَطَالَ الْجُلُوسَ عِنْدَ الْمَرِيضِ, شَقَّ عَلَيْهِ وَعَلَى أَهْلِ بَيْتِهِ,",
+    "meaning": "And Hamid sat for a little while and said: \"Indeed, when the visitor prolongs his sitting with the sick person, it becomes difficult for him and for the people of his house.\"",
+    "words": [
+      {
+        "word": "جَلَسَ",
+        "meaning": "He sat"
+      },
+      {
+        "word": "قَلِيلاً",
+        "meaning": "A little while"
+      },
+      {
+        "word": "الْعَابِدَ",
+        "meaning": "The visitor"
+      },
+      {
+        "word": "أَطَالَ",
+        "meaning": "He prolonged"
+      },
+      {
+        "word": "الْجُلُوسَ",
+        "meaning": "The sitting"
+      },
+      {
+        "word": "شَقَّ",
+        "meaning": "It became difficult, it became burdensome"
+      },
+      {
+        "word": "أَهْلِ بَيْتِهِ",
+        "meaning": "The people of his house, his family"
+      }
+    ]
+  },
+  {
+    "sentence": "فَأَسْتَأْذِنُ وَأَنْصَرِفُ, وَأَعُودُ إِنْ شَاءَ اللهُ غَدًا.",
+    "meaning": "So I ask for permission to leave, and I will return, God willing, tomorrow.\"",
+    "words": [
+      {
+        "word": "فَأَسْتَأْذِنُ",
+        "meaning": "So I ask for permission"
+      },
+      {
+        "word": "أَنْصَرِفُ",
+        "meaning": "I depart, I leave"
+      },
+      {
+        "word": "أَعُودُ",
+        "meaning": "I will return"
+      },
+      {
+        "word": "غَدًا",
+        "meaning": "Tomorrow"
+      }
+    ]
+  },
+  {
+    "sentence": "Paragraph 1: أَبُو الْحَسَنِ النَّدَوِيُّ عَالِمٌ هِنْدِيٌّ مَشْهُورٌ, وَدَاعِيَةٌ مُفَكِّرٌ وَأَدِيبٌ ,مَرَبِّ, وَهُوَ أَوَّلُ رَئِيسٍ لِرَابِطَةِ الْأَدَبِ الإِسْلَامِيِّ العَالَمِيَّةِ.",
+    "meaning": "Abu al-Hasan al-Nadwi is a famous Indian scholar, an intellectual caller (to Islam), a writer, an educator, and he is the first president of the World League of Islamic Literature.",
+    "words": [
+      {
+        "word": "عَالِمٌ",
+        "meaning": "Scholar"
+      },
+      {
+        "word": "هِنْدِيٌّ",
+        "meaning": "Indian"
+      },
+      {
+        "word": "مَشْهُورٌ",
+        "meaning": "Famous, renowned"
+      },
+      {
+        "word": "دَاعِيَةٌ",
+        "meaning": "A caller"
+      },
+      {
+        "word": "مُفَكِّرٌ",
+        "meaning": "Thinker, intellectual"
+      },
+      {
+        "word": "أَدِيبٌ",
+        "meaning": "Writer, literary figure"
+      },
+      {
+        "word": "مَرَبِّ",
+        "meaning": "An educator"
+      },
+      {
+        "word": "أَوَّلُ",
+        "meaning": "First"
+      },
+      {
+        "word": "رَئِيسٍ",
+        "meaning": "President, head"
+      },
+      {
+        "word": "رَابِطَةِ",
+        "meaning": "League, association"
+      },
+      {
+        "word": "الْأَدَبِ الإِسْلَامِيِّ",
+        "meaning": "Islamic literature"
+      },
+      {
+        "word": "العَالَمِيَّةِ",
+        "meaning": "World, global"
+      }
+    ]
+  },
+  {
+    "sentence": "وُلِدَ بقرية تكية بمديرية راي بريلي في ولاية أترا براديش سنة ١٩١٣م.",
+    "meaning": "He was born in the village of Takia, in the district of Rai Bareli, in the state of Uttar Pradesh, in the year 1913 CE.",
+    "words": [
+      {
+        "word": "وُلِدَ",
+        "meaning": "He was born"
+      },
+      {
+        "word": "قرية",
+        "meaning": "Village"
+      },
+      {
+        "word": "تكية",
+        "meaning": "A sufi meeting place"
+      },
+      {
+        "word": "مديرية",
+        "meaning": "District"
+      },
+      {
+        "word": "راي بريلي",
+        "meaning": "Rae Bareli"
+      },
+      {
+        "word": "ولاية",
+        "meaning": "State"
+      },
+      {
+        "word": "أترا براديش",
+        "meaning": "Uttar Pradesh"
+      },
+      {
+        "word": "سنة",
+        "meaning": "Year"
+      },
+      {
+        "word": "١٩١٣م",
+        "meaning": "1913 CE"
+      }
+    ]
+  },
+  {
+    "sentence": "بعد تعلمه القرآن الكريم, تعلّم لغتين الأردية والفارسية.",
+    "meaning": "After learning the Holy Quran, he learned two languages, Urdu and Persian.",
+    "words": [
+      {
+        "word": "تعلّمه",
+        "meaning": "His learning"
+      },
+      {
+        "word": "القرآن الكريم",
+        "meaning": "The Holy Quran"
+      },
+      {
+        "word": "لغتين",
+        "meaning": "Two languages"
+      },
+      {
+        "word": "الأردية",
+        "meaning": "Urdu"
+      },
+      {
+        "word": "الفارسية",
+        "meaning": "Persian"
+      }
+    ]
+  },
+  {
+    "sentence": "ثم التحق بندوة العلماء ثم بجامعة لكهنؤ للدراسة العربية وحصل على شهادة فاضل أدب في اللغة العربية وآدابها.",
+    "meaning": "Then he joined Nadwatul Ulama and then the University of Lucknow to study Arabic, and he obtained the degree of Fazil-e-Adab in Arabic language and literature.",
+    "words": [
+      {
+        "word": "التحق",
+        "meaning": "He joined, he enrolled"
+      },
+      {
+        "word": "ندوة العلماء",
+        "meaning": "Nadwatul Ulama"
+      },
+      {
+        "word": "بجامعة",
+        "meaning": "At the university"
+      },
+      {
+        "word": "لكهنؤ",
+        "meaning": "Lucknow"
+      },
+      {
+        "word": "للدراسة العربية",
+        "meaning": "To study Arabic"
+      },
+      {
+        "word": "حصل",
+        "meaning": "He obtained, he received"
+      },
+      {
+        "word": "شهادة",
+        "meaning": "Degree, certificate"
+      },
+      {
+        "word": "فاضل أدب",
+        "meaning": "Fazil-e-Adab"
+      },
+      {
+        "word": "اللغة العربية",
+        "meaning": "Arabic language"
+      },
+      {
+        "word": "آدابها",
+        "meaning": "Its literature"
+      }
+    ]
+  },
+  {
+    "sentence": "عُيّن مدرسا في دار العلوم لندوة العلماء عام ١٩٣٤م.",
+    "meaning": "He was appointed as a teacher at Darul Uloom Nadwatul Ulama in the year 1934 CE.",
+    "words": [
+      {
+        "word": "عُيّن",
+        "meaning": "He was appointed"
+      },
+      {
+        "word": "مدرسا",
+        "meaning": "Teacher"
+      },
+      {
+        "word": "دار العلوم",
+        "meaning": "House of Knowledge"
+      },
+      {
+        "word": "عام",
+        "meaning": "Year"
+      },
+      {
+        "word": "١٩٣٤م",
+        "meaning": "1934 CE"
+      }
+    ]
+  },
+  {
+    "sentence": "له عدة مؤلفات في موضوعات شتى في العلوم الإسلامية وفي الأدب الأردية والأدب العربية معا.",
+    "meaning": "He has numerous authored works on various subjects in Islamic sciences, in Urdu literature, and in Arabic literature together.",
+    "words": [
+      {
+        "word": "له",
+        "meaning": "He has"
+      },
+      {
+        "word": "عدة",
+        "meaning": "Several, numerous"
+      },
+      {
+        "word": "مؤلفات",
+        "meaning": "Authored works, writings"
+      },
+      {
+        "word": "موضوعات",
+        "meaning": "Subjects, topics"
+      },
+      {
+        "word": "شتى",
+        "meaning": "Various, diverse"
+      },
+      {
+        "word": "العلوم الإسلامية",
+        "meaning": "Islamic sciences"
+      },
+      {
+        "word": "الأدب الأردية",
+        "meaning": "Urdu literature"
+      },
+      {
+        "word": "الأدب العربية",
+        "meaning": "Arabic literature"
+      },
+      {
+        "word": "معا",
+        "meaning": "Together"
+      }
+    ]
+  },
+  {
+    "sentence": "ومن كتبه سلسلة \"قصص النبيين\" للأطفال وسلسلة أخرى للأطفال باسم \"القراءة الراشدة\".",
+    "meaning": "Among his books are the series \"Stories of the Prophets\" for children and another series for children called \"Al-Qira'a al-Rashida\" (The Rightly Guided Reading).",
+    "words": [
+      {
+        "word": "من كتبه",
+        "meaning": "Among his books"
+      },
+      {
+        "word": "سلسلة",
+        "meaning": "Series"
+      },
+      {
+        "word": "قصص النبيين",
+        "meaning": "Stories of the Prophets"
+      },
+      {
+        "word": "للأطفال",
+        "meaning": "For children"
+      },
+      {
+        "word": "أخرى",
+        "meaning": "Another"
+      },
+      {
+        "word": "باسم",
+        "meaning": "In the name of, called"
+      },
+      {
+        "word": "القراءة الراشدة",
+        "meaning": "The Rightly Guided Reading, or The Wise Reading"
+      }
+    ]
+  },
+  {
+    "sentence": "ومن أهم كتبه \"ماذا خسر العالم بانحطاط المسلمين\" و\"بين الدين والمدنية\" و\"رجال الفكر والدعوة في الإسلام\" و\"النبوة والأنبياء في ضوء القرآن\" و\"المسلمون في الهند\" و\"السيرة النبوية\".",
+    "meaning": "Among his most important books are \"What Did the World Lose by the Decline of Muslims?\", \"Between Religion and Materialism\", \"Men of Thought and Call in Islam\", \"Prophethood and the Prophets in Light of the Quran\", \"Muslims in India\", and \"The Biography of the Prophet\".",
+    "words": [
+      {
+        "word": "من أهم كتبه",
+        "meaning": "Among his most important books"
+      },
+      {
+        "word": "ماذا خسر العالم بانحطاط المسلمين",
+        "meaning": "What Did the World Lose by the Decline of Muslims?"
+      },
+      {
+        "word": "بين الدين والمدنية",
+        "meaning": "Between Religion and Materialism"
+      },
+      {
+        "word": "رجال الفكر والدعوة في الإسلام",
+        "meaning": "Men of Thought and Call in Islam"
+      },
+      {
+        "word": "النبوة والأنبياء في ضوء القرآن",
+        "meaning": "Prophethood and the Prophets in Light of the Quran"
+      },
+      {
+        "word": "المسلمون في الهند",
+        "meaning": "Muslims in India"
+      },
+      {
+        "word": "السيرة النبوية",
+        "meaning": "The Biography of the Prophet"
+      }
+    ]
+  },
+  {
+    "sentence": "حاز أبو الحسن الندوي على جائزة الملك فيصل العالمية لخدمة الإسلام عام ۱۹۸۰م.",
+    "meaning": "Abu al-Hasan al-Nadwi won the King Faisal International Prize for Service to Islam in 1980 CE.",
+    "words": [
+      {
+        "word": "حاز",
+        "meaning": "He won, he obtained"
+      },
+      {
+        "word": "جائزة",
+        "meaning": "Prize, award"
+      },
+      {
+        "word": "الملك فيصل العالمية",
+        "meaning": "The King Faisal International Prize"
+      },
+      {
+        "word": "لخدمة الإسلام",
+        "meaning": "For service to Islam"
+      },
+      {
+        "word": "عام",
+        "meaning": "Year"
+      },
+      {
+        "word": "۱۹۸۰م",
+        "meaning": "1980 CE"
+      }
+    ]
+  },
+  {
+    "sentence": "ومنح الدكتورة الفخرية في الآداب من جامعة كشمير عام ١٩٨١م.",
+    "meaning": "He was awarded an honorary doctorate in literature from the University of Kashmir in 1981 CE.",
+    "words": [
+      {
+        "word": "منح",
+        "meaning": "He was awarded, he was granted"
+      },
+      {
+        "word": "الدكتورة الفخرية",
+        "meaning": "Honorary doctorate"
+      },
+      {
+        "word": "الآداب",
+        "meaning": "Literature"
+      },
+      {
+        "word": "جامعة كشمير",
+        "meaning": "University of Kashmir"
+      },
+      {
+        "word": "عام",
+        "meaning": "Year"
+      },
+      {
+        "word": "١٩٨١م",
+        "meaning": "1981 CE"
+      }
+    ]
+  },
+  {
+    "sentence": "انتقل إلى جوار ربه سنة ۱۹۹۹م.",
+    "meaning": "He passed away (literally: moved to the neighborhood of his Lord) in the year 1999 CE.",
+    "words": [
+      {
+        "word": "انتقل",
+        "meaning": "He moved, he passed away"
+      },
+      {
+        "word": "جوار ربه",
+        "meaning": "The neighborhood of his Lord"
+      },
+      {
+        "word": "سنة",
+        "meaning": "Year"
+      },
+      {
+        "word": "۱۹۹۹م",
+        "meaning": "1999 CE"
+      }
+    ]
+  }
+]

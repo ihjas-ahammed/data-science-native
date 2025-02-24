@@ -1,0 +1,370 @@
+<!DOCTYPE  html>
+<html  lang="en">
+<head>
+    <meta  charset="UTF-8">
+    <meta  http-equiv="X-UA-Compatible"  content="IE=Edge">
+    <meta  name="viewport"  content="width=device-width,  initial-scale=1">
+
+    <title>Statistics</title>
+    
+    <!--  HTML  -->
+    
+
+    <!--  Custom  Styles  -->
+    <style>
+    	*{
+	padding:0;
+	margin:0;
+	font-family:  sans-serif;
+}
+
+body{
+	background:  #fff;
+}
+header{
+	position:  fixed;
+	height:  60px;
+	background:  #4c6;
+	top:0;
+	left:0;
+	right:0;
+	color:#fff;
+	display:flex;
+	flex-direction:  column;
+	justify-content:  center;
+	align-items:  center;
+	box-shadow:  0px  0px  10px  #0005;
+	text-shadow:  0px  0px  5px  #0005;
+
+}
+
+.main{
+	margin:10px;
+	margin-top:70px;
+	padding:10px;
+	border-radius:  5px;
+	box-shadow:  0px  0px  5px  #0005;
+}
+
+.main  .table{
+	display:flex;
+	flex-direction:  column;
+	width:  100%;
+}
+
+.table  .row{
+	border-top:  1px  solid  #0005;
+	display:flex;
+	width:100%;
+}
+
+.table  .row:nth-child(1){
+	border-top:none;
+}
+
+.table  .row  *{
+	flex:1;
+	width:100%;
+	text-align:  center;
+	margin:10px;
+}
+
+
+.table  .row  .text{
+	border:none;
+	padding:7px;
+	margin:0;
+}
+
+.btn{
+	border:none;
+	background:  #4c6;
+	color:#fff;
+	padding:10px;
+	font-size:  10pt;	
+	text-transform:  uppercase;
+}
+
+
+
+.btn:active{
+	box-shadow:  0px  0px  5px  #0005;
+}
+
+.output{
+	background:  #456;
+	color:#fff;
+	padding:10px;
+	display:flex;
+	flex-direction:  column;
+}
+
+.output  .item{
+	display:flex;
+	
+	border-bottom:1px  solid  #0005;
+}
+
+.output  .item  *{
+	flex:1;
+	padding:5px;
+}
+
+.output  .item:last-child{
+	border-bottom:none;
+}
+
+.output  .item  .value{
+	justify-content:  center;
+	align-items:  center;
+	display:flex;
+}
+    </style>
+</head>
+
+<body>
+	<header>
+		<h1>Statistics</h1>
+	</header>
+	<div  class="page  main">
+		<div  class="table">
+			<div  class="row">
+				<span  class="text">X<sub>i</sub></span>
+				<span  class="text">F<sub>i</sub></span>
+			</div>
+			<div  class="row">
+				<input  class="text"  type="number"  value="0"><input  class="text"  type="number"  value="0">  
+			</div>
+		</div>
+		<div  class="table">
+			<div  class="row  add">
+				<button  class="add-btn  btn">Add  row</button>
+				<button  class="del-btn  btn">Remove  row</button>
+			</div>
+		</div>
+		
+		<div  class="output">
+			<div  class="item  mean">
+				<span  class="name">Mean</span>
+				<span  class="value">0</span>
+			</div>
+			<div  class="item  median">
+				<span  class="name">Median</span>
+				<span  class="value">0</span>
+			</div>
+			<div  class="item  mdx">
+				<span  class="name">M.D  of  Mean</span>
+				<span  class="value">0</span>
+			</div>
+			<div  class="item  mdm">
+				<span  class="name">M.D  of  Median</span>
+				<span  class="value">0</span>
+			</div>
+			<div  class="item  s">
+				<span  class="name">Varience</span>
+				<span  class="value">0</span>
+			</div>
+			<div  class="item  sd">
+				<span  class="name">Standard  Deviation</span>
+				<span  class="value">0</span>
+			</div>
+		</div>
+	</div>
+    <script>
+    	const  addBtn  =  document.querySelector('.add-btn');
+const  delBtn  =  document.querySelector('.del-btn');
+const  tl  =  document.querySelector('.table');
+
+addBtn.addEventListener('click',  ()  =>  {
+	let  ka  =  document.createElement('div');
+	ka.classList.add('row');
+	ka.innerHTML  =  '<input  class="text"  type="number"  value="0"><input  class="text"  type="number"  value="0">';
+	tl.appendChild(ka);
+	let  inputs  =  document.querySelectorAll("input.text");
+for(let  k  =  0;  k  <  inputs.length;k++){
+	inputs[k].addEventListener("change",()=>update());
+}
+
+})
+let  inputs  =  document.querySelectorAll("input.text");
+for(let  k  =  0;  k  <  inputs.length;k++){
+	inputs[k].addEventListener("change",()=>update());
+}
+
+
+delBtn.addEventListener('click',  ()  =>  {
+	if  (tl.children.length  >  2)  {
+		tl.removeChild(tl.children[tl.children.length  -  1]);
+	}
+})
+
+
+
+function  update(){
+	let  ar  =  getTable();
+	let  mdm  =  getMDM(ar);
+	let  mdx  =  getMDX(ar);
+	let  v  =  getVarience(ar);
+	let  mean  =  f(getMean(ar));
+	let  median  =  f(getMedian(ar));
+	let  sd  =    f(Math.sqrt(v));
+	
+	document.querySelector(".item.mdx  .value").textContent  =  mdx;
+	document.querySelector(".item.mdm  .value").textContent  =  mdm;
+	document.querySelector(".item.s  .value").textContent  =  v;
+	document.querySelector(".item.sd  .value").textContent  =  sd;
+	document.querySelector(".item.mean  .value").textContent  =  mean;
+	document.querySelector(".item.median  .value").textContent  =  median;
+	
+}
+
+function  f(n){
+	return  Math.round(n*100)/100;
+}
+function  getTable(){
+	let  rt  =  [[],[]];
+	let  nums  =  document.querySelectorAll(".table  .row  input.text");
+	for(let  m  =  0;  m  <  nums.length;m++){
+		if((m+1)  %  2  ==  0){
+			rt[1][((m+1)/2)-1]  =  parseFloat(nums[m].value);
+		}else{
+			rt[0][((m+2)/2)-1]  =  parseFloat(nums[m].value);
+		}
+	}
+	return  rt;
+}
+
+function  getVarience(table)  {
+	let  n  =  sumof(table[1]);
+	let  mean  =  getMean(table);
+	let  dm  =  0;
+	for  (let  x  =  0;  x  <  table[1].length;  x++)  {
+		let  xi  =  table[0][x];
+		let  fi  =  table[1][x];
+		dm  +=  fi  *  Math.pow(xi  -  mean,  2);
+	}
+	let  mdx  =  dm  /  n;
+	return  Math.round(mdx  *  100)  /  100;
+}
+
+
+function  getMDM(table)  {
+	let  n  =  sumof(table[1]);
+	let  median  =  getMedian(table);
+	let  dm  =  0;
+	for  (let  x  =  0;  x  <  table[1].length;  x++)  {
+		let  xi  =  table[0][x];
+		let  fi  =  table[1][x];
+		dm  +=  fi  *  Math.abs(xi  -  median);
+	}
+
+	let  mdm  =  dm  /  n;
+	return  Math.round(mdm  *  100)  /  100;
+}
+
+function  getMedian(table)  {
+	table  =  sort(table);
+
+	let  n  =  sumof(table[1]);
+	let  ca  =  new  Array(table[1].length);
+	let  m  =  0;
+	for  (let  x  =  0;  x  <  table[1].length;  x++)  {
+		m  +=  table[1][x];
+		ca[x]  =  m;
+		0
+
+	}
+	let  mean  =  0;
+	if  (n  %  2  ==  0)  {
+		let  a  =  (n  /  2);
+		let  b  =  a  +  1;
+		let  p  =  ca.length
+		let  k  =  ca.length;
+		for  (let  m  =  0;  m  <  ca.length;  m++)  {
+			if  (a  >  ca[m])  {
+				p  -=  1;
+			}
+			if  (b  >  ca[m])  k  -=  1;
+		}
+
+		mean  =  (table[0][p]  +  table[0][k])  /  2;
+		return  mean;
+	}  else  {
+		let  a  =  (n  +  1)  /  2;
+		let  p  =  ca.length;
+		for  (let  m  =  0;  m  <  ca.length;  m++)  {
+			if  (a  >  ca[m])  {
+				p  -=  1;
+			}
+		}
+		return  a;
+	}
+
+}
+
+function  sort(ar)  {
+	console.log(ar[0]);
+	let  b  =  ar[0];
+	let  kr  =  ar[1];
+	for  (let  k  =  0;  k  <  b.length;  k++)  {
+		let  sm  =  findSmallest(k,  b);
+		let  a  =  [b[sm],  kr[sm]];
+		let  z  =  [b[k],  kr[k]];
+		b[k]  =  a[0];
+		kr[k]  =  a[1];
+		b[sm]  =  z[0];
+		kr[sm]  =  z[1];
+	}
+	return  [b,  kr];
+}
+
+function  findSmallest(start,  ar)  {
+	let  sm  =  ar[start];
+	let  index  =  start;
+	for  (let  x  =  start;  x  <  ar.length;  x++)  {
+		if  (sm  >  ar[x])  {
+			sm  =  ar[x];
+			index  =  x;
+		}
+	}
+
+	return  index;
+}
+
+function  getMDX(table)  {
+	let  n  =  sumof(table[1]);
+	let  mean  =  getMean(table);
+	let  dm  =  0;
+	for  (let  x  =  0;  x  <  table[1].length;  x++)  {
+		let  xi  =  table[0][x];
+		let  fi  =  table[1][x];
+		dm  +=  fi  *  Math.abs(xi  -  mean);
+	}
+	let  mdx  =  dm  /  n;
+	return  Math.round(mdx  *  100)  /  100;
+}
+
+function  sumof(ar)  {
+	let  sum  =  0;
+	for  (let  x  =  0;  x  <  ar.length;  x++)  {
+		let  m  =  ar[x];
+		sum  +=  m;
+	}
+	return  sum;
+}
+
+function  getMean(table)  {
+	let  n  =  sumof(table[1]);
+	let  xf  =  0;
+	for  (let  i  =  0;  i  <  table[1].length;  i++)  {
+		let  x  =  table[0][i];
+		let  f  =  table[1][i];
+		xf  +=  f  *  x;
+	}
+
+	let  mean  =  xf  /  n;
+	return  mean;
+}
+    </script>
+</body>
+</html>

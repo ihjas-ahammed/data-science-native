@@ -1,0 +1,476 @@
+{
+  "1":[
+    {
+      "question": "What is data?",
+      "options": [
+        "Any information stored in digital format",
+        "Information in analog format",
+        "Data stored only on paper",
+        "A set of random numbers"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What does Big Data refer to?",
+      "options": [
+        "Extremely large volumes of data that require innovative processing methods",
+        "Small, manageable datasets",
+        "Data stored only in spreadsheets",
+        "Data that is outdated"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "How is structured data typically stored?",
+      "options": [
+        "In tabular form with rows and columns",
+        "In random text files",
+        "As unorganized multimedia files",
+        "In handwritten notes"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "Which language is mainly used to interact with relational databases?",
+      "options": [
+        "SQL",
+        "Python",
+        "JavaScript",
+        "Ruby"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What is a key benefit of structured data?",
+      "options": [
+        "Easier querying and faster search operations",
+        "Unlimited flexibility with schema changes",
+        "Lower storage overhead",
+        "Complete unpredictability"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What is semi-structured data?",
+      "options": [
+        "Data with an incomplete structure like HTML, XML, or JSON",
+        "Data stored exclusively in tables",
+        "Data with no identifiable tags",
+        "Data that is only used for images"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What is a downside of semi-structured data?",
+      "options": [
+        "It can be more complex to query compared to structured data",
+        "It is always error-free",
+        "It never requires extra storage",
+        "It follows a strict schema"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What distinguishes unstructured data?",
+      "options": [
+        "It is not organized in a predefined manner",
+        "It is always numeric",
+        "It is stored in rows and columns",
+        "It uses SQL for querying"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What is a characteristic of data streams?",
+      "options": [
+        "They are continuously updated in real-time",
+        "They are static and never change",
+        "They are only collected once a day",
+        "They are exclusively archived data"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "How is qualitative (categorical) data defined?",
+      "options": [
+        "Data about qualities that can't be measured objectively",
+        "Data that is strictly numerical",
+        "Data that includes only continuous values",
+        "Data stored in relational databases"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What type of data is nominal?",
+      "options": [
+        "Categorical data without any inherent order, like gender or nationality",
+        "Data that is always ordered by size",
+        "Numeric data with intervals",
+        "Data with a clear ranking"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What distinguishes ordinal data from nominal data?",
+      "options": [
+        "Ordinal data has a specific order or ranking",
+        "Ordinal data is completely unordered",
+        "Ordinal data is non-categorical",
+        "Ordinal data is always numerical"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What is discrete data?",
+      "options": [
+        "Numerical data with distinct and separate values",
+        "Data that flows continuously",
+        "Data that is unstructured",
+        "Categorical data with no numbers"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What is continuous data?",
+      "options": [
+        "Numerical data given within a range",
+        "Data with isolated, separate values",
+        "Only qualitative data",
+        "Data that is always static"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "How is interval scale data characterized?",
+      "options": [
+        "Data measured along equal intervals where only addition and subtraction make sense",
+        "Data with a true zero point for multiplication",
+        "Data that is categorical",
+        "Data that is unstructured"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "How is ratio scale data different from interval scale data?",
+      "options": [
+        "Ratio scale data has a true zero and supports multiplication and division",
+        "Ratio scale data has no zero point",
+        "Ratio scale data is non-numerical",
+        "Ratio scale data is used only for categorical variables"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What are the basic steps in data analysis?",
+      "options": [
+        "Collect, organise, and analyse",
+        "Design, develop, and deploy",
+        "Gather, ignore, and discard",
+        "Measure, compare, and conclude"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "Which technique involves gathering data from various sources?",
+      "options": [
+        "Data mining",
+        "Data cleaning",
+        "Data modeling",
+        "Data encryption"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What is predictive analysis used for?",
+      "options": [
+        "To predict future events using modeling, machine learning, and data mining",
+        "To simply describe past data",
+        "To delete outdated information",
+        "To store data without analysis"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What is the goal of exploratory data analysis?",
+      "options": [
+        "To examine data to gain insights before making assumptions",
+        "To immediately deploy a model",
+        "To ignore patterns in the data",
+        "To focus solely on data collection"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What does diagnostic analytics focus on?",
+      "options": [
+        "Using historical data to answer questions and identify patterns",
+        "Predicting future trends exclusively",
+        "Cleaning data for storage",
+        "Randomly selecting data samples"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What is the purpose of inferential data analysis?",
+      "options": [
+        "To make inferences about a larger population based on sample data",
+        "To only describe the sample data without generalizing",
+        "To organize data into tables",
+        "To delete irrelevant data"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What is a uniform distribution?",
+      "options": [
+        "A probability distribution where every value within a range is equally likely",
+        "A skewed distribution with one dominant peak",
+        "A bell curve distribution",
+        "A distribution with random probabilities"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "How is Big Data defined in the context of processing methods?",
+      "options": [
+        "As extremely large volumes of data that require innovative processing methods",
+        "As small datasets that can be processed on a single computer",
+        "As data that is always structured",
+        "As data stored in handwritten logs"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What is the main goal of data science?",
+      "options": [
+        "To process vast amounts of data to identify patterns and drive business decisions",
+        "To only collect data without analysis",
+        "To store data without processing it",
+        "To avoid using data in decision-making"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What is the first step in the data science process?",
+      "options": [
+        "Data collection",
+        "Data deployment",
+        "Data visualization",
+        "Data archiving"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What is a common challenge in data science?",
+      "options": [
+        "Data quality and availability issues",
+        "An excess of perfect data",
+        "Too little data to analyze",
+        "No need for data cleaning"
+      ],
+      "correct": 0
+    }
+  ],
+  "2":[
+    {
+      "question": "What is Exploratory Data Analysis (EDA)?",
+      "options": [
+        "A process of examining data to gain insights and understanding",
+        "A method for encrypting data",
+        "A technique to hide data inconsistencies",
+        "A way to create data visualizations only"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "Which of the following is a primary purpose of EDA?",
+      "options": [
+        "To summarize main characteristics of datasets",
+        "To design database schemas",
+        "To automate data collection",
+        "To replace the need for statistical tests"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "Which Python tool is NOT mentioned as used for EDA in the notes?",
+      "options": [
+        "pandas",
+        "numPy",
+        "matplotlib",
+        "Django"
+      ],
+      "correct": 3
+    },
+    {
+      "question": "Which library is used to set the screen size and show plots in Python?",
+      "options": [
+        "seaborn",
+        "matplotlib",
+        "pandas",
+        "numPy"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "What type of analysis involves using diagrams to analyze a single variable?",
+      "options": [
+        "Multivariate graphical analysis",
+        "Univariate graphical analysis",
+        "Non-graphical multivariate analysis",
+        "Non-graphical univariate analysis"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "What does a box plot display?",
+      "options": [
+        "The frequency distribution of data",
+        "The median, quartiles, and outliers",
+        "The correlation between two variables",
+        "The time series trend"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "Which measure quantifies the average deviation from the mean?",
+      "options": [
+        "Range",
+        "Variance",
+        "Standard Deviation",
+        "Interquartile Range (IQR)"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "What is the formula for population variance?",
+      "options": [
+        "σ² = (1/N) ∑(xᵢ - μ)²",
+        "σ² = (1/(n-1)) ∑(xᵢ - μ)²",
+        "σ = √(1/N ∑(xᵢ - μ)²)",
+        "σ² = max(x) - min(x)"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "How is the median defined for an odd number of observations?",
+      "options": [
+        "The average of the two middle values",
+        "The middle value when data is sorted",
+        "The most frequent value",
+        "The value with the smallest deviation from the mean"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "What does IQR stand for in descriptive statistics?",
+      "options": [
+        "Interquartile Range",
+        "Internal Quality Ratio",
+        "Initial Quantile Range",
+        "Integrated Query Report"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "Which method reduces dimensionality while preserving essential information?",
+      "options": [
+        "Correlation Matrix",
+        "Multivariate Regression",
+        "Factor Analysis",
+        "Principal Component Analysis (PCA)"
+      ],
+      "correct": 3
+    },
+    {
+      "question": "What does skewness measure in a data distribution?",
+      "options": [
+        "Central tendency",
+        "Data spread",
+        "Asymmetry of the distribution",
+        "Number of modes"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "What does a positive skew indicate about a data distribution?",
+      "options": [
+        "Tail extends to the left",
+        "Tail extends to the right",
+        "Distribution is perfectly symmetrical",
+        "There are no outliers"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "Which graphical technique is best for visualizing the relationship between two numeric variables?",
+      "options": [
+        "Histogram",
+        "Box plot",
+        "Scatter Plot",
+        "Heatmap"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "What is the primary goal of descriptive statistics?",
+      "options": [
+        "To summarize and describe the main features of a dataset",
+        "To develop predictive models",
+        "To encrypt sensitive data",
+        "To clean the dataset automatically"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "What does a correlation matrix help you understand in multivariate non-graphical analysis?",
+      "options": [
+        "The frequency of data values",
+        "The strength of relationships between variables",
+        "The layout of a dataset in a DataFrame",
+        "The time evolution of a dataset"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "Which Python library is used to create DataFrames?",
+      "options": [
+        "seaborn",
+        "matplotlib",
+        "pandas",
+        "numPy"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "What is the function of sns.histplot() in Python?",
+      "options": [
+        "To create a line chart",
+        "To create a histogram",
+        "To create a scatter plot",
+        "To create a box plot"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "Which measure of central tendency is most robust in the presence of outliers?",
+      "options": [
+        "Mean",
+        "Mode",
+        "Median",
+        "Range"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "What is the formula for calculating the population mean?",
+      "options": [
+        "μ = (1/N) ∑₍ᵢ₌₁₎ᴺ xᵢ",
+        "μ = ∑₍ᵢ₌₁₎ᴺ xᵢ",
+        "μ = (max(x) - min(x)) / 2",
+        "μ = (1/(n-1)) ∑₍ᵢ₌₁₎ᴺ xᵢ"
+      ],
+      "correct": 0
+    }
+  ]
+}

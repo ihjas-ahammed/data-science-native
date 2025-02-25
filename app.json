@@ -3,7 +3,7 @@
     "name": "Notes",
     "slug": "data-science-native",
     "scheme": "org",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -19,12 +19,12 @@
         "backgroundColor": "#000000"
       },
       "package": "me.ihjas.notes",
-      "versionCode": 3,
+      "versionCode": 4,
       "permissions": [
         "INTERNET",
         "INTERNET"
       ],
-      "runtimeVersion": "1.0.0"
+      "runtimeVersion": "1.0.3"
     },
     "web": {
       "favicon": "./assets/icon.png",

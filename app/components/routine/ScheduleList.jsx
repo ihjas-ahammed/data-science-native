@@ -2,19 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 
-const ScheduleList = ({ 
-  schedule, 
-  calculateProgress, 
-  onEditTask, 
-  onDeleteTask, 
-  onOpenProgressModal, 
-  onOpenSubtasksModal 
+const ScheduleList = ({
+  schedule,
+  calculateProgress,
+  onEditTask,
+  onDeleteTask,
+  onOpenProgressModal,
+  onOpenSubtasksModal,
+  handleCloudSync
 }) => {
   const [currentTaskIndex, setCurrentTaskIndex] = useState(-1);
 
   useEffect(() => {
     const updateCurrentTask = () => {
-      if (schedule.length === 0) return -1;
+      if (schedule.length === 0) {
+        setCurrentTaskIndex(-1);
+        return;
+      }
 
       const now = new Date();
       const currentIndex = schedule.findIndex(task => {
@@ -28,9 +32,9 @@ const ScheduleList = ({
     };
 
     updateCurrentTask(); // Initial check
-    const interval = setInterval(updateCurrentTask, 1000);
+    const interval = setInterval(updateCurrentTask, 60000); // Update every 60 seconds (1 minute)
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // Cleanup interval on unmount
   }, [schedule]);
 
   const formatTimeToAmPm = (timeString) => {
@@ -63,7 +67,7 @@ const ScheduleList = ({
     const now = new Date();
     const [aHours, aMinutes] = a.time.split(':');
     const [bHours, bMinutes] = b.time.split(':');
-    
+
     const aStart = new Date().setHours(parseInt(aHours), parseInt(aMinutes), 0);
     const bStart = new Date().setHours(parseInt(bHours), parseInt(bMinutes), 0);
     const aEnd = aStart + a.duration * 60000;
@@ -90,12 +94,12 @@ const ScheduleList = ({
   });
 
   const renderItem = ({ item, index }) => {
-    const progress = calculateProgress(item);
+    const progress = calculateProgress(item); // Recalculate progress on each render
     const endTime = calculateEndTime(item.time, item.duration);
     const isCurrent = sortedSchedule.findIndex(t => t.id === item.id) === currentTaskIndex && currentTaskIndex !== -1;
 
     return (
-      <View className={`bg-white rounded-lg p-4 mb-2 shadow-sm ${isCurrent ? 'border-l-4 border-blue-500' : ''}`}>
+      <View className={`bg-white rounded-lg p-4 mb-2 shadow-sm ${index === 0 ? 'border-l-4 border-blue-500' : ''}`}>
         <View className="flex-row justify-between items-center">
           <View className="flex-1">
             <View className="flex-row items-center mb-1">
@@ -110,11 +114,11 @@ const ScheduleList = ({
         </View>
 
         <View className="h-2 bg-gray-200 rounded-full overflow-hidden my-2">
-          <View 
+          <View
             className="h-full bg-blue-300 absolute"
             style={{ width: `${progress.time}%` }}
           />
-          <View 
+          <View
             className="h-full bg-blue-500 absolute"
             style={{ width: `${progress.real}%` }}
           />
@@ -124,15 +128,15 @@ const ScheduleList = ({
           <TouchableOpacity onPress={() => onEditTask(item.id)}>
             <MaterialIcons name="edit" size={20} color="gray" />
           </TouchableOpacity>
-          <TouchableOpacity 
-            onPress={() => item.progressType === 'manual' 
+          <TouchableOpacity
+            onPress={() => item.progressType === 'manual'
               ? onOpenProgressModal(item.id)
               : onOpenSubtasksModal(item.id)}
           >
-            <MaterialIcons 
-              name={item.progressType === 'manual' ? 'percent' : 'task'} 
-              size={20} 
-              color="gray" 
+            <MaterialIcons
+              name={item.progressType === 'manual' ? 'percent' : 'task'}
+              size={20}
+              color="gray"
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => onDeleteTask(item.id)}>
@@ -145,10 +149,16 @@ const ScheduleList = ({
 
   return (
     <View className="flex-1">
-      <View className="flex-row justify-between items-center mb-4">
+      <View className="flex-row items-center mb-4">
         <Text className="text-xl font-bold text-gray-800">Today's Tasks</Text>
-        <TouchableOpacity 
-          className="bg-blue-500 px-3 py-1 rounded"
+        <TouchableOpacity
+          onPress={handleCloudSync}
+          className='bg-blue-500 h-10 items-center justify-center px-2 rounded ml-auto'
+        >
+          <Ionicons name="cloud" size={20} color="#fff" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="bg-blue-500 px-3 h-10 items-center justify-center rounded ml-1"
           onPress={() => onEditTask(null)}
         >
           <Text className="text-white">Add Task</Text>

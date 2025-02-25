@@ -30,8 +30,8 @@ export default function App() {
     <SafeAreaView className='flex-1'>
       <NavBar current={current} setCurrent={(newCurrent) => setcurrent(newCurrent)} />
       {current == "Notes" ? <Home /> : <></>}
-      {current == "Routine" ? <Routine /> : <></>}
-      {current == "Progress" ? <Progress/>: <></>}
+      {current == "Routine" ? <Routine firebaseApp={app}/> : <></>}
+      {current == "Progress" ? <Progress firebaseApp={app}/>: <></>}
       <StatusBar style="auto" />
     </SafeAreaView>
   )

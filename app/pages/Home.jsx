@@ -11,6 +11,7 @@ const courseData = {
         { text: 'Module 1', path: '/cs2/mod1.html' },
         { text: 'Module 2', path: '/cs2/mod2.html' },
         { text: 'Module 3', path: '/cs2/mod3.html' },
+        { text: 'Module 4', path: '/cs2/mod4.html' },
         { text: 'Objectives', path: '/cs2/qa/' },
       ],
     },
@@ -19,6 +20,7 @@ const courseData = {
       modules: [
         { text: 'Module 1', path: '/stat2/mod1.html' },
         { text: 'Module 2', path: '/stat2/mod2.html' },
+        { text: 'Module 3', path: '/stat2/mod3.html' }
       ],
     },
     {

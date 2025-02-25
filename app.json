@@ -3,28 +3,22 @@
     "name": "Notes",
     "slug": "data-science-native",
     "scheme": "org",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash-bg.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
-    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#000000"
       },
       "package": "me.ihjas.notes",
-      "versionCode": 4,
+      "versionCode": 5,
       "permissions": [
-        "INTERNET",
         "INTERNET"
       ],
-      "runtimeVersion": "1.0.3"
+      "runtimeVersion": "1.0.4"
     },
     "web": {
       "favicon": "./assets/icon.png",

@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-
 import * as SecureStore from 'expo-secure-store'; // For offline storage
 import { getDatabase, ref, get } from 'firebase/database';
+import { Ionicons } from '@expo/vector-icons'; // For icons
+import Toast from 'react-native-toast-message'; // For toast notifications
+
 import LearningCard from '../components/progress/LearningCard';
 import TopicProgress from '../components/progress/TopicProgress';
 import ProgressStats from '../components/progress/ProgressStats';
 import EditDialog from '../components/progress/EditDialog';
-import { Ionicons } from '@expo/vector-icons'; // For Edit icon
+import ImportExportDialog from '../components/progress/ImportExportDialog'; // New component
 
 const checkNetworkStatus = async () => {
     try {
@@ -27,26 +29,13 @@ const Progress = ({ firebaseApp }) => {
     const [activeBook, setActiveBook] = useState(null);
     const [activeTopic, setActiveTopic] = useState(null);
     const [editDialog, setEditDialog] = useState(false);
+    const [importExportDialog, setImportExportDialog] = useState(false); // New state for import/export dialog
     const [store, setStore] = useState([]);
     const [isOnline, setIsOnline] = useState(true); // Track network status
 
-    const defaultData = [{
-        "name": "Data Science",
-        "topics": [
-            {
-                "name": "Introduction to Data Science",
-                "subtopics": [
-                    { "level": 2, "name": "Introduction to Data: Types of Data-Structured Data, Semi-Structured Data, Unstructured Data and Data Streams" },
-                    { "level": 2, "name": "Statistical Data Types: Quantitative Data (Ratio and Interval Scale) and Qualitative Data (Nominal and ordinal)" },
-                    { "level": 2, "name": "Basic Methods of Data Analysis: Descriptive Data Analysis, Diagnostic Data Analysis or Exploratory Data Analysis, Inferential Data Analysis and Predictive Analysis." },
-                    { "level": 2, "name": "Inferential Statistics: Statistical Inferance, Population and Sample, Statistical Modeling, Probability Distributions- Normal, Uniform" },
-                    { "level": 2, "name": "Introduction to Data Science: Big Data and Data Science, Data Science Process" },
-                    { "level": 2, "name": "Applications of Data Science, Issues and challenges in Data Science" }
-                ]
-            },
+    const defaultData = [
             // ... (rest of defaultData remains the same as in your original code)
-        ]
-    }];
+];
 
     // Load progress data from expo-secure-store
     const loadData = async () => {
@@ -112,6 +101,11 @@ const Progress = ({ firebaseApp }) => {
         }
     };
 
+    // Handle imported data
+    const handleImportData = async (importedData) => {
+        await saveData(importedData);
+    };
+
     const handleLevelChange = async (bookName, topicName, subtopicName, newValue) => {
         const newData = data.map((book) => {
             if (book.name === bookName) {
@@ -175,11 +169,33 @@ const Progress = ({ firebaseApp }) => {
         return rt;
     };
 
+    // Handler for cloud button click
+    const handleCloudButtonClick = () => {
+        if (!isOnline) {
+            Toast.show({
+                type: 'error',
+                text1: 'Error',
+                text2: 'No network available for import/export',
+            });
+            return;
+        }
+        setImportExportDialog(true);
+    };
+
     return (
         <View className="flex-1 bg-white">
             <ScrollView contentContainerStyle={{ padding: 16 }}>
-                {/* Header */}
-                <View className="flex-row items-center justify-between ml-auto  mr-2">
+                {/* Header with Buttons */}
+                <View className="flex-row items-center justify-end space-x-3 mr-2">
+                    {/* Cloud Button for Import/Export */}
+                    <TouchableOpacity
+                        onPress={handleCloudButtonClick}
+                        className="bg-black p-2 rounded-lg mr-2"
+                    >
+                        <Ionicons name="cloud" size={24} color="white" />
+                    </TouchableOpacity>
+                    
+                    {/* Edit Button */}
                     <TouchableOpacity
                         onPress={() => isOnline ? setEditDialog(true) : alert('No network available')}
                         className="bg-black/10 p-2 rounded-lg"
@@ -248,6 +264,17 @@ const Progress = ({ firebaseApp }) => {
                     }
                 }}
             />
+
+            {/* Import/Export Dialog */}
+            <ImportExportDialog
+                open={importExportDialog}
+                onClose={() => setImportExportDialog(false)}
+                firebaseApp={firebaseApp}
+                onImportData={handleImportData}
+            />
+
+            {/* Toast Component for Notifications */}
+            <Toast />
         </View>
     );
 };

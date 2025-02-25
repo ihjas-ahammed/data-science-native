@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Alert, FlatList } from 'react-native';
+import { View, ScrollView, Alert, FlatList, TouchableOpacity } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import * as Notifications from 'expo-notifications';
+import { Ionicons } from '@expo/vector-icons';
+import { getFirestore } from 'firebase/firestore';
 import ProgressOverview from '../components/routine/ProgressOverview';
 import ScheduleList from '../components/routine/ScheduleList';
 import AddTaskModal from '../components/routine/AddTaskModal';
 import ProgressModal from '../components/routine/ProgressModal';
 import SubtasksModal from '../components/routine/SubtasksModal';
+import ImportExportRoutineDialog from '../components/routine/ImportExportRoutineDialog';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -16,7 +19,7 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const Routine = () => {
+const Routine = ({ firebaseApp }) => {
   const [schedule, setSchedule] = useState([]);
   const [username, setUsername] = useState('admin');
   const [editingTaskId, setEditingTaskId] = useState(null);
@@ -24,6 +27,21 @@ const Routine = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false);
   const [isSubtasksModalOpen, setIsSubtasksModalOpen] = useState(false);
+  const [isImportExportModalOpen, setIsImportExportModalOpen] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
+
+  // Check network status
+  const checkNetworkStatus = async () => {
+    try {
+      const response = await fetch("https://8.8.8.8", {
+        method: "HEAD",
+        timeout: 5000
+      });
+      return response.status >= 200 && response.status < 300;
+    } catch (error) {
+      return false;
+    }
+  };
 
   // Load schedule from SecureStore
   useEffect(() => {
@@ -43,6 +61,17 @@ const Routine = () => {
       }
     };
     loadSchedule();
+    
+    // Check network status initially and periodically
+    const checkOnlineStatus = async () => {
+      const status = await checkNetworkStatus();
+      setIsOnline(status);
+    };
+    
+    checkOnlineStatus();
+    const intervalId = setInterval(checkOnlineStatus, 10000);
+    
+    return () => clearInterval(intervalId);
   }, [username]);
 
   // Schedule push notifications
@@ -153,15 +182,46 @@ const Routine = () => {
       ]
     );
   };
+
+  // Handle imported data
+  const handleImportData = (importedData) => {
+    const sortedSchedule = importedData.sort((a, b) => {
+      const timeA = new Date(`2000/01/01 ${a.time}`);
+      const timeB = new Date(`2000/01/01 ${b.time}`);
+      return timeA - timeB;
+    });
+    setSchedule(sortedSchedule);
+    scheduleNotifications(sortedSchedule);
+  };
+
+  // Handle cloud sync button click
+  const handleCloudSyncPress = () => {
+    if (!isOnline) {
+      Alert.alert(
+        "Network Unavailable",
+        "You need an internet connection to sync your routine data.",
+        [{ text: "OK" }]
+      );
+      return;
+    }
+    setIsImportExportModalOpen(true);
+  };
+
   const renderContent = () => (
     <>
-      <ProgressOverview
+
+<ProgressOverview
         schedule={schedule}
         calculateProgress={calculateProgress}
       />
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 10 }}>
+      
+        
+      </View>
       <ScheduleList
         schedule={schedule}
         calculateProgress={calculateProgress}
+        handleCloudSync={handleCloudSyncPress}
         onEditTask={(id) => {
           setEditingTaskId(id);
           setIsAddModalOpen(true);
@@ -218,9 +278,17 @@ const Routine = () => {
         task={schedule.find(t => t.id === currentTaskId)}
         onUpdateSubtasks={(subtasks) => updateTask(currentTaskId, { subtasks })}
       />
+
+      {/* Import/Export Dialog */}
+      <ImportExportRoutineDialog
+        isOpen={isImportExportModalOpen}
+        onClose={() => setIsImportExportModalOpen(false)}
+        firebaseApp={firebaseApp}
+        username={username}
+        onImportData={handleImportData}
+      />
     </View>
   );
 };
 
 export default Routine;
-

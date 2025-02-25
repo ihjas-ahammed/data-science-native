@@ -10,7 +10,7 @@ const ProgressModal = ({ isOpen, onClose, task, onSave }) => {
     if (task) {
       setProgress(task.manualProgress || 0);
     }
-  }, [task]);
+  }, []);
 
   if (!isOpen || !task) return null;
 
@@ -70,15 +70,15 @@ const ProgressModal = ({ isOpen, onClose, task, onSave }) => {
                 style={{ width: '100%', height: 40 }}
                 minimumValue={0}
                 maximumValue={100}
+                value={task.manualProgress}
                 step={1}
-                value={progress}
-                onValueChange={(value) => setProgress(Math.round(value))}
+                onValueChange={(value) => setProgress(value)}
                 minimumTrackTintColor="#3B82F6"
                 maximumTrackTintColor="#D1D5DB"
                 thumbTintColor="#3B82F6"
               />
               <Text className="text-2xl font-semibold text-blue-500">
-                {progress}%
+                {parseInt(progress)}%
               </Text>
             </View>
           </View>

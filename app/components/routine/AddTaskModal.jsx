@@ -17,8 +17,6 @@ const AddTaskModal = ({ isOpen, onClose, onSave, editingTask }) => {
     duration: '',
     progressType: 'manual'
   });
-  const [isEditingTime, setIsEditingTime] = useState(false);
-  const [tempTime, setTempTime] = useState('');
 
   useEffect(() => {
     const setDefaultTime = () => {
@@ -31,7 +29,6 @@ const AddTaskModal = ({ isOpen, onClose, onSave, editingTask }) => {
     };
 
     if (editingTask) {
-      // Convert 24h to 12h AM/PM for display
       const [hours, minutes] = editingTask.time.split(':');
       let displayHours = parseInt(hours);
       const period = displayHours >= 12 ? 'PM' : 'AM';
@@ -69,26 +66,6 @@ const AddTaskModal = ({ isOpen, onClose, onSave, editingTask }) => {
     }).replace(/\s/g, '');
   };
 
-  const adjustTime = (type, direction) => {
-    const [timePart, period] = taskData.time.split(' ');
-    let [hours, minutes] = timePart.split(':').map(Number);
-
-    if (type === 'hour') {
-      hours = direction === 'up' ? hours + 1 : hours - 1;
-      if (hours > 12) hours = 1;
-      if (hours < 1) hours = 12;
-    } else if (type === 'minute') {
-      minutes = direction === 'up' ? minutes + 1 : minutes - 1;
-      if (minutes >= 60) minutes = 0;
-      if (minutes < 0) minutes = 59;
-    }
-
-    setTaskData({
-      ...taskData,
-      time: `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${period}`
-    });
-  };
-
   const togglePeriod = () => {
     const [timePart, period] = taskData.time.split(' ');
     setTaskData({
@@ -97,15 +74,27 @@ const AddTaskModal = ({ isOpen, onClose, onSave, editingTask }) => {
     });
   };
 
-  const handleTimeEditSubmit = () => {
-    const timeRegex = /^([0-1]?[0-2]):[0-5][0-9] (AM|PM)$/i;
-    if (!timeRegex.test(tempTime)) {
-      Alert.alert('Error', 'Please enter time as HH:MM AM/PM (e.g., 03:45 PM)');
-      setTempTime(taskData.time);
-    } else {
-      setTaskData({ ...taskData, time: tempTime.trim() });
+  const handleHourChange = (text) => {
+  
+    const num = text.replace(/[^0-9]/g, '');
+    if (num === '' || (parseInt(num) >= 0 && parseInt(num) <= 12)) {
+      const [_, minutes, period] = taskData.time.split(/[: ]/);
+      setTaskData({
+        ...taskData,
+        time: `${num.padStart(2, '')}:${minutes} ${period}`
+      });
     }
-    setIsEditingTime(false);
+  };
+
+  const handleMinuteChange = (text) => {
+    const num = text.replace(/[^0-9]/g, '');
+    if (num === '' || (parseInt(num) >= 0 && parseInt(num) <= 59)) {
+      const [hours, , period] = taskData.time.split(/[: ]/);
+      setTaskData({
+        ...taskData,
+        time: `${hours}:${num.padStart(2, '')} ${period}`
+      });
+    }
   };
 
   const handleSubmit = () => {
@@ -131,6 +120,8 @@ const AddTaskModal = ({ isOpen, onClose, onSave, editingTask }) => {
 
   if (!isOpen) return null;
 
+  const [hours, minutes, period] = taskData.time.split(/[: ]/);
+
   return (
     <Modal
       visible={isOpen}
@@ -151,77 +142,42 @@ const AddTaskModal = ({ isOpen, onClose, onSave, editingTask }) => {
 
           {/* Form */}
           <View className="space-y-4 gap-4">
-            {/* Custom Time Picker */}
+            {/* Time Picker */}
             <View>
               <View className="flex-row items-center mb-2">
                 <Ionicons name="time-outline" size={16} color="gray" className="mr-2" />
                 <Text className="text-gray-700">Start Time</Text>
               </View>
-              {isEditingTime ? (
-                <View className="flex-row items-center">
-                  <TextInput
-                    className="flex-1 border border-gray-300 rounded-lg p-2 text-gray-800"
-                    value={tempTime}
-                    onChangeText={setTempTime}
-                    onSubmitEditing={handleTimeEditSubmit}
-                    placeholder="HH:MM AM/PM"
-                    autoFocus
-                  />
-                  <TouchableOpacity 
-                    onPress={handleTimeEditSubmit}
-                    className="ml-2 p-2"
-                  >
-                    <Ionicons name="checkmark" size={20} color="green" />
-                  </TouchableOpacity>
-                </View>
-              ) : (
-                <View className="flex-row items-center border border-gray-300 rounded-lg p-2 bg-gray-50">
-                  {/* Hours */}
-                  <View className="flex-1 items-center">
-                    <TouchableOpacity onPress={() => adjustTime('hour', 'up')}>
-                      <Ionicons name="chevron-up" size={16} color="gray" />
-                    </TouchableOpacity>
-                    <Text className="text-base font-medium text-gray-800 my-1">
-                      {taskData.time.split(':')[0]}
-                    </Text>
-                    <TouchableOpacity onPress={() => adjustTime('hour', 'down')}>
-                      <Ionicons name="chevron-down" size={16} color="gray" />
-                    </TouchableOpacity>
-                  </View>
-                  <Text className="text-base text-gray-600 mx-1">:</Text>
-                  {/* Minutes */}
-                  <View className="flex-1 items-center">
-                    <TouchableOpacity onPress={() => adjustTime('minute', 'up')}>
-                      <Ionicons name="chevron-up" size={16} color="gray" />
-                    </TouchableOpacity>
-                    <Text className="text-base font-medium text-gray-800 my-1">
-                      {taskData.time.split(':')[1].split(' ')[0]}
-                    </Text>
-                    <TouchableOpacity onPress={() => adjustTime('minute', 'down')}>
-                      <Ionicons name="chevron-down" size={16} color="gray" />
-                    </TouchableOpacity>
-                  </View>
-                  {/* AM/PM Toggle */}
-                  <TouchableOpacity 
-                    onPress={togglePeriod}
-                    className="bg-blue-500 rounded px-2 py-1 mx-2"
-                  >
-                    <Text className="text-white text-sm font-medium">
-                      {taskData.time.split(' ')[1]}
-                    </Text>
-                  </TouchableOpacity>
-                  {/* Edit Button */}
-                  <TouchableOpacity 
-                    onPress={() => {
-                      setTempTime(taskData.time);
-                      setIsEditingTime(true);
-                    }}
-                    className="p-2"
-                  >
-                    <Ionicons name="pencil" size={16} color="gray" />
-                  </TouchableOpacity>
-                </View>
-              )}
+              <View className="flex-row items-center space-x-2 gap-2">
+                {/* Hours Input */}
+                <TextInput
+                  className="w-16 border border-gray-300 rounded-lg p-2 text-gray-800 text-center bg-gray-50"
+                  value={hours}
+                  onChangeText={handleHourChange}
+                  keyboardType="numeric"
+                  maxLength={2}
+                  placeholder="HH"
+                  placeholderTextColor="#9CA3AF"
+                />
+                <Text className="text-gray-600 text-lg font-medium">:</Text>
+                {/* Minutes Input */}
+                <TextInput
+                  className="w-16 border border-gray-300 rounded-lg p-2 text-gray-800 text-center bg-gray-50"
+                  value={minutes}
+                  onChangeText={handleMinuteChange}
+                  keyboardType="numeric"
+                  maxLength={2}
+                  placeholder="MM"
+                  placeholderTextColor="#9CA3AF"
+                />
+                {/* AM/PM Toggle */}
+                <TouchableOpacity
+                  onPress={togglePeriod}
+                  className="bg-blue-500 rounded-lg px-3 py-2 min-w-[50px] items-center"
+                >
+                  <Text className="text-white font-medium">{period}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
 
             {/* Activity Input */}
@@ -231,7 +187,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, editingTask }) => {
                 <Text className="text-gray-700">Activity</Text>
               </View>
               <TextInput
-                className="border border-gray-300 rounded-lg p-2 text-gray-800"
+                className="border border-gray-300 rounded-lg p-2 text-gray-800 bg-gray-50"
                 placeholder="Activity name"
                 value={taskData.activity}
                 onChangeText={(text) => setTaskData({ ...taskData, activity: text })}
@@ -245,7 +201,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, editingTask }) => {
                 <Text className="text-gray-700">Duration (minutes)</Text>
               </View>
               <TextInput
-                className="border border-gray-300 rounded-lg p-2 text-gray-800"
+                className="border border-gray-300 rounded-lg p-2 text-gray-800 bg-gray-50"
                 placeholder="Duration in minutes"
                 keyboardType="numeric"
                 value={taskData.duration}
@@ -279,7 +235,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, editingTask }) => {
           </View>
 
           {/* Footer Buttons */}
-          <View className="flex-row justify-end space-x-2 mt-6">
+          <View className="flex-row justify-end space-x-2 mt-6 gap-1">
             <TouchableOpacity
               className="bg-gray-200 px-4 py-2 rounded-lg"
               onPress={onClose}

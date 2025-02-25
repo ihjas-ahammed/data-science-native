@@ -13,22 +13,22 @@ const ScheduleList = ({
   const [currentTaskIndex, setCurrentTaskIndex] = useState(-1);
 
   useEffect(() => {
-    const findCurrentTask = () => {
+    const updateCurrentTask = () => {
       if (schedule.length === 0) return -1;
 
       const now = new Date();
-      return schedule.findIndex(task => {
+      const currentIndex = schedule.findIndex(task => {
         const [hours, minutes] = task.time.split(':');
         let scheduleStart = new Date();
         scheduleStart.setHours(parseInt(hours), parseInt(minutes), 0);
         const scheduleEnd = new Date(scheduleStart.getTime() + task.duration * 60000);
         return now >= scheduleStart && now <= scheduleEnd;
       });
+      setCurrentTaskIndex(currentIndex);
     };
 
-    const interval = setInterval(() => {
-      setCurrentTaskIndex(findCurrentTask());
-    }, 1000);
+    updateCurrentTask(); // Initial check
+    const interval = setInterval(updateCurrentTask, 1000);
 
     return () => clearInterval(interval);
   }, [schedule]);
@@ -58,10 +58,41 @@ const ScheduleList = ({
     }).replace(/\s/g, '');
   };
 
+  // Sort schedule by time and completion status
+  const sortedSchedule = [...schedule].sort((a, b) => {
+    const now = new Date();
+    const [aHours, aMinutes] = a.time.split(':');
+    const [bHours, bMinutes] = b.time.split(':');
+    
+    const aStart = new Date().setHours(parseInt(aHours), parseInt(aMinutes), 0);
+    const bStart = new Date().setHours(parseInt(bHours), parseInt(bMinutes), 0);
+    const aEnd = aStart + a.duration * 60000;
+    const bEnd = bStart + b.duration * 60000;
+
+    const aProgress = calculateProgress(a);
+    const bProgress = calculateProgress(b);
+
+    // Completed tasks (100% progress) go to bottom
+    if (aProgress.real === 100 && bProgress.real !== 100) return 1;
+    if (bProgress.real === 100 && aProgress.real !== 100) return -1;
+    if (aProgress.real === 100 && bProgress.real === 100) {
+      return aStart - bStart; // Among completed, sort by start time
+    }
+
+    // Current task (if any) should be near top
+    const aIsCurrent = now >= aStart && now <= aEnd;
+    const bIsCurrent = now >= bStart && now <= bEnd;
+    if (aIsCurrent && !bIsCurrent) return -1;
+    if (bIsCurrent && !aIsCurrent) return 1;
+
+    // Sort remaining tasks by start time
+    return aStart - bStart;
+  });
+
   const renderItem = ({ item, index }) => {
     const progress = calculateProgress(item);
     const endTime = calculateEndTime(item.time, item.duration);
-    const isCurrent = index === currentTaskIndex;
+    const isCurrent = sortedSchedule.findIndex(t => t.id === item.id) === currentTaskIndex && currentTaskIndex !== -1;
 
     return (
       <View className={`bg-white rounded-lg p-4 mb-2 shadow-sm ${isCurrent ? 'border-l-4 border-blue-500' : ''}`}>
@@ -124,7 +155,7 @@ const ScheduleList = ({
         </TouchableOpacity>
       </View>
 
-      {schedule.length === 0 ? (
+      {sortedSchedule.length === 0 ? (
         <View className="flex-1 justify-center items-center">
           <Text className="text-gray-500">
             No tasks scheduled. Click "Add Task" to get started.
@@ -132,7 +163,7 @@ const ScheduleList = ({
         </View>
       ) : (
         <FlatList
-          data={schedule}
+          data={sortedSchedule}
           renderItem={renderItem}
           keyExtractor={item => item.id.toString()}
           showsVerticalScrollIndicator={false}

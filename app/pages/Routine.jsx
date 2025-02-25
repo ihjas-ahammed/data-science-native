@@ -58,8 +58,8 @@ const Routine = () => {
 
       Notifications.scheduleNotificationAsync({
         content: {
-          title: `${task.title} Completed`,
-          body: `Your task "${task.title}" has reached its scheduled end time!`,
+          title: `${task.activity} session started`,
+          body: `It wiil end in ${task.duration} minutes!`,
         },
         trigger,
       });

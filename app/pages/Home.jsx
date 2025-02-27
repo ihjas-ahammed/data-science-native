@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 const courseData = {
   semester2: [
     {
-      title: 'Computer Science',
+      title: 'Data Science',
       modules: [
         { text: 'Module 1', path: '/cs2/mod1.html' },
         { text: 'Module 2', path: '/cs2/mod2.html' },
@@ -32,6 +32,15 @@ const courseData = {
         { text: 'Lesson 7', path: '/arabic/lesson7/' },
       ],
     },
+    {
+      title: 'Web Design',
+      modules: [
+        { text: 'Module 1', path: '/cs2.1/mod1.html' },
+        { text: 'Module 2', path: '/cs2.1/mod2.html' },
+        { text: 'Module 3', path: '/cs2.1/mod3.html' },
+        { text: 'Module 4', path: '/cs2.1/mod4.html' },
+      ],
+    }
   ],
 };
 

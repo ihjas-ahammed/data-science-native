@@ -10,6 +10,7 @@ import TopicProgress from '../components/progress/TopicProgress';
 import ProgressStats from '../components/progress/ProgressStats';
 import EditDialog from '../components/progress/EditDialog';
 import ImportExportDialog from '../components/progress/ImportExportDialog'; // New component
+import RoutineModal from '../components/progress/RoutineModal';
 
 const checkNetworkStatus = async () => {
     try {
@@ -24,7 +25,7 @@ const checkNetworkStatus = async () => {
     }
 };
 
-const Progress = ({ firebaseApp }) => {
+const Progress = ({ firebaseApp,setPage }) => {
     const [data, setData] = useState([]);
     const [activeBook, setActiveBook] = useState(null);
     const [activeTopic, setActiveTopic] = useState(null);
@@ -32,6 +33,8 @@ const Progress = ({ firebaseApp }) => {
     const [importExportDialog, setImportExportDialog] = useState(false); // New state for import/export dialog
     const [store, setStore] = useState([]);
     const [isOnline, setIsOnline] = useState(true); // Track network status
+    const [routineModal, setRoutineModal] = useState(false);
+    const [currentModule, setCurrentModule] = useState([]);
 
     const defaultData = [
             // ... (rest of defaultData remains the same as in your original code)
@@ -206,7 +209,10 @@ const Progress = ({ firebaseApp }) => {
                 </View>
 
                 {/* Progress Stats */}
-                <ProgressStats stats={calculateStats()} />
+                <ProgressStats stats={calculateStats()} onAddTask={(index)=>{
+                    setCurrentModule(data[index])
+                    setRoutineModal(true)
+                }}/>
 
                 {/* Learning Cards */}
                 <View className="space-y-4">
@@ -271,6 +277,14 @@ const Progress = ({ firebaseApp }) => {
                 onClose={() => setImportExportDialog(false)}
                 firebaseApp={firebaseApp}
                 onImportData={handleImportData}
+            />
+            <RoutineModal
+                visible={routineModal}
+                courseData={currentModule}
+                onClose={()=>{
+                    setRoutineModal(false)
+                    setPage("Routine")
+                }}
             />
 
             {/* Toast Component for Notifications */}

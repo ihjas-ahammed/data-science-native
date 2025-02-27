@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Touchable, TouchableOpacity } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
-const ProgressStats = ({ stats }) => {
+const ProgressStats = ({ stats, onAddTask }) => {
     return (
         <View className="p-2.5 gap-2.5">
             {/* First Stat (Overall Progress) */}
@@ -43,10 +43,11 @@ const ProgressStats = ({ stats }) => {
             {/* Remaining Stats in Three Columns */}
             <View className="flex flex-row gap-2 flex-wrap justify-center">
                 {stats.slice(1).map((stat, index) => (
-                    <View
-                        key={index}
+                    <TouchableOpacity
                         className="bg-black rounded-lg p-3 w-[31%]"
-                    >
+                        activeOpacity={0.7}
+                        key={index}
+                        onPress={()=>onAddTask(index)}>
                         <View className="flex items-center gap-2">
                             <AnimatedCircularProgress
                                 size={60}
@@ -69,7 +70,7 @@ const ProgressStats = ({ stats }) => {
                                 {stat.title}
                             </Text>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 ))}
             </View>
         </View>

@@ -31,7 +31,7 @@ export default function App() {
       <NavBar current={current} setCurrent={(newCurrent) => setcurrent(newCurrent)} />
       {current == "Notes" ? <Home /> : <></>}
       {current == "Routine" ? <Routine firebaseApp={app}/> : <></>}
-      {current == "Progress" ? <Progress firebaseApp={app}/>: <></>}
+      {current == "Progress" ? <Progress firebaseApp={app} setPage={(page)=>setcurrent(page)}/>: <></>}
       <StatusBar style="auto" />
     </SafeAreaView>
   )

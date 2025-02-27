@@ -7,6 +7,8 @@ const LearningCard = ({ title, progress, onClick, isActive }) => {
   return (
     <TouchableOpacity
       onPress={onClick}
+      
+      activeOpacity={0.7}
       className="bg-black rounded-lg p-3 mb-2 mx-3"
     >
       <View className="flex-row items-center justify-between">

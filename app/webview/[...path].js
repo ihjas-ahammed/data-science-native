@@ -164,6 +164,7 @@ const NotesPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState(null);
   const [markdownLoaded, setMarkdownLoaded] = useState(false)
+  const [loadingMessage, setsetLoadingMessage] = useState("Preparing...")
 
   const ensureDirectoryExists = async (dirPath) => {
     try {

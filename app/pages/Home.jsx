@@ -8,19 +8,19 @@ const courseData = {
     {
       title: 'Data Science',
       modules: [
-        { text: 'Module 1', path: '/cs2/mod1.html' },
-        { text: 'Module 2', path: '/cs2/mod2.html' },
-        { text: 'Module 3', path: '/cs2/mod3.html' },
-        { text: 'Module 4', path: '/cs2/mod4.html' },
+        { text: 'Module 1', path: '/cs2/mod1.md' },
+        { text: 'Module 2', path: '/cs2/mod2.md' },
+        { text: 'Module 3', path: '/cs2/mod3.md' },
+        { text: 'Module 4', path: '/cs2/mod4.md' },
         { text: 'Objectives', path: '/cs2/qa/' },
       ],
     },
     {
       title: 'Statistics',
       modules: [
-        { text: 'Module 1', path: '/stat2/mod1.html' },
-        { text: 'Module 2', path: '/stat2/mod2.html' },
-        { text: 'Module 3', path: '/stat2/mod3.html' }
+        { text: 'Module 1', path: '/stat2/mod1' },
+        { text: 'Module 2', path: '/stat2/mod2' },
+        { text: 'Module 3', path: '/stat2/mod3' }
       ],
     },
     {
@@ -35,10 +35,10 @@ const courseData = {
     {
       title: 'Web Design',
       modules: [
-        { text: 'Module 1', path: '/cs2.1/mod1.html' },
-        { text: 'Module 2', path: '/cs2.1/mod2.html' },
-        { text: 'Module 3', path: '/cs2.1/mod3.html' },
-        { text: 'Module 4', path: '/cs2.1/mod4.html' },
+        { text: 'Module 1', path: '/cs2.1/mod1.md' },
+        { text: 'Module 2', path: '/cs2.1/mod2.md' },
+        { text: 'Module 3', path: '/cs2.1/mod3.md' },
+        { text: 'Module 4', path: '/cs2.1/mod4.md' },
       ],
     }
   ],
@@ -51,13 +51,13 @@ const Home = () => {
   const ModuleButton = ({ text, path }) => (
     <TouchableOpacity
       className="bg-white/20 rounded-[10px] px-5 py-5 mb-1"
-      onPress={() => router.push(`/pages/notes`)}
+      onPress={() => router.push(`/webview${path}`)}
     >
       <Text className="text-white">{text}</Text>
     </TouchableOpacity>
   );
 
-  // Reusable Course Card
+  // Reusable Course Card 
   const CourseCard = ({ semester, title, modules, colSpan }) => (
     <View className={`bg-black rounded-[10px] p-5 flex`}>
       <Text className="text-2xl font-bold text-white mb-6 mx-auto">{title}</Text>

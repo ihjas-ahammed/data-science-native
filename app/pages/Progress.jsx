@@ -1,46 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import * as SecureStore from 'expo-secure-store'; // For offline storage
+import { View, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 import { getDatabase, ref, get } from 'firebase/database';
-import { Ionicons } from '@expo/vector-icons'; // For icons
-import Toast from 'react-native-toast-message'; // For toast notifications
+import { Ionicons } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
 
 import LearningCard from '../components/progress/LearningCard';
 import TopicProgress from '../components/progress/TopicProgress';
 import ProgressStats from '../components/progress/ProgressStats';
 import EditDialog from '../components/progress/EditDialog';
-import ImportExportDialog from '../components/progress/ImportExportDialog'; // New component
+import ImportExportDialog from '../components/progress/ImportExportDialog';
 import RoutineModal from '../components/progress/RoutineModal';
 
 const checkNetworkStatus = async () => {
     try {
-        // Attempt a simple fetch to a reliable endpoint
         const response = await fetch("https://8.8.8.8", {
             method: "HEAD",
-            timeout: 5000 // 5-second timeout
+            timeout: 5000
         });
-        return response.status >= 200 && response.status < 300; // Success if status is 2xx
+        return response.status >= 200 && response.status < 300;
     } catch (error) {
-        return false; // Offline or request failed
+        return false;
     }
 };
 
-const Progress = ({ firebaseApp,setPage }) => {
+const Progress = ({ firebaseApp, setPage }) => {
+    // State declarations
     const [data, setData] = useState([]);
+    const [store, setStore] = useState([]);
     const [activeBook, setActiveBook] = useState(null);
     const [activeTopic, setActiveTopic] = useState(null);
     const [editDialog, setEditDialog] = useState(false);
-    const [importExportDialog, setImportExportDialog] = useState(false); // New state for import/export dialog
-    const [store, setStore] = useState([]);
-    const [isOnline, setIsOnline] = useState(true); // Track network status
+    const [importExportDialog, setImportExportDialog] = useState(false);
     const [routineModal, setRoutineModal] = useState(false);
     const [currentModule, setCurrentModule] = useState([]);
+    const [isOnline, setIsOnline] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const defaultData = [
-            // ... (rest of defaultData remains the same as in your original code)
-];
+        // Your default data structure here
+    ];
 
-    // Load progress data from expo-secure-store
+    // Data loading functions
     const loadData = async () => {
         try {
             const storedData = await SecureStore.getItemAsync('progressData');
@@ -55,7 +56,6 @@ const Progress = ({ firebaseApp,setPage }) => {
         }
     };
 
-    // Load syllabus store from Firebase
     const loadStore = async () => {
         try {
             const db = getDatabase(firebaseApp);
@@ -63,38 +63,32 @@ const Progress = ({ firebaseApp,setPage }) => {
             const snapshot = await get(storeRef);
             if (snapshot.exists()) {
                 setStore(snapshot.val());
-            } else {
-                console.log('No syllabus store found in Firebase');
             }
         } catch (error) {
             console.error('Error loading store data:', error);
         }
     };
 
-    // Check network status
+    // Initial data loading and network checking
     useEffect(() => {
-        // Initial check
-        const loadInitialData = async () => {
+        const initializeData = async () => {
+            setIsLoading(true);
             const onlineStatus = await checkNetworkStatus();
             setIsOnline(onlineStatus);
-            loadData(); // Your existing function
-            loadStore(); // Your existing function
+            await Promise.all([loadData(), loadStore()]);
+            setIsLoading(false);
         };
-        loadInitialData();
 
-        // Poll every 5 seconds to monitor status
+        initializeData();
+
         const intervalId = setInterval(async () => {
-            const onlineStatus = await checkNetworkStatus();
-            setIsOnline(onlineStatus);
+            setIsOnline(await checkNetworkStatus());
         }, 5000);
 
-        // Cleanup interval on unmount
-        return () => {
-            clearInterval(intervalId);
-        };
+        return () => clearInterval(intervalId);
     }, []);
 
-    // Save progress data to expo-secure-store
+    // Data manipulation functions
     const saveData = async (newData) => {
         try {
             await SecureStore.setItemAsync('progressData', JSON.stringify(newData));
@@ -104,21 +98,20 @@ const Progress = ({ firebaseApp,setPage }) => {
         }
     };
 
-    // Handle imported data
     const handleImportData = async (importedData) => {
         await saveData(importedData);
     };
 
     const handleLevelChange = async (bookName, topicName, subtopicName, newValue) => {
-        const newData = data.map((book) => {
+        const newData = data.map(book => {
             if (book.name === bookName) {
                 return {
                     ...book,
-                    topics: book.topics.map((topic) => {
+                    topics: book.topics.map(topic => {
                         if (topic.name === topicName) {
                             return {
                                 ...topic,
-                                subtopics: topic.subtopics.map((subtopic) => {
+                                subtopics: topic.subtopics.map(subtopic => {
                                     if (subtopic.name === subtopicName) {
                                         return { ...subtopic, level: newValue + 1 };
                                     }
@@ -135,6 +128,7 @@ const Progress = ({ firebaseApp,setPage }) => {
         await saveData(newData);
     };
 
+    // Progress calculation functions
     const getColorByPercentage = (percentage) => {
         if (percentage < 0 || percentage > 100) return '#777777';
         const hue = Math.floor((percentage / 100) * 300);
@@ -153,26 +147,26 @@ const Progress = ({ firebaseApp,setPage }) => {
     const calculateStats = () => {
         const allTopics = data.flatMap(book => book.topics.flatMap(topic => topic.subtopics));
         const totalProgress = calculateProgress(allTopics);
-        const rt = [
-            {
-                title: 'Overall Progress',
-                value: Math.round(totalProgress),
-                color: getColorByPercentage(Math.round(totalProgress)),
-                description: 'Total learning progress',
-            },
-        ];
+        const stats = [{
+            title: 'Overall Progress',
+            value: Math.round(totalProgress),
+            color: getColorByPercentage(Math.round(totalProgress)),
+            description: 'Total learning progress',
+        }];
+        
         data.forEach(book => {
-            rt.push({
+            const bookProgress = calculateProgress(book.topics.flatMap(t => t.subtopics));
+            stats.push({
                 title: book.name,
-                value: parseInt(calculateProgress(book.topics.flatMap(t => t.subtopics))),
-                color: getColorByPercentage(parseInt(calculateProgress(book.topics.flatMap(t => t.subtopics)))),
+                value: parseInt(bookProgress),
+                color: getColorByPercentage(parseInt(bookProgress)),
                 description: '',
             });
         });
-        return rt;
+        return stats;
     };
 
-    // Handler for cloud button click
+    // Button handlers
     const handleCloudButtonClick = () => {
         if (!isOnline) {
             Toast.show({
@@ -188,17 +182,14 @@ const Progress = ({ firebaseApp,setPage }) => {
     return (
         <View className="flex-1 bg-white">
             <ScrollView contentContainerStyle={{ padding: 16 }}>
-                {/* Header with Buttons */}
+                {/* Header */}
                 <View className="flex-row items-center justify-end space-x-3 mr-2">
-                    {/* Cloud Button for Import/Export */}
                     <TouchableOpacity
                         onPress={handleCloudButtonClick}
                         className="bg-black p-2 rounded-lg mr-2"
                     >
                         <Ionicons name="cloud" size={24} color="white" />
                     </TouchableOpacity>
-                    
-                    {/* Edit Button */}
                     <TouchableOpacity
                         onPress={() => isOnline ? setEditDialog(true) : alert('No network available')}
                         className="bg-black/10 p-2 rounded-lg"
@@ -209,10 +200,13 @@ const Progress = ({ firebaseApp,setPage }) => {
                 </View>
 
                 {/* Progress Stats */}
-                <ProgressStats stats={calculateStats()} onAddTask={(index)=>{
-                    setCurrentModule(data[index])
-                    setRoutineModal(true)
-                }}/>
+                <ProgressStats 
+                    stats={calculateStats()} 
+                    onAddTask={(index) => {
+                        setCurrentModule(data[index]);
+                        setRoutineModal(true);
+                    }}
+                />
 
                 {/* Learning Cards */}
                 <View className="space-y-4">
@@ -256,38 +250,44 @@ const Progress = ({ firebaseApp,setPage }) => {
                 </View>
             </ScrollView>
 
-            {/* Edit Dialog */}
+            {/* Dialogs and Modals */}
             <EditDialog
                 open={editDialog}
                 courses={store}
                 onClose={() => setEditDialog(false)}
                 data={data}
                 onSave={async (dt) => {
-                    if (isOnline) {
-                        await saveData(dt);
-                    } else {
-                        alert('Cannot save changes offline');
-                    }
+                    if (isOnline) await saveData(dt);
+                    else alert('Cannot save changes offline');
                 }}
             />
 
-            {/* Import/Export Dialog */}
             <ImportExportDialog
                 open={importExportDialog}
                 onClose={() => setImportExportDialog(false)}
                 firebaseApp={firebaseApp}
                 onImportData={handleImportData}
             />
+
             <RoutineModal
                 visible={routineModal}
                 courseData={currentModule}
-                onClose={()=>{
-                    setRoutineModal(false)
-                    setPage("Routine")
+                onClose={() => {
+                    setRoutineModal(false);
+                    setPage("Routine");
                 }}
             />
 
-            {/* Toast Component for Notifications */}
+            {/* Loading Overlay */}
+            {isLoading && (
+                <View 
+                    className="absolute inset-0 flex justify-center items-center"
+                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.7)' }}
+                >
+                    <ActivityIndicator size="large" color="#000000" />
+                </View>
+            )}
+
             <Toast />
         </View>
     );

@@ -51,7 +51,7 @@ const Home = () => {
   const ModuleButton = ({ text, path }) => (
     <TouchableOpacity
       className="bg-white/20 rounded-[10px] px-5 py-5 mb-1"
-      onPress={() => router.push(`/webview${path}`)}
+      onPress={() => router.push(`/pages/notes`)}
     >
       <Text className="text-white">{text}</Text>
     </TouchableOpacity>

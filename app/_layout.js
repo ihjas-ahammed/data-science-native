@@ -7,7 +7,7 @@ const RootLayout = () => {
     return (
         <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }}/>
-            
+            <Stack.Screen name="pages/notes"/>
             <Stack.Screen name="webview/[...path]" options={{ headerShown: false }}/>
         </Stack>
     )

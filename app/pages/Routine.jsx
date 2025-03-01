@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Alert, FlatList, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Alert, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import * as Notifications from 'expo-notifications';
 import { Ionicons } from '@expo/vector-icons';
@@ -29,6 +29,7 @@ const Routine = ({ firebaseApp }) => {
   const [isSubtasksModalOpen, setIsSubtasksModalOpen] = useState(false);
   const [isImportExportModalOpen, setIsImportExportModalOpen] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // New loading state
 
   // Check network status
   const checkNetworkStatus = async () => {
@@ -46,6 +47,7 @@ const Routine = ({ firebaseApp }) => {
   // Load schedule from SecureStore
   useEffect(() => {
     const loadSchedule = async () => {
+      setIsLoading(true); // Start loading
       if (username) {
         const storedSchedule = await SecureStore.getItemAsync(`routine-${username}`);
         if (storedSchedule) {
@@ -56,20 +58,26 @@ const Routine = ({ firebaseApp }) => {
             return timeA - timeB;
           });
           setSchedule(sortedSchedule);
-          scheduleNotifications(sortedSchedule);
+          await scheduleNotifications(sortedSchedule);
         }
       }
+      setIsLoading(false); // Stop loading
     };
-    loadSchedule();
-    
-    // Check network status initially and periodically
-    const checkOnlineStatus = async () => {
+
+    const initialize = async () => {
+      await loadSchedule();
+      
+      // Check network status initially and periodically
       const status = await checkNetworkStatus();
       setIsOnline(status);
     };
     
-    checkOnlineStatus();
-    const intervalId = setInterval(checkOnlineStatus, 10000);
+    initialize();
+    
+    const intervalId = setInterval(async () => {
+      const status = await checkNetworkStatus();
+      setIsOnline(status);
+    }, 10000);
     
     return () => clearInterval(intervalId);
   }, [username]);
@@ -88,7 +96,7 @@ const Routine = ({ firebaseApp }) => {
       Notifications.scheduleNotificationAsync({
         content: {
           title: `${task.activity} session started`,
-          body: `It wiil end in ${task.duration} minutes!`,
+          body: `It will end in ${task.duration} minutes!`,
         },
         trigger,
       });
@@ -134,7 +142,7 @@ const Routine = ({ firebaseApp }) => {
   // Save to SecureStore
   const saveToStore = async (newSchedule) => {
     await SecureStore.setItemAsync(`routine-${username}`, JSON.stringify(newSchedule));
-    scheduleNotifications(newSchedule);
+    await scheduleNotifications(newSchedule);
   };
 
   // Task management functions
@@ -209,14 +217,12 @@ const Routine = ({ firebaseApp }) => {
 
   const renderContent = () => (
     <>
-
-<ProgressOverview
+      <ProgressOverview
         schedule={schedule}
         calculateProgress={calculateProgress}
       />
       <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 10 }}>
-      
-        
+        {/* You can add additional buttons here if needed */}
       </View>
       <ScheduleList
         schedule={schedule}
@@ -242,7 +248,7 @@ const Routine = ({ firebaseApp }) => {
   return (
     <View className="flex-1 bg-gray-100">
       <FlatList
-        data={[1]} // Single item to render all content once
+        data={[1]}
         renderItem={() => (
           <View className="px-4 pt-4">
             <View className="bg-white rounded-lg shadow-lg p-4 mb-4">
@@ -251,7 +257,7 @@ const Routine = ({ firebaseApp }) => {
           </View>
         )}
         keyExtractor={() => 'routine-content'}
-        ListFooterComponent={<View className="h-4" />} // Optional spacing at bottom
+        ListFooterComponent={<View className="h-4" />}
         showsVerticalScrollIndicator={false}
       />
 
@@ -279,7 +285,6 @@ const Routine = ({ firebaseApp }) => {
         onUpdateSubtasks={(subtasks) => updateTask(currentTaskId, { subtasks })}
       />
 
-      {/* Import/Export Dialog */}
       <ImportExportRoutineDialog
         isOpen={isImportExportModalOpen}
         onClose={() => setIsImportExportModalOpen(false)}
@@ -287,6 +292,16 @@ const Routine = ({ firebaseApp }) => {
         username={username}
         onImportData={handleImportData}
       />
+
+      {/* Loading Overlay */}
+      {isLoading && (
+        <View 
+          className="absolute inset-0 flex justify-center items-center"
+          style={{ backgroundColor: 'rgba(255, 255, 255, 0.7)' }}
+        >
+          <ActivityIndicator size="large" color="#000000" />
+        </View>
+      )}
     </View>
   );
 };

@@ -1,5 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
-import { ImageBackground, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+
+import { ImageBackground, SafeAreaView, StyleSheet, Text, View , StatusBar } from 'react-native';
 import "./global.css"
 import NavBar from './components/NavBar';
 import Home from './pages/Home'
@@ -29,7 +29,7 @@ export default function App() {
 
     <SafeAreaView className='flex-1'>
     
-          <StatusBar barStyle="light-content" backgroundColor="#000" />
+          <StatusBar barStyle="light-content" backgroundColor="#222" />
       <NavBar current={current} setCurrent={(newCurrent) => setcurrent(newCurrent)} />
       {current == "Notes" ? <Home /> : <></>}
       {current == "Routine" ? <Routine firebaseApp={app}/> : <></>}

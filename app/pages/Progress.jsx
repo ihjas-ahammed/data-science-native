@@ -81,8 +81,19 @@ const Progress = ({ firebaseApp, setPage }) => {
 
         const intervalId = setInterval(async () => {
             setIsOnline(await checkNetworkStatus());
-            if(store == [] && await checkNetworkStatus()) await Promise.all([loadStore()]);
+            await Promise.all([loadStore()]);
         }, 5000);
+
+        const netStat = async () => {
+            setIsOnline(await checkNetworkStatus());
+            await Promise.all([loadStore()]);
+        }
+
+        try{
+            netStat()
+        }catch(e){
+
+        }
 
         return () => clearInterval(intervalId);
     }, []);

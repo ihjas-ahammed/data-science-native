@@ -7,7 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 // Sample questions (would be replaced with your full question set)
 
 
-const QuizScreen = ({sampleQuestions}) => {
+const QuizScreen = ({sampleQuestions, title}) => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [options, setOptions] = useState([]);
@@ -220,7 +220,7 @@ const QuizScreen = ({sampleQuestions}) => {
         <TouchableOpacity className="p-2" onPress={handleExit}>
           <MaterialIcons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-bold flex-1 ml-4">Data Science Quiz</Text>
+        <Text className="text-white text-lg font-bold flex-1 ml-4">{title}</Text>
         <View className="bg-white bg-opacity-20 px-3 py-1.5 rounded-full">
           <Text className="text-black font-bold">Score: {score}</Text>
         </View>

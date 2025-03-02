@@ -127,7 +127,9 @@ const Home = () => {
         <TouchableOpacity
           className="flex h-full justify-center px-4"
           onPress={() => {
-            router.push(`/cog?qa=${JSON.stringify(qa)}`)
+            let t = JSON.stringify({title:text,qa:qa})
+            console.log(t)
+            router.push(`/cog?dt=${t}`)
           }}>
           <Ionicons name="cog-outline" size={24} color="white" />
         </TouchableOpacity>

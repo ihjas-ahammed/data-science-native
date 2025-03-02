@@ -6,8 +6,12 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import RNFS from 'react-native-fs'
 
 const cog = () => {
-  const { qa } = useLocalSearchParams()
-  const { name, path, obj } = JSON.parse(qa)
+  const { dt } = useLocalSearchParams()
+  
+
+  const {qa,title} = JSON.parse(dt)
+  
+  const { name, path, obj } = qa
   
   const [data, setData] = useState({})
   const [isLoading, setIsLoading] = useState(true)
@@ -81,7 +85,7 @@ const cog = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" backgroundColor="#4f46e5" />
-      <QuizScreen sampleQuestions={data[obj]} />
+      <QuizScreen sampleQuestions={data[obj]} title={title}/>
     </SafeAreaView>
   )
 }

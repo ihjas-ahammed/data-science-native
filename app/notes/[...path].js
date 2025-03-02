@@ -33,23 +33,23 @@ const INDEX_HTML_CONTENT_TEMPLATE = `
     <!-- MathJax (async for optional math rendering) -->
     <script id="MathJax-script" async src="mathjax.min.js"></script>
     <!-- Highlight.js for Code Syntax Highlighting -->
-    <link rel="stylesheet" href="github-dark.min.css">
+    <link rel="stylesheet" href="github.min.css">
     <script src="highlight.min.js"></script>
     <style>
     body {
-        background: #000000;
+        background: #ffffff;
         padding: 30px;
         margin: 0;
         display: flex;
         width: 100vw;
-        color: #fff;
+        font-family:arial;
+        color: #000000;
     }
     .markdown-body {
+
         max-width: 100%;
-        background: #000000;
-        padding: 0;
-        margin: 0;
-        color: #fff;
+        padding-top:30px;
+        background: #ffffff;
     }
     </style>
     <script>
@@ -134,7 +134,7 @@ const DEPENDENCIES = {
   'katex.min.js': 'https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js',
   'contrib/auto-render.min.js': 'https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js',
   'mathjax.min.js': 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
-  'github-dark.min.css': 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css',
+  'github.min.css': 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css',
   'highlight.min.js': 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js',
 };
 
@@ -423,27 +423,27 @@ const NotesPage = () => {
         {isEditing ? (
           <>
             <TouchableOpacity className="p-2" onPress={handleSave}>
-              <Ionicons name="sync" size={18} color="white" />
+              <Ionicons name="sync" size={18} color="black" />
             </TouchableOpacity>
             <TouchableOpacity className="p-2" onPress={() => setIsEditing(false)}>
-              <Ionicons name="close" size={18} color="white" />
+              <Ionicons name="close" size={18} color="black" />
             </TouchableOpacity>
           </>
         ) : (
           <>
             <TouchableOpacity className="p-2" onPress={() => setIsEditing(true)}>
-              <Ionicons name="pencil" size={18} color="white" />
+              <Ionicons name="pencil" size={18} color="black" />
             </TouchableOpacity>
             <TouchableOpacity className="p-2" onPress={handleCloudAction}>
-              <Ionicons name="cloud" size={18} color="white" />
+              <Ionicons name="cloud" size={18} color="black" />
             </TouchableOpacity>
           </>
         )}
       </View>
       {isEditing ? (
-        <ScrollView className="flex-1 bg-black mt-10">
+        <ScrollView className="flex-1 bg-white mt-10">
           <TextInput
-            className="p-[30px] text-white text-sm"
+            className="p-[30px] text-black text-sm"
             multiline
             value={markdown}
             onChangeText={setMarkdown}
@@ -479,11 +479,11 @@ const NotesPage = () => {
               top: 0, left: 0, right: 0, bottom: 0,
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              backgroundColor: 'rgba(255, 255, 255, 0.8)',
               zIndex:10
             }}>
-              <ActivityIndicator size="large" color="#ffffff" />
-              <Text style={{ color: '#fff', marginTop: 10 }}>Loading Markdown...</Text>
+              <ActivityIndicator size="large" color="#000000" />
+              <Text style={{ color: '#000', marginTop: 10 }}>Loading Markdown...</Text>
             </View>
           ) : (<></>)}
         </View>

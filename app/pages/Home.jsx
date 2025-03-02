@@ -8,37 +8,36 @@ const courseData = {
     {
       title: 'Data Science',
       modules: [
-        { text: 'Module 1', path: '/cs2/mod1.md' ,webview: false  },
-        { text: 'Module 2', path: '/cs2/mod2.md' ,webview: false },
-        { text: 'Module 3', path: '/cs2/mod3.md' , webview: false},
-        { text: 'Module 4', path: '/cs2/mod4.md', webview: false },
-        { text: 'Objectives', path: '/cs2/qa/', webview: true },
+        { text: 'Module 1', path: '/cs2/mod1.md' ,webview: false, qa: {name:"obj",path:"/cs2/qa/js/levels.json", obj: 1}  },
+        { text: 'Module 2', path: '/cs2/mod2.md' ,webview: false, qa: {name:"obj",path:"/cs2/qa/js/levels.json", obj: 2}},
+        { text: 'Module 3', path: '/cs2/mod3.md' , webview: false, qa: {name:"obj",path:"/cs2/qa/js/levels.json", obj: 3}},
+        { text: 'Module 4', path: '/cs2/mod4.md', webview: false, qa: {} },
       ],
     },
     {
       title: 'Statistics',
       modules: [
-        { text: 'Module 1', path: '/stat2/mod1' , webview: false},
-        { text: 'Module 2', path: '/stat2/mod2' ,webview: false},
-        { text: 'Module 3', path: '/stat2/mod3' ,webview: false}
+        { text: 'Module 1', path: '/stat2/mod1' , webview: false, qa: {}},
+        { text: 'Module 2', path: '/stat2/mod2' ,webview: false, qa: {}},
+        { text: 'Module 3', path: '/stat2/mod3' ,webview: false, qa: {}}
       ],
     },
     {
       title: 'Arabic',
       modules: [
-        { text: 'Lesson 1', path: '/arabic/lesson1/' , webview: true},
-        { text: 'Lesson 2', path: '/arabic/lesson2/' ,webview: true},
-        { text: 'Lesson 5', path: '/arabic/lesson5/' ,webview: true },
-        { text: 'Lesson 7', path: '/arabic/lesson7/' ,webview: true },
+        { text: 'Lesson 1', path: '/arabic/lesson1/' , webview: true, qa: {}},
+        { text: 'Lesson 2', path: '/arabic/lesson2/' ,webview: true, qa: {}},
+        { text: 'Lesson 5', path: '/arabic/lesson5/' ,webview: true , qa: {}},
+        { text: 'Lesson 7', path: '/arabic/lesson7/' ,webview: true , qa: {}},
       ],
     },
     {
       title: 'Web Design',
       modules: [
-        { text: 'Module 1', path: '/cs2.1/mod1.md' ,webview: false},
-        { text: 'Module 2', path: '/cs2.1/mod2.md' , webview: false},
-        { text: 'Module 3', path: '/cs2.1/mod3.md' , webview: false},
-        { text: 'Module 4', path: '/cs2.1/mod4.md' , webview: false},
+        { text: 'Module 1', path: '/cs2.1/mod1.md' ,webview: false , qa: {}},
+        { text: 'Module 2', path: '/cs2.1/mod2.md' , webview: false , qa: {}},
+        { text: 'Module 3', path: '/cs2.1/mod3.md' , webview: false , qa: {}},
+        { text: 'Module 4', path: '/cs2.1/mod4.md' , webview: false , qa: {}},
       ],
     }
   ],

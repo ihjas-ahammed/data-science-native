@@ -28,6 +28,8 @@ export default function App() {
   return (
 
     <SafeAreaView className='flex-1'>
+    
+          <StatusBar barStyle="light-content" backgroundColor="#000" />
       <NavBar current={current} setCurrent={(newCurrent) => setcurrent(newCurrent)} />
       {current == "Notes" ? <Home /> : <></>}
       {current == "Routine" ? <Routine firebaseApp={app}/> : <></>}

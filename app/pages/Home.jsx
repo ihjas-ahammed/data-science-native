@@ -8,37 +8,37 @@ const courseData = {
     {
       title: 'Data Science',
       modules: [
-        { text: 'Module 1', path: '/cs2/mod1.md' },
-        { text: 'Module 2', path: '/cs2/mod2.md' },
-        { text: 'Module 3', path: '/cs2/mod3.md' },
-        { text: 'Module 4', path: '/cs2/mod4.md' },
-        { text: 'Objectives', path: '/cs2/qa/' },
+        { text: 'Module 1', path: '/cs2/mod1.md' ,webview: false  },
+        { text: 'Module 2', path: '/cs2/mod2.md' ,webview: false },
+        { text: 'Module 3', path: '/cs2/mod3.md' , webview: false},
+        { text: 'Module 4', path: '/cs2/mod4.md', webview: false },
+        { text: 'Objectives', path: '/cs2/qa/', webview: true },
       ],
     },
     {
       title: 'Statistics',
       modules: [
-        { text: 'Module 1', path: '/stat2/mod1' },
-        { text: 'Module 2', path: '/stat2/mod2' },
-        { text: 'Module 3', path: '/stat2/mod3' }
+        { text: 'Module 1', path: '/stat2/mod1' , webview: false},
+        { text: 'Module 2', path: '/stat2/mod2' ,webview: false},
+        { text: 'Module 3', path: '/stat2/mod3' ,webview: false}
       ],
     },
     {
       title: 'Arabic',
       modules: [
-        { text: 'Lesson 1', path: '/arabic/lesson1/' },
-        { text: 'Lesson 2', path: '/arabic/lesson2/' },
-        { text: 'Lesson 5', path: '/arabic/lesson5/' },
-        { text: 'Lesson 7', path: '/arabic/lesson7/' },
+        { text: 'Lesson 1', path: '/arabic/lesson1/' , webview: true},
+        { text: 'Lesson 2', path: '/arabic/lesson2/' ,webview: true},
+        { text: 'Lesson 5', path: '/arabic/lesson5/' ,webview: true },
+        { text: 'Lesson 7', path: '/arabic/lesson7/' ,webview: true },
       ],
     },
     {
       title: 'Web Design',
       modules: [
-        { text: 'Module 1', path: '/cs2.1/mod1.md' },
-        { text: 'Module 2', path: '/cs2.1/mod2.md' },
-        { text: 'Module 3', path: '/cs2.1/mod3.md' },
-        { text: 'Module 4', path: '/cs2.1/mod4.md' },
+        { text: 'Module 1', path: '/cs2.1/mod1.md' ,webview: false},
+        { text: 'Module 2', path: '/cs2.1/mod2.md' , webview: false},
+        { text: 'Module 3', path: '/cs2.1/mod3.md' , webview: false},
+        { text: 'Module 4', path: '/cs2.1/mod4.md' , webview: false},
       ],
     }
   ],
@@ -48,10 +48,16 @@ const Home = () => {
   const router = useRouter();
 
   // Reusable Module Button
-  const ModuleButton = ({ text, path }) => (
+  const ModuleButton = ({ text, path, webview }) => (
     <TouchableOpacity
       className="bg-white/20 rounded-[10px] px-5 py-5 mb-1"
-      onPress={() => router.push(`/webview${path}`)}
+      onPress={() => {
+          if(webview){
+            router.push(`/webview${path}`)
+          }else{
+            router.push(`/notes${path}`)
+          }
+      }}
     >
       <Text className="text-white">{text}</Text>
     </TouchableOpacity>
@@ -63,7 +69,7 @@ const Home = () => {
       <Text className="text-2xl font-bold text-white mb-6 mx-auto">{title}</Text>
       <View className="flex flex-col">
         {modules.map((module, idx) => (
-          <ModuleButton key={idx} text={module.text} path={module.path} />
+          <ModuleButton key={idx} text={module.text} path={module.path} webview={module.webview} />
         ))}
       </View>
     </View>

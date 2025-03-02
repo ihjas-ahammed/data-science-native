@@ -14,7 +14,7 @@ import * as SecureStore from 'expo-secure-store';
 import * as Notifications from 'expo-notifications';
 import { Ionicons } from '@expo/vector-icons';
 
-const RoutineModal = ({ visible, onClose, courseData }) => {
+const RoutineModal = ({ visible, onClose, courseData, onSave }) => {
   const [selectedModule, setSelectedModule] = useState('');
   const [selectedSubtasks, setSelectedSubtasks] = useState({});
   const [time, setTime] = useState(''); // Displayed as "HH:MM AM/PM"
@@ -120,7 +120,7 @@ const RoutineModal = ({ visible, onClose, courseData }) => {
     await SecureStore.setItemAsync(`routine-${username}`, JSON.stringify([...schedule, routineData]));
     scheduleNotifications([...schedule, routineData]);
     ToastAndroid.show('Task added successfully!', ToastAndroid.SHORT);
-    handleCancel();
+    handleSaveI();
   };
 
   // Reset and close modal
@@ -130,6 +130,14 @@ const RoutineModal = ({ visible, onClose, courseData }) => {
     setTime('');
     setDuration('');
     onClose();
+  };
+
+  const handleSaveI = () => {
+    setSelectedModule('');
+    setSelectedSubtasks({});
+    setTime('');
+    setDuration('');
+    onSave();
   };
 
   // Time picker handlers

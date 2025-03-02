@@ -73,9 +73,7 @@ const Progress = ({ firebaseApp, setPage }) => {
     useEffect(() => {
         const initializeData = async () => {
             setIsLoading(true);
-            const onlineStatus = await checkNetworkStatus();
-            setIsOnline(onlineStatus);
-            await Promise.all([loadData(), loadStore()]);
+            await Promise.all([loadData()]);
             setIsLoading(false);
         };
 
@@ -83,6 +81,7 @@ const Progress = ({ firebaseApp, setPage }) => {
 
         const intervalId = setInterval(async () => {
             setIsOnline(await checkNetworkStatus());
+            if(store == [] && await checkNetworkStatus()) await Promise.all([loadStore()]);
         }, 5000);
 
         return () => clearInterval(intervalId);
@@ -274,8 +273,14 @@ const Progress = ({ firebaseApp, setPage }) => {
                 courseData={currentModule}
                 onClose={() => {
                     setRoutineModal(false);
-                    setPage("Routine");
                 }}
+
+                onSave={
+                    ()=>{
+                        setRoutineModal(false)
+                        setPage("Routine")
+                    }
+                }
             />
 
             {/* Loading Overlay */}

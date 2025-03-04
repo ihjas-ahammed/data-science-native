@@ -3,7 +3,7 @@
     "name": "Sirius",
     "slug": "data-science-native",
     "scheme": "org",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -19,7 +19,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "me.ihjas.notes",
-      "versionCode": 9,
+      "versionCode": 10,
       "permissions": [
         "INTERNET"
       ],

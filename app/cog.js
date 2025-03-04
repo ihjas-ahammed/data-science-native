@@ -1,93 +1,147 @@
-import { View, Text, StatusBar, ActivityIndicator } from 'react-native'
-import React, { useState, useEffect } from 'react'
-import { useLocalSearchParams } from 'expo-router'
-import QuizScreen from './pages/QuizPage'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import RNFS from 'react-native-fs'
+import { View, Text, StatusBar, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { useLocalSearchParams, router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import RNFS from 'react-native-fs';
+import * as SecureStore from 'expo-secure-store';
+import CustomProgressBar from './components/cog/CustomProgressBar';
+
+import { MaterialIcons } from '@expo/vector-icons';
+
 
 const cog = () => {
-  const { dt } = useLocalSearchParams()
-  
+  // Extract parameters from the route
+  const { dt } = useLocalSearchParams();
+  const { qa, title } = JSON.parse(dt);
+  const { path, obj } = qa;
 
-  const {qa,title} = JSON.parse(dt)
-  
-  const { name, path, obj } = qa
-  
-  const [data, setData] = useState({})
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
+  // State definitions
+  const [data, setData] = useState([]); // Initialize as empty array to avoid mapping errors
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [scores, setScores] = useState({}); // Store scores for each section
 
-  // Define the file path in app's document directory
-  const filePath = `${RNFS.DocumentDirectoryPath}/quiz_data/${path}`
-  // Get the directory path (parent of the file)
-  const directoryPath = filePath.substring(0, filePath.lastIndexOf('/'))
+  // Define file path for quiz data
+  const filePath = `${RNFS.DocumentDirectoryPath}/quiz_data/${path}`;
+  const directoryPath = filePath.substring(0, filePath.lastIndexOf('/'));
 
+  // Function to sanitize section names for SecureStore keys
+  const sanitizeKey = (name) => {
+    return name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+  };
+
+  // Load quiz data from file or download it
   useEffect(() => {
     const loadData = async () => {
       try {
-        // Check if file exists
-        const fileExists = await RNFS.exists(filePath)
-        
+        const fileExists = await RNFS.exists(filePath);
         if (fileExists) {
-          // Read existing file
-          const fileContent = await RNFS.readFile(filePath, 'utf8')
-          setData(JSON.parse(fileContent))
+          const fileContent = await RNFS.readFile(filePath, 'utf8');
+          setData(JSON.parse(fileContent));
         } else {
-          // Create all parent directories recursively
-          await RNFS.mkdir(directoryPath, {
-            NSURLIsExcludedFromBackupKey: true
-          })
-          
-          // Download the file
-          const downloadUrl = `https://ihjas-ahammed.github.io/${path}`
+          await RNFS.mkdir(directoryPath, { NSURLIsExcludedFromBackupKey: true });
+          const downloadUrl = `https://ihjas-ahammed.github.io/${path}`;
           const downloadResult = await RNFS.downloadFile({
             fromUrl: downloadUrl,
             toFile: filePath,
-          }).promise
-
+          }).promise;
           if (downloadResult.statusCode === 200) {
-            const downloadedContent = await RNFS.readFile(filePath, 'utf8')
-            setData(JSON.parse(downloadedContent))
+            const downloadedContent = await RNFS.readFile(filePath, 'utf8');
+            setData(JSON.parse(downloadedContent));
           } else {
-            throw new Error('Download failed')
+            throw new Error('Download failed');
           }
         }
       } catch (err) {
-        setError('Failed to load quiz data')
-        console.error(err)
+        setError('Failed to load quiz data');
+        console.error(err);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
+    };
+    loadData();
+  }, [path]);
+
+  // Load scores from SecureStore once data is available
+  useEffect(() => {
+    const loadScores = async () => {
+      const scorePromises = data[obj+""].map((section) => {
+        const key = sanitizeKey(section.name);
+        return SecureStore.getItemAsync(key).then((scr) => ({
+          key,
+          score: scr ? parseInt(scr, 10) : 0,
+        }));
+      });
+      const scoresArray = await Promise.all(scorePromises);
+      const scoresObj = scoresArray.reduce((acc, { key, score }) => {
+        acc[key] = score;
+        return acc;
+      }, {});
+
+      setScores(scoresObj)
+
     }
+    loadScores();
+  });
 
-    loadData()
-  }, [path, filePath, directoryPath]) // Added filePath and directoryPath to dependencies
-
-  // Loading screen
+  // Loading state UI
   if (isLoading) {
     return (
-      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <SafeAreaView className="flex-1 justify-center items-center bg-gray-100">
         <ActivityIndicator size="large" color="#4f46e5" />
-        <Text style={{ marginTop: 10 }}>Loading Quiz Data...</Text>
       </SafeAreaView>
-    )
+    );
   }
 
-  // Error screen
+  // Error state UI
   if (error) {
     return (
-      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ color: 'red' }}>{error}</Text>
+      <SafeAreaView className="flex-1 justify-center items-center bg-gray-100">
+        <Text className="text-red-500 text-lg">{error}</Text>
       </SafeAreaView>
-    )
+    );
   }
 
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar barStyle="light-content" backgroundColor="#4f46e5" />
-      <QuizScreen sampleQuestions={data[obj]} title={title}/>
-    </SafeAreaView>
-  )
-}
+  const handleExit = () => {
+    router.back();
+  };
 
-export default cog
+  // Main UI with list of section cards
+  return (
+    <SafeAreaView className="flex-1 bg-gray-100">
+      <StatusBar barStyle="light-content" backgroundColor="#4f46e5" />
+      <View className="h-14 bg-indigo-600 flex-row items-center px-4 shadow-md">
+        <TouchableOpacity className="p-2" onPress={handleExit}>
+          <MaterialIcons name="arrow-back" size={24} color="white" />
+        </TouchableOpacity>
+        <Text className="text-white text-lg font-bold flex-1 ml-4">{title}</Text>
+      </View>
+      <ScrollView className="flex-1 p-4">
+        {data[obj + ""].map((section, index) => {
+          const key = sanitizeKey(section.name);
+          const score = scores[key] || 0;
+          const total = section.qa.length;
+
+          return (
+            <TouchableOpacity
+              key={index}
+              onPress={() => {
+                router.push('/quiz?qs=' + JSON.stringify({ name: section.name, qa: section.qa, key: key }));
+              }}
+              className="p-4 bg-white rounded-xl shadow-lg mb-4 border border-gray-200"
+            >
+              <Text className="text-xl font-semibold text-gray-800 mb-3">
+                {section.name}
+              </Text>
+              <View className="flex-row items-center">
+                <CustomProgressBar progress={total > 0 ? score / total : 0} height={10} />
+              </View>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+export default cog;

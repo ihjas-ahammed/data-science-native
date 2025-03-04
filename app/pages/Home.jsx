@@ -109,7 +109,7 @@ const Home = () => {
   }, []);
 
   // Reusable Module Button
-  const ModuleButton = ({ text, path, webview, qa }) => (
+  const ModuleButton = ({ text, path, webview, qa2 }) => (
     <View className="bg-white/20 rounded-[10px] flex-row mb-1 flex h-[40px] ">
       <TouchableOpacity
         className="h-full w-fit flex-1 px-4 justify-center"
@@ -123,15 +123,15 @@ const Home = () => {
       >
         <Text className="text-white">{text}</Text>
       </TouchableOpacity>
-      {qa.obj ?
+      {qa2 ?
         <TouchableOpacity
           className="flex h-full justify-center px-4"
           onPress={() => {
-            let t = JSON.stringify({title:text,qa:qa})
+            let t = JSON.stringify({title:text,qa:qa2})
             console.log(t)
             router.push(`/cog?dt=${t}`)
           }}>
-          <Ionicons name="cog-outline" size={24} color="white" />
+          <Ionicons name="caret-forward-circle-outline" size={24} color="white" />
         </TouchableOpacity>
         : <></>}
     </View>
@@ -143,7 +143,7 @@ const Home = () => {
       <Text className="text-2xl font-bold text-white mb-6 mx-auto">{title}</Text>
       <View className="flex flex-col">
         {modules.map((module, idx) => (
-          <ModuleButton key={idx} text={module.text} path={module.path} webview={module.webview} qa={module.qa} />
+          <ModuleButton key={idx} text={module.text} path={module.path} webview={module.webview} qa2={module.qa2} />
         ))}
       </View>
     </View>

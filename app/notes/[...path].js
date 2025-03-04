@@ -1,19 +1,46 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StatusBar, ActivityIndicator, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StatusBar, ActivityIndicator, SafeAreaView, ScrollView, KeyboardAvoidingView, Platform, Modal, Switch, Alert } from 'react-native';
 import { WebView } from 'react-native-webview';
 import RNFS from 'react-native-fs';
 import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import * as SecureStore from 'expo-secure-store';
+import { initializeApp } from 'firebase/app';
+import { getDatabase, ref, set, get, child, remove, query, orderByChild, equalTo, limitToFirst } from 'firebase/database';
 
 // Markdown placeholder for template
 const MARKDOWN_PLACEHOLDER = "%MARKDOWN_CONTENT%";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAnjWWep4dtxvn1YKtmdU7A002X2NAvlX0",
+  authDomain: "data-science-ef878.firebaseapp.com",
+  databaseURL: "https://data-science-ef878-default-rtdb.firebaseio.com",
+  projectId: "data-science-ef878",
+  storageBucket: "data-science-ef878.firebasestorage.app",
+  messagingSenderId: "1010841233830",
+  appId: "1:1010841233830:web:e7aa0b516ace71c1720767",
+  measurementId: "G-FL7XZR6X7Q"
+};
+
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+
+const sanitizePath = (path) => {
+  return path
+    .replace(/#/g, '%23')    // Replace # with %23
+    .replace(/\./g, '%2E')    // Replace . with %2E
+    .replace(/\$/g, '%24')    // Replace $ with %24
+    .replace(/\[/g, '%5B')    // Replace [ with %5B
+    .replace(/\]/g, '%5D')    // Replace ] with %5D
+    .replace(/%/g, '%25');    // Replace % with %25 (to handle already encoded characters)
+};
 
 const INDEX_HTML_CONTENT_TEMPLATE = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=0.8, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>Notes Preview</title>
     <!-- GitHub Markdown CSS -->
     <link rel="stylesheet" href="github-markdown.min.css"
@@ -46,7 +73,8 @@ const INDEX_HTML_CONTENT_TEMPLATE = `
         color: #000000;
     }
     .markdown-body {
-
+        
+        font-size:14pt;
         max-width: 100%;
         padding-top:30px;
         background: #ffffff;
@@ -157,6 +185,7 @@ const NotesPage = () => {
     );
   }
 
+  const sanitizedPath = sanitizePath(path);
   const webViewRef = useRef(null);
   const [localHtmlPath, setLocalHtmlPath] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -164,8 +193,29 @@ const NotesPage = () => {
   const [markdown, setMarkdown] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState(null);
-  const [markdownLoaded, setMarkdownLoaded] = useState(false)
-  const [loadingMessage, setLoadingMessage] = useState("Preparing...")
+  const [markdownLoaded, setMarkdownLoaded] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("Preparing...");
+  const [showChannelModal, setShowChannelModal] = useState(false);
+  const [channels, setChannels] = useState([]);
+  const [selectedChannel, setSelectedChannel] = useState('default');
+  const [userId, setUserId] = useState('');
+  const [pin, setPin] = useState('');
+  const [isPublic, setIsPublic] = useState(true);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  useEffect(() => {
+    const loadCredentials = async () => {
+      const storedUserId = await SecureStore.getItemAsync('userId');
+      const storedPin = await SecureStore.getItemAsync('pin');
+      if (storedUserId && storedPin) {
+        setUserId(storedUserId);
+        setPin(storedPin);
+        await fetchChannels()
+      }
+    };
+    loadCredentials();
+  }, []);
 
   const ensureDirectoryExists = async (dirPath) => {
     try {
@@ -219,35 +269,197 @@ const NotesPage = () => {
     }
   };
 
-  // Handle cloud sync manually
-  const handleCloudAction = async () => {
-    setIsLoading(true);
-    setLoadingMessage('Syncing with cloud...');
-    try {
-      const dataDir = `${RNFS.DocumentDirectoryPath}/notes`;
-      let mdFilePath = `${dataDir}/${path}`;
-      if (!path.includes('.')) {
-        mdFilePath = `${dataDir}/${path}/index.md`;
-      }
-      const exists = await RNFS.exists(mdFilePath);
-      if (exists) await RNFS.unlink(mdFilePath);
-      const mdUrl = `https://ihjas-ahammed.github.io/${path}`;
-      await safeDownloadFile(mdUrl, mdFilePath, (percent) => setProgress(Math.min(percent, 100)));
-      const mdContent = await RNFS.readFile(mdFilePath, 'utf8');
-      setMarkdown(mdContent);
-      const htmlPath = `${dataDir}/index.html`;
-      const jsonMarkdown = JSON.stringify(mdContent);
-      const htmlContent = INDEX_HTML_CONTENT_TEMPLATE.replace(MARKDOWN_PLACEHOLDER, jsonMarkdown);
+  const handleDeleteChannel = async (channelId) => {
+    if (!userId || !pin) {
+      setError('Please log in to delete notes');
+      setShowLoginModal(true);
+      return;
+    }
 
-      await RNFS.writeFile(htmlPath, htmlContent, 'utf8');
-      setLocalHtmlPath(`file://${htmlPath}`);
-      webViewRef.current?.reload();
+    try {
+      const dbRef = ref(database, `notes/${sanitizedPath}/${channelId}`);
+      const snapshot = await get(dbRef);
+
+      if (!snapshot.exists()) {
+        setError('Note not found');
+        return;
+      }
+
+      const channelData = snapshot.val();
+
+      if (channelData.name !== userId || channelData.pin !== pin) {
+        setError('You can only delete your own notes');
+        return;
+      }
+
+      Alert.alert(
+        "Confirm Delete",
+        "Are you sure you want to delete this note?",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Delete",
+            style: "destructive",
+            onPress: async () => {
+              setIsLoading(true);
+              try {
+                await remove(dbRef);
+                await fetchChannels();
+                if (selectedChannel === channelId) {
+                  setMarkdown('');
+                  const dataDir = `${RNFS.DocumentDirectoryPath}/notes`;
+                  const htmlPath = `${dataDir}/index.html`;
+                  const htmlContent = INDEX_HTML_CONTENT_TEMPLATE.replace(MARKDOWN_PLACEHOLDER, JSON.stringify(''));
+                  await RNFS.writeFile(htmlPath, htmlContent, 'utf8');
+                  setLocalHtmlPath(`file://${htmlPath}`);
+                  webViewRef.current?.reload();
+                }
+              } catch (err) {
+                setError(`Failed to delete note: ${err.message}`);
+              } finally {
+                setIsLoading(false);
+              }
+            }
+          }
+        ]
+      );
     } catch (err) {
-      setError(`Cloud sync failed: ${err.message}`);
+      setError(`Error verifying note ownership: ${err.message}`);
+    }
+  };
+
+  const fetchChannels = async () => {
+    try {
+      const dbRef = ref(database);
+      const snapshot = await get(child(dbRef, `notes/${sanitizedPath}`));
+      
+      const storedUserId = await SecureStore.getItemAsync('userId');
+      const storedPin = await SecureStore.getItemAsync('pin');
+
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const channelList = Object.entries(data).map(([key, value]) => ({
+          id: key,
+          ...value,
+          visible: value.type === 'public' || (userId && value.name === userId && value.pin === pin),
+          canDelete: storedUserId && value.name === storedUserId && value.pin === storedPin
+        })).filter(channel => channel.visible);
+        setChannels(channelList);
+      } else {
+        setChannels([]);
+      }
+    } catch (err) {
+      setError(`Failed to fetch channels: ${err.message}`);
+    }
+  };
+
+
+  const handleLogin = async () => {
+    if (!userId || !pin) {
+      setError('Please enter both User ID and PIN');
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await SecureStore.setItemAsync('userId', userId);
+      await SecureStore.setItemAsync('pin', pin);
+      await fetchChannels();
+      setShowLoginModal(false);
+    } catch (err) {
+      setError(`Login failed: ${err.message}`);
     } finally {
       setIsLoading(false);
     }
   };
+
+  const handleUpload = async () => {
+    if (!userId || !pin) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Check if user already has a note
+      const userNotesQuery = query(
+        ref(database, `notes/${sanitizedPath}`),
+        equalTo(userId),
+        limitToFirst(1)
+      );
+
+      const snapshot = await get(userNotesQuery);
+      let existingChannelId = null;
+
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        existingChannelId = Object.keys(data)[0];
+        const existingNote = Object.values(data)[0];
+        if (existingNote.pin !== pin) {
+          setError('PIN does not match existing note');
+          setIsLoading(false);
+          return;
+        }
+      }
+
+      const channelId = existingChannelId || `${sanitizePath(userId)}`;
+      const channelData = {
+        name: userId,
+        pin: pin,
+        note: markdown,
+        type: isPublic ? 'public' : 'private'
+      };
+
+      await set(ref(database, `notes/${sanitizedPath}/${channelId}`), channelData);
+      await fetchChannels();
+      setSelectedChannel(channelId);
+      setShowUploadModal(false);
+    } catch (err) {
+      setError(`Upload failed: ${err.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleChannelSelect = async (channelId) => {
+    setIsLoading(true);
+    try {
+      const mdUrl = `https://ihjas-ahammed.github.io/${path}`;
+
+      const dataDir = `${RNFS.DocumentDirectoryPath}/notes`;
+      const mdFilePath = `${dataDir}/${path}`;
+      let mdc = ''
+      if (channelId === 'default') {
+        RNFS.unlink(mdFilePath)
+        await safeDownloadFile(mdUrl, mdFilePath, setProgress);
+        const mdContent = await RNFS.readFile(mdFilePath, 'utf8');
+        setMarkdown(mdContent);
+        mdc = mdContent
+
+      } else {
+        const dbRef = ref(database);
+        const snapshot = await get(child(dbRef, `notes/${sanitizedPath}/${channelId}`));
+        if (snapshot.exists()) {
+          setMarkdown(snapshot.val().note);
+          mdc = snapshot.val().note
+        }
+      }
+      const htmlPath = `${dataDir}/index.html`;
+      const htmlContent = INDEX_HTML_CONTENT_TEMPLATE.replace(MARKDOWN_PLACEHOLDER, JSON.stringify(mdc));
+      RNFS.unlink(htmlPath)
+      await RNFS.writeFile(htmlPath, htmlContent, 'utf8');
+      await RNFS.writeFile(mdFilePath, mdc, 'utf8')
+      setLocalHtmlPath(`file://${htmlPath}`);
+      setSelectedChannel(channelId);
+      webViewRef.current?.reload();
+    } catch (err) {
+      setError(`Failed to load channel: ${err.message}`);
+    } finally {
+      setIsLoading(false);
+      setShowChannelModal(false);
+    }
+  };
+
+
 
   useEffect(() => {
     const setupFiles = async () => {
@@ -288,6 +500,7 @@ const NotesPage = () => {
           setProgress(Math.min((filesDownloaded / totalFiles) * 100, 100));
         } else {
           try {
+            await fetchChannels();
             const mdUrl = `https://ihjas-ahammed.github.io/${path}`;
             await safeDownloadFile(mdUrl, mdFilePath, (percent) => {
               setProgress(Math.min(((filesDownloaded + (percent / 100)) / totalFiles) * 100, 100));
@@ -341,6 +554,7 @@ const NotesPage = () => {
         setError(`Error: ${error.message}`);
       } finally {
         setIsLoading(false);
+        await fetchChannels()
       }
     };
     setupFiles();
@@ -377,7 +591,7 @@ const NotesPage = () => {
       if (data.type === 'log') {
         if (data.message === 'Markdown processed successfully') {
           setMarkdownLoaded(true)
-        }else if(data.message ==='renderMathInElement is defined'){
+        } else if (data.message === 'renderMathInElement is defined') {
           setMarkdownLoaded(false)
         }
         console.log('WebView Log:', data.message);
@@ -419,7 +633,7 @@ const NotesPage = () => {
   return (
     <SafeAreaView className="flex-1 bg-black">
       <StatusBar barStyle="light-content" backgroundColor="#000" />
-      <View className="absolute top-12 right-0 flex-col items-center justify-end px-2.5 z-10">
+      <View className="absolute top-2 right-0 flex-col items-center justify-end px-2.5 z-10">
         {isEditing ? (
           <>
             <TouchableOpacity className="p-2" onPress={handleSave}>
@@ -434,16 +648,31 @@ const NotesPage = () => {
             <TouchableOpacity className="p-2" onPress={() => setIsEditing(true)}>
               <Ionicons name="pencil" size={18} color="black" />
             </TouchableOpacity>
-            <TouchableOpacity className="p-2" onPress={handleCloudAction}>
+            <TouchableOpacity className="p-2" onPress={() => setShowChannelModal(true)}>
               <Ionicons name="cloud" size={18} color="black" />
             </TouchableOpacity>
+            <TouchableOpacity className="p-2" onPress={() => setShowUploadModal(true)}>
+              <Ionicons name="cloud-upload" size={18} color="black" />
+            </TouchableOpacity>
+            {userId && pin ? (
+              <TouchableOpacity className="p-2" onPress={() => { setUserId(''); setPin(''); SecureStore.deleteItemAsync('userId'); SecureStore.deleteItemAsync('pin'); }}>
+                <Ionicons name="log-out" size={18} color="black" />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity className="p-2" onPress={() => setShowLoginModal(true)}>
+                <Ionicons name="log-in" size={18} color="black" />
+              </TouchableOpacity>
+            )}
           </>
         )}
       </View>
       {isEditing ? (
-        <ScrollView className="flex-1 bg-white mt-10">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
           <TextInput
-            className="p-[30px] text-black text-sm"
+            className="p-[30px] text-black bg-white text-normal min-h-[200px]"
             multiline
             value={markdown}
             onChangeText={setMarkdown}
@@ -453,9 +682,9 @@ const NotesPage = () => {
             keyboardType="ascii-capable"
             textAlignVertical="top"
           />
-        </ScrollView>
+        </KeyboardAvoidingView>
       ) : (
-        <View style={{flex:1}}>
+        <View style={{ flex: 1 }}>
           <WebView
             className="mt-10"
             ref={webViewRef}
@@ -471,16 +700,16 @@ const NotesPage = () => {
             domStorageEnabled={true}
             javaScriptEnabled={true}
           />
-          
 
-          {!markdownLoaded? (
+
+          {!markdownLoaded ? (
             <View style={{
               position: 'absolute',
               top: 0, left: 0, right: 0, bottom: 0,
               justifyContent: 'center',
               alignItems: 'center',
               backgroundColor: 'rgba(255, 255, 255, 0.8)',
-              zIndex:10
+              zIndex: 10
             }}>
               <ActivityIndicator size="large" color="#000000" />
               <Text style={{ color: '#000', marginTop: 10 }}>Loading Markdown...</Text>
@@ -488,6 +717,101 @@ const NotesPage = () => {
           ) : (<></>)}
         </View>
       )}
+      <Modal visible={showChannelModal} transparent animationType="slide">
+        <View className="flex-1 justify-center items-center bg-black/50">
+          <View className="bg-white p-5 rounded-lg w-3/4">
+            <Text className="text-lg font-bold mb-4">Select Channel</Text>
+            <TouchableOpacity
+              className="p-2 border-b"
+              onPress={() => handleChannelSelect('default')}
+            >
+              <Text>Default</Text>
+            </TouchableOpacity>
+            {channels.map(channel => (
+              <View key={channel.id} className="p-2 border-b flex-row justify-between items-center">
+                <TouchableOpacity
+                  onPress={() => handleChannelSelect(channel.id)}
+                  className="flex-1"
+                >
+                  <Text>{channel.name} ({channel.type})</Text>
+                </TouchableOpacity>
+                {channel.canDelete && (
+                  <TouchableOpacity
+                    className="p-2"
+                    onPress={() => handleDeleteChannel(channel.id)}
+                  >
+                    <Ionicons name="trash" size={18} color="red" />
+                  </TouchableOpacity>
+                )}
+              </View>
+            ))}
+            <TouchableOpacity
+              className="p-2 mt-4 bg-gray-200 rounded"
+              onPress={() => setShowChannelModal(false)}
+            >
+              <Text>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      <Modal visible={showUploadModal} transparent animationType="slide">
+        <View className="flex-1 justify-center items-center bg-black/50">
+          <View className="bg-white p-5 rounded-lg w-3/4">
+            <Text className="text-lg font-bold mb-4">Upload Note</Text>
+            <Text className="mb-2">User: {userId}</Text>
+            <View className="flex-row items-center mb-4">
+              <Text className="mr-2">Public</Text>
+              <Switch value={isPublic} onValueChange={setIsPublic} />
+            </View>
+            <TouchableOpacity
+              className="p-2 bg-blue-500 rounded"
+              onPress={handleUpload}
+            >
+              <Text className="text-white text-center">Upload</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="p-2 mt-2 bg-gray-200 rounded"
+              onPress={() => setShowUploadModal(false)}
+            >
+              <Text className="text-center">Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Login Modal */}
+      <Modal visible={showLoginModal} transparent animationType="slide">
+        <View className="flex-1 justify-center items-center bg-black/50">
+          <View className="bg-white p-5 rounded-lg w-3/4">
+            <Text className="text-lg font-bold mb-4">Login</Text>
+            <TextInput
+              className="border p-2 mb-2"
+              placeholder="User ID"
+              value={userId}
+              onChangeText={setUserId}
+            />
+            <TextInput
+              className="border p-2 mb-2"
+              placeholder="PIN"
+              value={pin}
+              onChangeText={setPin}
+              secureTextEntry
+            />
+            <TouchableOpacity
+              className="p-2 bg-blue-500 rounded"
+              onPress={handleLogin}
+            >
+              <Text className="text-white text-center">Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="p-2 mt-2 bg-gray-200 rounded"
+              onPress={() => setShowLoginModal(false)}
+            >
+              <Text className="text-center">Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

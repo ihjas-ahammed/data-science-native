@@ -7,7 +7,7 @@ export default ({ config }) => {
         name: "Sirius",
         slug: "data-science-native",
         scheme: "org",
-        version: "1.0.9",
+        version: "1.0.10",
         orientation: "portrait",
         icon: "./assets/icon.png",
         userInterfaceStyle: "light",

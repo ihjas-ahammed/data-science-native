@@ -1,11 +1,12 @@
 import { View, Text, StatusBar, ActivityIndicator, ScrollView, TouchableHighlight } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocalSearchParams, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as FileSystem from 'expo-file-system';
 import * as SecureStore from 'expo-secure-store';
 import CustomProgressBar from './components/cog/CustomProgressBar';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 
 const cog = () => {
   const { dt } = useLocalSearchParams();
@@ -16,6 +17,8 @@ const cog = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [scores, setScores] = useState({});
+  const [allWrongQuestions, setAllWrongQuestions] = useState([]);
+  const [activeTab, setActiveTab] = useState('topics');
 
   const filePath = `${FileSystem.documentDirectory}quiz_data/${path}`;
   const directoryPath = filePath.substring(0, filePath.lastIndexOf('/'));
@@ -24,6 +27,7 @@ const cog = () => {
     return name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
   };
 
+  // Load quiz data when the component mounts or path changes
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -52,25 +56,46 @@ const cog = () => {
     loadData();
   }, [path]);
 
-  useEffect(() => {
-    const loadScores = async () => {
-      const scorePromises = data[obj + ""].map((section) => {
-        const key = sanitizeKey(section.name);
-        return SecureStore.getItemAsync(key).then((scr) => ({
-          key,
-          score: scr ? parseInt(scr, 10) : 0,
-        }));
-      });
-      const scoresArray = await Promise.all(scorePromises);
-      const scoresObj = scoresArray.reduce((acc, { key, score }) => {
-        acc[key] = score;
-        return acc;
-      }, {});
+  // Load scores and repractice questions every time the screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      const loadScoresAndRepractice = async () => {
+        if (data && data[obj]) {
+          const scorePromises = data[obj].map((section) => {
+            const key = sanitizeKey(section.name);
+            return SecureStore.getItemAsync(key).then((scr) => ({
+              key,
+              score: scr ? parseInt(scr, 10) : 0,
+            }));
+          });
 
-      setScores(scoresObj);
-    };
-    loadScores();
-  }, [data]);
+          const repracticePromises = data[obj].map((section) => {
+            const key = sanitizeKey(section.name);
+            const repracticeKey = `repractice-${key}`;
+            return SecureStore.getItemAsync(repracticeKey).then((str) => ({
+              key,
+              questions: str ? JSON.parse(str) : [],
+            }));
+          });
+
+          const [scoresArray, repracticeArray] = await Promise.all([
+            Promise.all(scorePromises),
+            Promise.all(repracticePromises),
+          ]);
+
+          const scoresObj = scoresArray.reduce((acc, { key, score }) => {
+            acc[key] = score;
+            return acc;
+          }, {});
+          setScores(scoresObj);
+
+          const allQuestions = repracticeArray.flatMap(({ questions }) => questions);
+          setAllWrongQuestions(allQuestions);
+        }
+      };
+      loadScoresAndRepractice();
+    }, [data, obj])
+  );
 
   if (isLoading) {
     return (
@@ -101,33 +126,97 @@ const cog = () => {
         </TouchableHighlight>
         <Text className="text-gray-200 text-lg font-bold flex-1 ml-4">{title}</Text>
       </View>
-      <ScrollView className="flex-1 p-4">
-        {data[obj + ""].map((section, index) => {
-          const key = sanitizeKey(section.name);
-          const score = scores[key] || 0;
-          const total = section.qa.length;
-
-          return (
+      <View className="flex-1">
+        <ScrollView className="flex-1 p-4 mb-4">
+          {activeTab === 'topics' ? (
+            data[obj].map((section, index) => {
+              const key = sanitizeKey(section.name);
+              const score = scores[key] || 0;
+              const total = section.qa.length;
+              return (
+                <TouchableHighlight
+                  key={index}
+                  onPress={() => {
+                    router.push('/quiz?qs=' + JSON.stringify({ name: section.name, qa: section.qa, key: key }));
+                  }}
+                  underlayColor="#4b5563"
+                  className="p-4 bg-gray-800 rounded-lg mb-4 border border-gray-700"
+                >
+                  <View>
+                    <Text className="text-xl font-semibold text-gray-200 mb-3">
+                      {section.name}
+                    </Text>
+                    <View className="flex-row items-center">
+                      <CustomProgressBar progress={total > 0 ? score / total : 0} height={10} />
+                    </View>
+                  </View>
+                </TouchableHighlight>
+              );
+            })
+          ) : (
             <TouchableHighlight
-              key={index}
               onPress={() => {
-                router.push('/quiz?qs=' + JSON.stringify({ name: section.name, qa: section.qa, key: key }));
+                if (allWrongQuestions.length > 0) {
+                  router.push('/quiz?qs=' + JSON.stringify({
+                    name: "Repractice",
+                    qa: allWrongQuestions,
+                    key: "repractice",
+                    maxNo: allWrongQuestions.length,
+                  }));
+                } else {
+                  alert("No questions to repractice.");
+                }
               }}
               underlayColor="#4b5563"
               className="p-4 bg-gray-800 rounded-lg mb-4 border border-gray-700"
             >
               <View>
                 <Text className="text-xl font-semibold text-gray-200 mb-3">
-                  {section.name}
+                  Repractice ({allWrongQuestions.length} questions)
                 </Text>
-                <View className="flex-row items-center">
-                  <CustomProgressBar progress={total > 0 ? score / total : 0} height={10} />
-                </View>
               </View>
             </TouchableHighlight>
-          );
-        })}
-      </ScrollView>
+          )}
+        </ScrollView>
+        <View className="h-16 bg-gray-800 flex-row items-center justify-around shadow-md">
+          <TouchableHighlight
+            underlayColor="#4b5563"
+            onPress={() => setActiveTab('topics')}
+            className="flex-1 items-center justify-center"
+          >
+            <View className="items-center">
+              <MaterialIcons
+                name="library-books"
+                size={24}
+                color={activeTab === 'topics' ? '#e5e7eb' : '#9ca3af'}
+              />
+              <Text
+                className={`text-sm ${activeTab === 'topics' ? 'text-gray-200' : 'text-gray-400'}`}
+              >
+                Topics
+              </Text>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight
+            underlayColor="#4b5563"
+            onPress={() => setActiveTab('tools')}
+            className="flex-1 items-center justify-center"
+          >
+            <View className="items-center">
+              <MaterialIcons
+                name="build"
+                size={24}
+                color={activeTab === 'tools' ? '#e5e7eb' : '#9ca3af'}
+              />
+              <Text
+                className={`text-sm ${activeTab === 'tools' ? 'text-gray-200' : 'text-gray-400'}`}
+              >
+                Tools
+              </Text>
+            </View>
+          </TouchableHighlight>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };

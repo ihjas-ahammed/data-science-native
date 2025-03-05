@@ -1,2 +1,1 @@
-EAS_BUILD_PROFILE=preview 
-eas update --branch preview
+EAS_BUILD_PROFILE=preview  eas update --branch preview

@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableHighlight, Animated, StatusBar, ScrollView } from 'react-native';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { View, Text, TouchableHighlight, Animated, StatusBar, ScrollView, LayoutAnimation, Platform, TouchableOpacity, Vibration } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import * as SecureStore from 'expo-secure-store';
+import { Audio } from 'expo-av';
 
 const QuizScreen = () => {
+  // State declarations
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [options, setOptions] = useState([]);
@@ -18,39 +20,56 @@ const QuizScreen = () => {
   const [completed, setCompleted] = useState(false);
   const [answerSelected, setAnswerSelected] = useState(false);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(null);
+  const [canProceed, setCanProceed] = useState(false);
+  const [lastAnswerCorrect, setLastAnswerCorrect] = useState(false);
+  const [isDescriptionGray, setIsDescriptionGray] = useState(false);
+  const correctSoundRef = useRef(null);
+
+  // Parse query parameters
   const { qs } = useLocalSearchParams();
-  const { name, qa, key } = JSON.parse(qs);
+  const { name, qa, key,maxNo } = JSON.parse(qs);
 
   const title = name;
   const sampleQuestions = qa;
+  const TARGET_CORRECT_ANSWERS = maxNo ? maxNo :10;
 
-  const TARGET_CORRECT_ANSWERS = 10;
+  // Load sound effect for correct answers
+  useEffect(() => {
+    const loadSound = async () => {
+      try {
+        const { sound } = await Audio.Sound.createAsync(
+          require('../assets/sounds/correct.wav')
+        );
+        correctSoundRef.current = sound;
+      } catch (error) {
+        console.error('Error loading sound:', error);
+      }
+    };
+    loadSound();
+    return () => {
+      if (correctSoundRef.current) {
+        correctSoundRef.current.unloadAsync();
+      }
+    };
+  }, []);
 
-  // **Initialize questions with shuffled order**
+  // Initialize questions with shuffled order
   useEffect(() => {
     const shuffledQuestions = [...sampleQuestions].sort(() => Math.random() - 0.5);
     setQuestions(shuffledQuestions);
     setAskedQuestions([]);
   }, []);
 
-  // **Update score in SecureStore**
+  // Update score in SecureStore
   const updateScore = () => {
     SecureStore.getItemAsync(key).then(async (scr) => {
-      if (parseInt(scr) <= score) {
-        console.log(`Saving ${key}:${score}`);
+      if (parseInt(scr) <= score || !scr) {
         await SecureStore.setItemAsync(key, score.toString());
-        console.log(`Saved ${key}:${score}`);
-      } else if (parseInt(scr) > score) {
-        console.log("Hi");
-      } else {
-        console.log(`Saving ${key}:${score}`);
-        await SecureStore.setItemAsync(key, score.toString());
-        console.log(`Saved ${key}:${score}`);
       }
     });
   };
 
-  // **Shuffle options when current question changes**
+  // Shuffle options when current question changes
   useEffect(() => {
     if (questions.length > 0) {
       const currentQuestion = questions[currentQuestionIndex];
@@ -63,10 +82,12 @@ const QuizScreen = () => {
       setOptions(shuffledOptions);
       setAnswerSelected(false);
       setSelectedOptionIndex(null);
+      setCanProceed(false);
+      setShowFeedback(false);
     }
   }, [questions, currentQuestionIndex]);
 
-  // **Update progress bar animation**
+  // Update progress bar animation
   useEffect(() => {
     Animated.timing(progressAnim, {
       toValue: score / TARGET_CORRECT_ANSWERS,
@@ -78,39 +99,105 @@ const QuizScreen = () => {
       duration: 300,
       useNativeDriver: false,
     }).start();
-  }, [score, progressAnim, progressBarColor]);
+  }, [score]);
 
   const interpolatedColor = progressBarColor.interpolate({
     inputRange: [0, 0.5, 1],
     outputRange: ['#ff4d4d', '#ffde59', '#4CAF50'],
   });
 
-  // **Handle answer selection**
-  const handleAnswer = (isCorrect, index) => {
+  // Handle answer selection
+  const handleAnswer = async (isCorrect, index) => {
     setAnswerSelected(true);
     setSelectedOptionIndex(index);
     setAskedQuestions([...askedQuestions, questions[currentQuestionIndex]]);
-
-    if (isCorrect) {
-      setScore(score + 1);
-      setFeedbackMessage('Correct! +1 point');
-      setFeedbackColor('#28a745');
-    } else {
-      setScore(Math.max(0, score - 1));
-      setFeedbackMessage('Incorrect! -1 point');
-      setFeedbackColor('#dc3545');
-    }
-
+  
+    const newScore = isCorrect ? score + 1 : Math.max(0, score - 1);
+    setScore(newScore);
+    setFeedbackMessage(isCorrect ? 'Correct! +1 point' : 'Incorrect! -1 point');
+    setFeedbackColor(isCorrect ? '#28a745' : '#dc3545');
+    setLastAnswerCorrect(isCorrect);
     setShowFeedback(true);
     updateScore();
-
-    if (score >= TARGET_CORRECT_ANSWERS) {
+  
+    // Play sound or vibrate based on correctness
+    if (isCorrect && correctSoundRef.current) {
+      try {
+        await correctSoundRef.current.playAsync();
+      } catch (error) {
+        console.error('Error playing sound:', error);
+      }
+    } else {
+      Vibration.vibrate(500);
+    }
+  
+    // Handle repractice list
+    const repracticeKey = `repractice-${key}`;
+    try {
+      const currentRepractice = await SecureStore.getItemAsync(repracticeKey);
+      let repracticeList = currentRepractice ? JSON.parse(currentRepractice) : [];
+      const currentQuestion = questions[currentQuestionIndex];
+  
+      if (isCorrect) {
+        // Remove the question from repractice list if it exists
+        repracticeList = repracticeList.filter(q => q.question !== currentQuestion.question);
+      } else {
+        // Add the question to repractice list if it doesn't exist
+        if (!repracticeList.some(q => q.question === currentQuestion.question)) {
+          repracticeList.push(currentQuestion);
+        }
+      }
+  
+      // Save the updated repractice list
+      await SecureStore.setItemAsync(repracticeKey, JSON.stringify(repracticeList));
+    } catch (error) {
+      console.error('Error updating repractice list:', error);
+    }
+  
+    // Determine options to keep
+    const correctOption = options.find(opt => opt.isCorrect);
+    let optionsToKeep;
+    if (isCorrect) {
+      optionsToKeep = [correctOption];
+    } else {
+      const selectedOption = options[index];
+      optionsToKeep = [correctOption, selectedOption];
+    }
+  
+    // Animate the removal of other options
+    if (Platform.OS !== 'web') {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    }
+    setOptions(optionsToKeep);
+  
+    // Control description clickability and color
+    if (isCorrect) {
+      setCanProceed(true);
+      setIsDescriptionGray(false);
+    } else {
+      setCanProceed(false);
+      setIsDescriptionGray(true);
+      setTimeout(() => {
+        setCanProceed(true);
+        setIsDescriptionGray(false);
+      }, 2000);
+    }
+  
+    if (newScore >= TARGET_CORRECT_ANSWERS) {
       setCompleted(true);
     }
   };
 
-  // **Move to next question**
-  const nextQ = () => {
+  
+  // Move to next question
+  const nextQ = async () => {
+    if (correctSoundRef.current) {
+      try {
+        await correctSoundRef.current.stopAsync();
+      } catch (error) {
+        console.error('Error stopping sound:', error);
+      }
+    }
     setShowFeedback(false);
     moveToNextQuestion();
   };
@@ -136,12 +223,12 @@ const QuizScreen = () => {
     }
   }, [currentQuestionIndex, questions, askedQuestions]);
 
-  // **Handle exit**
+  // Handle exit
   const handleExit = () => {
     router.back();
   };
 
-  // **Handle restart**
+  // Handle restart
   const handleRestart = () => {
     setScore(0);
     setCurrentQuestionIndex(0);
@@ -153,7 +240,7 @@ const QuizScreen = () => {
     setQuestions(shuffledQuestions);
   };
 
-  // **Dynamic option styling**
+  // Dynamic option styling
   const getOptionClassName = (option, index) => {
     let baseClass = "p-4 rounded-lg mb-3 border border-gray-700";
     if (!answerSelected) {
@@ -161,25 +248,27 @@ const QuizScreen = () => {
     }
     if (option.isCorrect) {
       return `${baseClass} bg-green-900 border-green-700`;
-    }
-    if (index === selectedOptionIndex && !option.isCorrect) {
+    } else {
       return `${baseClass} bg-red-900 border-red-700`;
     }
-    return `${baseClass} bg-gray-700 opacity-50`;
   };
 
-  // **Dynamic description styling**
+  // Dynamic description styling
   const getDescriptionClassName = () => {
+    let baseClass = "p-4 rounded-lg mb-3 border";
     if (!showFeedback) {
-      return "p-4 rounded-lg mb-3 border border-gray-700 bg-gray-700";
+      return `${baseClass} border-gray-700 bg-gray-700`;
     }
-    const isCorrect = options[selectedOptionIndex]?.isCorrect;
-    return isCorrect
-      ? "p-4 rounded-lg mb-3 border border-green-700 bg-green-900"
-      : "p-4 rounded-lg mb-3 border border-red-700 bg-red-900";
+    if (!lastAnswerCorrect && isDescriptionGray) {
+      return `${baseClass} border-gray-700 bg-gray-700`;
+    }
+    const colorClass = lastAnswerCorrect
+      ? "border-green-700 bg-green-900"
+      : "border-red-700 bg-red-900";
+    return `${baseClass} ${colorClass}`;
   };
 
-  // **Completed Screen**
+  // Completed Screen
   if (completed) {
     return (
       <View className="flex-1 bg-gray-900">
@@ -209,7 +298,7 @@ const QuizScreen = () => {
     );
   }
 
-  // **Loading State**
+  // Loading State
   if (questions.length === 0 || options.length === 0) {
     return (
       <View className="flex-1 bg-gray-900 justify-center items-center">
@@ -218,7 +307,7 @@ const QuizScreen = () => {
     );
   }
 
-  // **Main Quiz UI**
+  // Main Quiz UI
   return (
     <View className="flex-1 bg-gray-900">
       {/* Action Bar */}
@@ -259,7 +348,7 @@ const QuizScreen = () => {
         <View>
           {options.map((option, index) => (
             <TouchableHighlight
-              key={index}
+              key={option.originalIndex}
               underlayColor="#4b5563"
               onPress={() => !answerSelected && handleAnswer(option.isCorrect, index)}
               disabled={answerSelected}
@@ -272,15 +361,19 @@ const QuizScreen = () => {
       </View>
 
       {/* Description with Scroll */}
-      {showFeedback && questions[currentQuestionIndex].describe !== options[questions[currentQuestionIndex].correct] && (
+      {showFeedback && questions[currentQuestionIndex].describe !== options.find(opt => opt.isCorrect)?.text && (
         <View className="px-4 pb-4 flex-1">
-          <TouchableHighlight underlayColor="#4b5563" onPress={nextQ}>
-            <ScrollView className={getDescriptionClassName()} style={{ maxHeight: "100%" }}>
+          <TouchableOpacity
+            onPress={nextQ}
+            disabled={!canProceed}
+            className={getDescriptionClassName()}
+          >
+            <ScrollView style={{ maxHeight: "100%" }}>
               <Text className="text-base text-gray-200">
                 {questions[currentQuestionIndex].describe}
               </Text>
             </ScrollView>
-          </TouchableHighlight>
+          </TouchableOpacity>
           <Text className="text-center text-gray-400 mt-auto mb-5">
             Click on explanation to move on
           </Text>

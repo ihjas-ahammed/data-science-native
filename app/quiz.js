@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, Animated, StatusBar, ScrollView } from 'react-native';
+import { View, Text, TouchableHighlight, Animated, StatusBar, ScrollView } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import * as SecureStore from 'expo-secure-store';
@@ -26,32 +26,31 @@ const QuizScreen = () => {
 
   const TARGET_CORRECT_ANSWERS = 10;
 
-  // Initialize questions with shuffled order
+  // **Initialize questions with shuffled order**
   useEffect(() => {
     const shuffledQuestions = [...sampleQuestions].sort(() => Math.random() - 0.5);
     setQuestions(shuffledQuestions);
     setAskedQuestions([]);
   }, []);
 
+  // **Update score in SecureStore**
   const updateScore = () => {
     SecureStore.getItemAsync(key).then(async (scr) => {
       if (parseInt(scr) <= score) {
-        console.log("Saving " + key + ":" + score);
-        SecureStore.setItemAsync(key, score + "").then(() =>
-          console.log("Saved " + key + ":" + score)
-        );
+        console.log(`Saving ${key}:${score}`);
+        await SecureStore.setItemAsync(key, score.toString());
+        console.log(`Saved ${key}:${score}`);
       } else if (parseInt(scr) > score) {
         console.log("Hi");
       } else {
-        console.log("Saving " + key + ":" + score);
-        SecureStore.setItemAsync(key, score + "").then(() =>
-          console.log("Saved " + key + ":" + score)
-        );
+        console.log(`Saving ${key}:${score}`);
+        await SecureStore.setItemAsync(key, score.toString());
+        console.log(`Saved ${key}:${score}`);
       }
     });
   };
 
-  // Shuffle options when current question changes
+  // **Shuffle options when current question changes**
   useEffect(() => {
     if (questions.length > 0) {
       const currentQuestion = questions[currentQuestionIndex];
@@ -67,7 +66,7 @@ const QuizScreen = () => {
     }
   }, [questions, currentQuestionIndex]);
 
-  // Update progress bar
+  // **Update progress bar animation**
   useEffect(() => {
     Animated.timing(progressAnim, {
       toValue: score / TARGET_CORRECT_ANSWERS,
@@ -86,6 +85,7 @@ const QuizScreen = () => {
     outputRange: ['#ff4d4d', '#ffde59', '#4CAF50'],
   });
 
+  // **Handle answer selection**
   const handleAnswer = (isCorrect, index) => {
     setAnswerSelected(true);
     setSelectedOptionIndex(index);
@@ -109,6 +109,7 @@ const QuizScreen = () => {
     }
   };
 
+  // **Move to next question**
   const nextQ = () => {
     setShowFeedback(false);
     moveToNextQuestion();
@@ -135,10 +136,12 @@ const QuizScreen = () => {
     }
   }, [currentQuestionIndex, questions, askedQuestions]);
 
+  // **Handle exit**
   const handleExit = () => {
     router.back();
   };
 
+  // **Handle restart**
   const handleRestart = () => {
     setScore(0);
     setCurrentQuestionIndex(0);
@@ -150,79 +153,84 @@ const QuizScreen = () => {
     setQuestions(shuffledQuestions);
   };
 
+  // **Dynamic option styling**
   const getOptionClassName = (option, index) => {
-    let baseClass = "p-4 rounded-lg mb-3 border border-gray-300";
+    let baseClass = "p-4 rounded-lg mb-3 border border-gray-700";
     if (!answerSelected) {
-      return `${baseClass} bg-gray-50`;
+      return `${baseClass} bg-gray-700`;
     }
     if (option.isCorrect) {
-      return `${baseClass} bg-green-100 border-green-300`;
+      return `${baseClass} bg-green-900 border-green-700`;
     }
     if (index === selectedOptionIndex && !option.isCorrect) {
-      return `${baseClass} bg-red-100 border-red-300`;
+      return `${baseClass} bg-red-900 border-red-700`;
     }
-    return `${baseClass} bg-gray-50 opacity-50`;
+    return `${baseClass} bg-gray-700 opacity-50`;
   };
 
+  // **Dynamic description styling**
   const getDescriptionClassName = () => {
     if (!showFeedback) {
-      return "p-4 rounded-lg mb-3 border border-gray-300 bg-gray-50";
+      return "p-4 rounded-lg mb-3 border border-gray-700 bg-gray-700";
     }
     const isCorrect = options[selectedOptionIndex]?.isCorrect;
     return isCorrect
-      ? "p-4 rounded-lg mb-3 border border-green-300 bg-green-100"
-      : "p-4 rounded-lg mb-3 border border-red-300 bg-red-100";
+      ? "p-4 rounded-lg mb-3 border border-green-700 bg-green-900"
+      : "p-4 rounded-lg mb-3 border border-red-700 bg-red-900";
   };
 
-  // Render completed screen
+  // **Completed Screen**
   if (completed) {
     return (
-      <View className="flex-1 bg-gray-50">
+      <View className="flex-1 bg-gray-900">
         <StatusBar barStyle="light-content" />
         <View className="flex-1 justify-center items-center p-6">
           <MaterialIcons name="celebration" size={80} color="#FFD700" />
-          <Text className="text-2xl font-bold text-gray-800 mt-6 mb-4">Congratulations!</Text>
-          <Text className="text-lg text-center text-gray-600 mb-8">
+          <Text className="text-2xl font-bold text-gray-200 mt-6 mb-4">Congratulations!</Text>
+          <Text className="text-lg text-center text-gray-400 mb-8">
             You've successfully completed the quiz with {score} correct answers.
           </Text>
-          <TouchableOpacity
-            className="bg-indigo-600 py-3 px-8 rounded-full mb-4 w-4/5 items-center"
+          <TouchableHighlight
+            underlayColor="#6366f1"
             onPress={handleRestart}
+            className="bg-indigo-500 py-3 px-8 rounded-full mb-4 w-4/5 items-center"
           >
             <Text className="text-white text-lg font-bold">Try Again</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="bg-gray-600 py-3 px-8 rounded-full w-4/5 items-center"
+          </TouchableHighlight>
+          <TouchableHighlight
+            underlayColor="#4b5563"
             onPress={handleExit}
+            className="bg-gray-700 py-3 px-8 rounded-full w-4/5 items-center"
           >
             <Text className="text-white text-lg font-bold">Exit</Text>
-          </TouchableOpacity>
+          </TouchableHighlight>
         </View>
       </View>
     );
   }
 
-  // Loading state
+  // **Loading State**
   if (questions.length === 0 || options.length === 0) {
     return (
-      <View className="flex-1 bg-gray-50 justify-center items-center">
-        <Text className="text-lg text-gray-600">Loading questions...</Text>
+      <View className="flex-1 bg-gray-900 justify-center items-center">
+        <Text className="text-lg text-gray-400">Loading questions...</Text>
       </View>
     );
   }
 
+  // **Main Quiz UI**
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-gray-900">
       {/* Action Bar */}
-      <View className="h-14 bg-indigo-600 flex-row items-center px-4 shadow-md">
-        <TouchableOpacity className="p-2" onPress={handleExit}>
-          <MaterialIcons name="arrow-back" size={24} color="white" />
-        </TouchableOpacity>
-        <Text className="text-white text-lg font-bold flex-1 ml-4">{title}</Text>
+      <View className="h-14 bg-gray-800 flex-row items-center px-4 shadow-md">
+        <TouchableHighlight underlayColor="#4b5563" onPress={handleExit} className="p-2">
+          <MaterialIcons name="arrow-back" size={24} color="#e5e7eb" />
+        </TouchableHighlight>
+        <Text className="text-gray-200 text-lg font-bold flex-1 ml-4">{title}</Text>
       </View>
 
       {/* Progress Bar */}
-      <View className="h-8 bg-gray-200 rounded-lg mx-4 mt-4 overflow-hidden">
+      <View className="h-8 bg-gray-700 rounded-lg mx-4 mt-4 overflow-hidden">
         <Animated.View
           style={{
             height: '100%',
@@ -236,29 +244,29 @@ const QuizScreen = () => {
             backgroundColor: interpolatedColor,
           }}
         />
-
       </View>
 
       {/* Question Card */}
-      <View className="bg-white rounded-lg p-4 m-4 shadow-sm ">
-        <Text className="text-sm text-gray-500 mb-2">
+      <View className="bg-gray-800 rounded-lg p-4 m-4 shadow-sm border border-gray-700">
+        <Text className="text-sm text-gray-400 mb-2">
           Question {currentQuestionIndex + 1} of {questions.length}
         </Text>
-        <Text className="text-lg font-bold text-gray-800 mb-6">
+        <Text className="text-lg font-bold text-gray-200 mb-6">
           {questions[currentQuestionIndex].question}
         </Text>
 
         {/* Options */}
-        <View >
+        <View>
           {options.map((option, index) => (
-            <TouchableOpacity
+            <TouchableHighlight
               key={index}
-              className={getOptionClassName(option, index)}
+              underlayColor="#4b5563"
               onPress={() => !answerSelected && handleAnswer(option.isCorrect, index)}
               disabled={answerSelected}
+              className={getOptionClassName(option, index)}
             >
-              <Text className="text-base text-gray-700">{option.text}</Text>
-            </TouchableOpacity>
+              <Text className="text-base text-gray-200">{option.text}</Text>
+            </TouchableHighlight>
           ))}
         </View>
       </View>
@@ -266,19 +274,18 @@ const QuizScreen = () => {
       {/* Description with Scroll */}
       {showFeedback && questions[currentQuestionIndex].describe !== options[questions[currentQuestionIndex].correct] && (
         <View className="px-4 pb-4 flex-1">
-          <TouchableOpacity onPress={nextQ}>
+          <TouchableHighlight underlayColor="#4b5563" onPress={nextQ}>
             <ScrollView className={getDescriptionClassName()} style={{ maxHeight: "100%" }}>
-              <Text className="text-base text-gray-700">
+              <Text className="text-base text-gray-200">
                 {questions[currentQuestionIndex].describe}
               </Text>
             </ScrollView>
-          </TouchableOpacity>
-          <Text className="text-center text-gray-500 mt-auto mb-5">
+          </TouchableHighlight>
+          <Text className="text-center text-gray-400 mt-auto mb-5">
             Click on explanation to move on
           </Text>
         </View>
       )}
-
     </View>
   );
 };

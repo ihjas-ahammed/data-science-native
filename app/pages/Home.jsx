@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import RNFS from 'react-native-fs';
+import * as FileSystem from 'expo-file-system';
 
 // Define initial course data (unchanged)
 const initialCourseData = {
@@ -48,12 +48,12 @@ const initialCourseData = {
 const Home = () => {
   const router = useRouter();
   const [courseData, setCourseData] = useState(null);
-  const courseFilePath = `${RNFS.DocumentDirectoryPath}/course.json`;
+  const courseFilePath = `${FileSystem.documentDirectory}course.json`;
 
-  // Data handling functions (unchanged)
+  // Data handling functions
   const saveCourseData = async (data) => {
     try {
-      await RNFS.writeFile(courseFilePath, JSON.stringify(data), 'utf8');
+      await FileSystem.writeAsStringAsync(courseFilePath, JSON.stringify(data), { encoding: FileSystem.EncodingType.UTF8 });
     } catch (error) {
       console.error('Error saving course data:', error);
     }
@@ -61,9 +61,9 @@ const Home = () => {
 
   const loadCourseData = async () => {
     try {
-      const exists = await RNFS.exists(courseFilePath);
-      if (exists) {
-        const fileContent = await RNFS.readFile(courseFilePath, 'utf8');
+      const info = await FileSystem.getInfoAsync(courseFilePath);
+      if (info.exists) {
+        const fileContent = await FileSystem.readAsStringAsync(courseFilePath, { encoding: FileSystem.EncodingType.UTF8 });
         setCourseData(JSON.parse(fileContent));
       } else {
         setCourseData(initialCourseData);
@@ -99,7 +99,7 @@ const Home = () => {
 
   // Reusable Module Button
   const ModuleButton = ({ text, path, webview, qa2, last }) => (
-    <View className="py-3 border-b border-white/70 flex-row items-center">
+    <View className={`py-3 ${!last ? 'border-b':''} border-white/70 flex-row items-center`}>
       <TouchableOpacity
         className="flex-1"
         activeOpacity={0.8}
@@ -113,7 +113,7 @@ const Home = () => {
       >
         <Text className="text-white text-lg">{text}</Text>
       </TouchableOpacity>
-      {qa2 &&   (
+      {qa2  && (
         <TouchableOpacity
           className="px-4"
           activeOpacity={0.8}
@@ -125,7 +125,7 @@ const Home = () => {
         >
           <Ionicons name="caret-forward-circle-outline" size={24} color="white" />
         </TouchableOpacity>
-      ) }
+      )}
     </View>
   );
 
@@ -137,7 +137,7 @@ const Home = () => {
         {modules.map((module, idx) => (
           <ModuleButton
             key={idx}
-            last={idx == modules.length-1}
+            last={idx === modules.length - 1}
             text={module.text}
             path={module.path}
             webview={module.webview}

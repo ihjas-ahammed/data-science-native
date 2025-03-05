@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StatusBar, ActivityIndicator, SafeAreaView, ScrollView, KeyboardAvoidingView, Platform, Modal, Switch, Alert } from 'react-native';
 import { WebView } from 'react-native-webview';
-import RNFS from 'react-native-fs';
+import * as FileSystem from 'expo-file-system';
 import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as SecureStore from 'expo-secure-store';
@@ -73,7 +73,6 @@ const INDEX_HTML_CONTENT_TEMPLATE = `
         color: #000000;
     }
     .markdown-body {
-        
         font-size:14pt;
         max-width: 100%;
         padding-top:30px;
@@ -211,56 +210,41 @@ const NotesPage = () => {
       if (storedUserId && storedPin) {
         setUserId(storedUserId);
         setPin(storedPin);
-        await fetchChannels()
+        await fetchChannels();
       }
     };
     loadCredentials();
   }, []);
 
   const ensureDirectoryExists = async (dirPath) => {
-    try {
-      const dirExists = await RNFS.exists(dirPath);
-      if (!dirExists) {
-        console.log(`Creating directory: ${dirPath}`);
-        await RNFS.mkdir(dirPath, { NSURLIsExcludedFromBackupKey: true });
-      }
-    } catch (err) {
-      if (err.code === 'ENOENT') {
-        const parentDir = dirPath.substring(0, dirPath.lastIndexOf('/'));
-        await ensureDirectoryExists(parentDir);
-        await RNFS.mkdir(dirPath, { NSURLIsExcludedFromBackupKey: true });
-      } else {
-        throw err;
-      }
+    const info = await FileSystem.getInfoAsync(dirPath);
+    if (!info.exists) {
+      await FileSystem.makeDirectoryAsync(dirPath, { intermediates: true });
     }
   };
 
-  // A helper that resets progress and downloads a file while updating progress correctly.
   const safeDownloadFile = async (url, filePath, onProgress) => {
     try {
-      const exists = await RNFS.exists(filePath);
-      if (exists) {
+      const info = await FileSystem.getInfoAsync(filePath);
+      if (info.exists) {
         onProgress(100);
         return;
       }
       setLoadingMessage(`Downloading: ${url.split('/').pop()}`);
       const dirPath = filePath.substring(0, filePath.lastIndexOf('/'));
       await ensureDirectoryExists(dirPath);
-      const result = await RNFS.downloadFile({
-        fromUrl: url,
-        toFile: filePath,
-        background: false,
-        discretionary: false,
-        cacheable: false,
-        progress: (res) => {
-          if (res.contentLength > 0) {
-            const percent = Math.min((res.bytesWritten / res.contentLength) * 100, 100);
-            onProgress(percent);
-          }
-        },
-      }).promise;
-      if (result.statusCode < 200 || result.statusCode >= 300) {
-        throw new Error(`Download failed with status code: ${result.statusCode}`);
+      const downloadResumable = FileSystem.createDownloadResumable(
+        url,
+        filePath,
+        {},
+        (downloadProgress) => {
+          const percent = (downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite) * 100;
+          onProgress(percent);
+        }
+      );
+      const { status } = await downloadResumable.downloadAsync();
+      if (status < 200 || status >= 300) {
+        throw new Error(`Download failed with status code: ${status}`);
       }
       console.log(`Successfully downloaded ${url} to ${filePath}`);
     } catch (err) {
@@ -307,11 +291,11 @@ const NotesPage = () => {
                 await fetchChannels();
                 if (selectedChannel === channelId) {
                   setMarkdown('');
-                  const dataDir = `${RNFS.DocumentDirectoryPath}/notes`;
+                  const dataDir = `${FileSystem.documentDirectory}notes`;
                   const htmlPath = `${dataDir}/index.html`;
                   const htmlContent = INDEX_HTML_CONTENT_TEMPLATE.replace(MARKDOWN_PLACEHOLDER, JSON.stringify(''));
-                  await RNFS.writeFile(htmlPath, htmlContent, 'utf8');
-                  setLocalHtmlPath(`file://${htmlPath}`);
+                  await FileSystem.writeAsStringAsync(htmlPath, htmlContent, { encoding: FileSystem.EncodingType.UTF8 });
+                  setLocalHtmlPath(htmlPath);
                   webViewRef.current?.reload();
                 }
               } catch (err) {
@@ -353,7 +337,6 @@ const NotesPage = () => {
     }
   };
 
-
   const handleLogin = async () => {
     if (!userId || !pin) {
       setError('Please enter both User ID and PIN');
@@ -380,7 +363,6 @@ const NotesPage = () => {
 
     setIsLoading(true);
     try {
-      // Check if user already has a note
       const userNotesQuery = query(
         ref(database, `notes/${sanitizedPath}`),
         equalTo(userId),
@@ -424,31 +406,31 @@ const NotesPage = () => {
     setIsLoading(true);
     try {
       const mdUrl = `https://ihjas-ahammed.github.io/${path}`;
-
-      const dataDir = `${RNFS.DocumentDirectoryPath}/notes`;
-      const mdFilePath = `${dataDir}/${path}`;
-      let mdc = ''
+      const dataDir = `${FileSystem.documentDirectory}notes`;
+      let mdFilePath = `${dataDir}/${path}`;
+      if (!path.includes('.')) {
+        mdFilePath = `${dataDir}/${path}/index.md`;
+      }
+      let mdc = '';
       if (channelId === 'default') {
-        RNFS.unlink(mdFilePath)
+        await FileSystem.deleteAsync(mdFilePath, { idempotent: true });
         await safeDownloadFile(mdUrl, mdFilePath, setProgress);
-        const mdContent = await RNFS.readFile(mdFilePath, 'utf8');
-        setMarkdown(mdContent);
-        mdc = mdContent
-
+        mdc = await FileSystem.readAsStringAsync(mdFilePath, { encoding: FileSystem.EncodingType.UTF8 });
+        setMarkdown(mdc);
       } else {
         const dbRef = ref(database);
         const snapshot = await get(child(dbRef, `notes/${sanitizedPath}/${channelId}`));
         if (snapshot.exists()) {
-          setMarkdown(snapshot.val().note);
-          mdc = snapshot.val().note
+          mdc = snapshot.val().note;
+          setMarkdown(mdc);
         }
       }
       const htmlPath = `${dataDir}/index.html`;
       const htmlContent = INDEX_HTML_CONTENT_TEMPLATE.replace(MARKDOWN_PLACEHOLDER, JSON.stringify(mdc));
-      RNFS.unlink(htmlPath)
-      await RNFS.writeFile(htmlPath, htmlContent, 'utf8');
-      await RNFS.writeFile(mdFilePath, mdc, 'utf8')
-      setLocalHtmlPath(`file://${htmlPath}`);
+      await FileSystem.deleteAsync(htmlPath, { idempotent: true });
+      await FileSystem.writeAsStringAsync(htmlPath, htmlContent, { encoding: FileSystem.EncodingType.UTF8 });
+      await FileSystem.writeAsStringAsync(mdFilePath, mdc, { encoding: FileSystem.EncodingType.UTF8 });
+      setLocalHtmlPath(htmlPath);
       setSelectedChannel(channelId);
       webViewRef.current?.reload();
     } catch (err) {
@@ -459,15 +441,13 @@ const NotesPage = () => {
     }
   };
 
-
-
   useEffect(() => {
     const setupFiles = async () => {
       setIsLoading(true);
       setError(null);
       setProgress(0);
       try {
-        const dataDir = `${RNFS.DocumentDirectoryPath}/notes`;
+        const dataDir = `${FileSystem.documentDirectory}notes`;
         const htmlPath = `${dataDir}/index.html`;
         let mdFilePath = `${dataDir}/${path}`;
         if (!path.includes('.')) {
@@ -479,9 +459,8 @@ const NotesPage = () => {
 
         let filesDownloaded = 0;
         const fontCount = 25; // Estimated number of fonts for KaTeX v0.16.21
-        const totalFiles = Object.keys(DEPENDENCIES).length + 1 + fontCount; // dependencies + markdown + fonts
+        const totalFiles = Object.keys(DEPENDENCIES).length + 1 + fontCount;
 
-        // Download dependencies
         for (const [fileName, url] of Object.entries(DEPENDENCIES)) {
           const filePath = `${dataDir}/${fileName}`;
           await safeDownloadFile(url, filePath, (percent) => {
@@ -491,11 +470,10 @@ const NotesPage = () => {
           setProgress(Math.min((filesDownloaded / totalFiles) * 100, 100));
         }
 
-        // Download markdown file
         let mdContent = '';
-        const mdFileExists = await RNFS.exists(mdFilePath);
-        if (mdFileExists) {
-          mdContent = await RNFS.readFile(mdFilePath, 'utf8');
+        const mdFileInfo = await FileSystem.getInfoAsync(mdFilePath);
+        if (mdFileInfo.exists) {
+          mdContent = await FileSystem.readAsStringAsync(mdFilePath, { encoding: FileSystem.EncodingType.UTF8 });
           filesDownloaded += 1;
           setProgress(Math.min((filesDownloaded / totalFiles) * 100, 100));
         } else {
@@ -505,23 +483,22 @@ const NotesPage = () => {
             await safeDownloadFile(mdUrl, mdFilePath, (percent) => {
               setProgress(Math.min(((filesDownloaded + (percent / 100)) / totalFiles) * 100, 100));
             });
-            mdContent = await RNFS.readFile(mdFilePath, 'utf8');
+            mdContent = await FileSystem.readAsStringAsync(mdFilePath, { encoding: FileSystem.EncodingType.UTF8 });
             filesDownloaded += 1;
             setProgress(Math.min((filesDownloaded / totalFiles) * 100, 100));
           } catch (err) {
             mdContent = `# ${path.split('/').pop().replace('.md', '')}\n\nStart writing...\n\nInline: $E = mc^2$\n\nDisplay:\n$$\\int_0^1 x^2 dx = \\frac{1}{3}$$\n\n\`\`\`javascript\nconsole.log("Hello");\n\`\`\``;
-            await RNFS.writeFile(mdFilePath, mdContent, 'utf8');
+            await FileSystem.writeAsStringAsync(mdFilePath, mdContent, { encoding: FileSystem.EncodingType.UTF8 });
             filesDownloaded += 1;
             setProgress(Math.min((filesDownloaded / totalFiles) * 100, 100));
           }
         }
         setMarkdown(mdContent);
 
-        // Download fonts referenced by katex.min.css
         const fontDir = `${dataDir}/fonts`;
         await ensureDirectoryExists(fontDir);
         const katexCssPath = `${dataDir}/katex.min.css`;
-        const cssContent = await RNFS.readFile(katexCssPath, 'utf8');
+        const cssContent = await FileSystem.readAsStringAsync(katexCssPath, { encoding: FileSystem.EncodingType.UTF8 });
         const fontUrls = new Set();
         const urlRegex = /url\(['"]?([^'")]+)['"]?\)/g;
         let match;
@@ -544,39 +521,37 @@ const NotesPage = () => {
         }
         console.log(`Total fonts downloaded: ${fontUrls.size}`);
 
-        // Write the HTML file with the markdown content injected (using JSON.stringify to ensure proper escaping)
         const jsonMarkdown = JSON.stringify(mdContent);
         const htmlContent = INDEX_HTML_CONTENT_TEMPLATE.replace(MARKDOWN_PLACEHOLDER, jsonMarkdown);
-        await RNFS.writeFile(htmlPath, htmlContent, 'utf8');
-        setLocalHtmlPath(`file://${htmlPath}`);
+        await FileSystem.writeAsStringAsync(htmlPath, htmlContent, { encoding: FileSystem.EncodingType.UTF8 });
+        setLocalHtmlPath(htmlPath);
       } catch (error) {
         console.error('Error setting up files:', error);
         setError(`Error: ${error.message}`);
       } finally {
         setIsLoading(false);
-        await fetchChannels()
+        await fetchChannels();
       }
     };
     setupFiles();
   }, [path]);
 
-  // When saving, we use JSON.stringify so that the injected markdown is correctly escaped.
   const handleSave = async () => {
     setIsLoading(true);
     setLoadingMessage('Saving changes...');
     try {
-      const dataDir = `${RNFS.DocumentDirectoryPath}/notes`;
+      const dataDir = `${FileSystem.documentDirectory}notes`;
       let mdFilePath = `${dataDir}/${path}`;
       if (!path.includes('.')) {
         mdFilePath = `${dataDir}/${path}/index.md`;
       }
       const mdFileDir = mdFilePath.substring(0, mdFilePath.lastIndexOf('/'));
       await ensureDirectoryExists(mdFileDir);
-      await RNFS.writeFile(mdFilePath, markdown, 'utf8');
+      await FileSystem.writeAsStringAsync(mdFilePath, markdown, { encoding: FileSystem.EncodingType.UTF8 });
       const htmlPath = `${dataDir}/index.html`;
       const jsonMarkdown = JSON.stringify(markdown);
       const htmlContent = INDEX_HTML_CONTENT_TEMPLATE.replace(MARKDOWN_PLACEHOLDER, jsonMarkdown);
-      await RNFS.writeFile(htmlPath, htmlContent, 'utf8');
+      await FileSystem.writeAsStringAsync(htmlPath, htmlContent, { encoding: FileSystem.EncodingType.UTF8 });
       setIsEditing(false);
     } catch (error) {
       setError(`Save error: ${error.message}`);
@@ -590,9 +565,9 @@ const NotesPage = () => {
       const data = JSON.parse(event.nativeEvent.data);
       if (data.type === 'log') {
         if (data.message === 'Markdown processed successfully') {
-          setMarkdownLoaded(true)
+          setMarkdownLoaded(true);
         } else if (data.message === 'renderMathInElement is defined') {
-          setMarkdownLoaded(false)
+          setMarkdownLoaded(false);
         }
         console.log('WebView Log:', data.message);
       } else if (data.type === 'error') {
@@ -690,7 +665,7 @@ const NotesPage = () => {
             ref={webViewRef}
             originWhitelist={['*']}
             source={{ uri: localHtmlPath }}
-            baseUrl={`file://${RNFS.DocumentDirectoryPath}/notes/`}
+            baseUrl={`${FileSystem.documentDirectory}notes/`}
             allowFileAccess={true}
             mixedContentMode="always"
             style={{ flex: 1, backgroundColor: '#000' }}
@@ -700,8 +675,6 @@ const NotesPage = () => {
             domStorageEnabled={true}
             javaScriptEnabled={true}
           />
-
-
           {!markdownLoaded ? (
             <View style={{
               position: 'absolute',
@@ -714,7 +687,7 @@ const NotesPage = () => {
               <ActivityIndicator size="large" color="#000000" />
               <Text style={{ color: '#000', marginTop: 10 }}>Loading Markdown...</Text>
             </View>
-          ) : (<></>)}
+          ) : null}
         </View>
       )}
       <Modal visible={showChannelModal} transparent animationType="slide">
@@ -778,8 +751,6 @@ const NotesPage = () => {
           </View>
         </View>
       </Modal>
-
-      {/* Login Modal */}
       <Modal visible={showLoginModal} transparent animationType="slide">
         <View className="flex-1 justify-center items-center bg-black/50">
           <View className="bg-white p-5 rounded-lg w-3/4">

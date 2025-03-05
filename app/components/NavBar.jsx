@@ -1,49 +1,59 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, Button } from 'react-native';
-import { useRouter } from 'expo-router';
-import * as SecureStore from 'expo-secure-store';
+import { View, TouchableOpacity, Text } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import '../global.css';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import '../global.css';
 
-const NavBar = ({ current, setCurrent }) => { // Added proper prop destructuring
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    try {
-      await SecureStore.deleteItemAsync('username');
-      router.replace('/');
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-  };
-
+// Define a reusable NavItem component
+const NavItem = ({ page, icon, label, current, setCurrent }) => {
+  const isSelected = page === current;
   return (
-    <SafeAreaView className="max-w-5xl" style={{ backgroundColor: "#222" }}>
-      <View className="w-full flex-row justify-center pt-4 pb-2">
-        {/* Home Button */}
-        <TouchableOpacity
-          className="bg-black/44 rounded-[10px] px-5 py-2.5 mx-2"
-          onPress={() => setCurrent("Notes")}
-        >
-          <MaterialIcons name="notes" size={24} color="white" />
-        </TouchableOpacity>
+    <TouchableOpacity
+      className="px-5 py-2.5 flex-col items-center"
+      onPress={() => setCurrent(page)}
+      accessibilityLabel={label}
+    >
+      <MaterialIcons
+        name={icon}
+        size={24}
+        color={isSelected ? '#4CAF50' : 'white'}
+      />
+      <Text
+        className={`text-sm ${isSelected ? 'text-green-500' : 'text-white'}`}
+      >
+        {label}
+      </Text>
+    </TouchableOpacity>
+  );
+};
 
-        {/* Progress Button */}
-        <TouchableOpacity
-          className="bg-black/44 rounded-[10px] px-5 py-2.5 mx-2"
-          onPress={() => setCurrent("Progress")}
-        >
-          <Text className={`text-white my-auto font-bold text-xl ${current == "Progress" ? 'border-b-2 border-white':''}`}>PROGRESS</Text>
-        </TouchableOpacity>
-
-        {/* Routine Button */}
-        <TouchableOpacity
-          className="bg-black/44 rounded-[10px] px-5 py-2.5 mx-2"
-          onPress={() => setCurrent("Routine")}
-        >
-          <Text className={`text-white my-auto font-bold text-xl ${current == "Routine" ? 'border-b-2 border-white':''}`}>ROUTINE</Text>
-        </TouchableOpacity>
+// Main NavBar component
+const NavBar = ({ current, setCurrent }) => {
+  return (
+    <SafeAreaView style={{ backgroundColor: '#222' }}>
+      <View className="h-[1px] bg-gray-600" />
+      <View className="w-full flex-row justify-around py-2">
+        <NavItem
+          page="Notes"
+          icon="notes"
+          label="Notes"
+          current={current}
+          setCurrent={setCurrent}
+        />
+        <NavItem
+          page="Progress"
+          icon="bar-chart"
+          label="Progress"
+          current={current}
+          setCurrent={setCurrent}
+        />
+        <NavItem
+          page="Routine"
+          icon="calendar-today"
+          label="Routine"
+          current={current}
+          setCurrent={setCurrent}
+        />
       </View>
     </SafeAreaView>
   );

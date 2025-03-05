@@ -32,19 +32,11 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Build Android Debug APK
+      - name: Build Android APKs
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
-        env:
-          ANDROID_HOME: $ANDROID_SDK_ROOT
-
-      - name: Build Android Release APK
-        run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleRelease
+          ./gradlew assemble
         env:
           ANDROID_HOME: $ANDROID_SDK_ROOT
 

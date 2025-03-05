@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import RNFS from 'react-native-fs';
 
-// Define initial course data
+// Define initial course data (unchanged)
 const initialCourseData = {
   semester2: [
     {
@@ -50,7 +50,7 @@ const Home = () => {
   const [courseData, setCourseData] = useState(null);
   const courseFilePath = `${RNFS.DocumentDirectoryPath}/course.json`;
 
-  // Function to save course data to file
+  // Data handling functions (unchanged)
   const saveCourseData = async (data) => {
     try {
       await RNFS.writeFile(courseFilePath, JSON.stringify(data), 'utf8');
@@ -59,7 +59,6 @@ const Home = () => {
     }
   };
 
-  // Function to load course data from file
   const loadCourseData = async () => {
     try {
       const exists = await RNFS.exists(courseFilePath);
@@ -67,17 +66,15 @@ const Home = () => {
         const fileContent = await RNFS.readFile(courseFilePath, 'utf8');
         setCourseData(JSON.parse(fileContent));
       } else {
-        // If file doesn't exist, use initial data and save it
         setCourseData(initialCourseData);
         await saveCourseData(initialCourseData);
       }
     } catch (error) {
       console.error('Error loading course data:', error);
-      setCourseData(initialCourseData); // Fallback to initial data
+      setCourseData(initialCourseData);
     }
   };
 
-  // Function to download course data from GitHub
   const downloadCourseData = async () => {
     try {
       const response = await fetch('https://ihjas-ahammed.github.io/course.json');
@@ -91,90 +88,91 @@ const Home = () => {
     }
   };
 
-  // Initial load and attempt to download
   useEffect(() => {
-    // Load local data first
     loadCourseData();
-
-    // Attempt to download fresh data (runs async)
     downloadCourseData();
-
-    // Set up periodic checking (every 5 minutes)
     const intervalId = setInterval(() => {
       downloadCourseData();
     }, 5 * 60 * 1000);
-
-    // Cleanup interval
     return () => clearInterval(intervalId);
   }, []);
 
   // Reusable Module Button
-  const ModuleButton = ({ text, path, webview, qa2 }) => (
-    <View className="bg-white/20 rounded-[10px] flex-row mb-1 flex h-[40px] ">
+  const ModuleButton = ({ text, path, webview, qa2, last }) => (
+    <View className="py-3 border-b border-white/70 flex-row items-center">
       <TouchableOpacity
-        className="h-full w-fit flex-1 px-4 justify-center"
+        className="flex-1"
+        activeOpacity={0.8}
         onPress={() => {
           if (webview) {
-            router.push(`/webview${path}`)
+            router.push(`/webview${path}`);
           } else {
-            router.push(`/notes${path}`)
+            router.push(`/notes${path}`);
           }
         }}
       >
-        <Text className="text-white">{text}</Text>
+        <Text className="text-white text-lg">{text}</Text>
       </TouchableOpacity>
-      {qa2 ?
+      {qa2 &&   (
         <TouchableOpacity
-          className="flex h-full justify-center px-4"
+          className="px-4"
+          activeOpacity={0.8}
           onPress={() => {
-            let t = JSON.stringify({title:text,qa:qa2})
-            console.log(t)
-            router.push(`/cog?dt=${t}`)
-          }}>
+            const data = JSON.stringify({ title: text, qa: qa2 });
+            console.log(data);
+            router.push(`/cog?dt=${data}`);
+          }}
+        >
           <Ionicons name="caret-forward-circle-outline" size={24} color="white" />
         </TouchableOpacity>
-        : <></>}
+      ) }
     </View>
   );
 
-  // Reusable Course Card 
-  const CourseCard = ({ semester, title, modules, colSpan }) => (
-    <View className={`bg-black rounded-[10px] p-5 flex`}>
-      <Text className="text-2xl font-bold text-white mb-6 mx-auto">{title}</Text>
+  // Reusable Course Card
+  const CourseCard = ({ title, modules }) => (
+    <View className="bg-[#222] rounded-[10px] p-5 shadow-lg">
+      <Text className="text-2xl font-bold text-white mb-6 text-center">{title}</Text>
       <View className="flex flex-col">
         {modules.map((module, idx) => (
-          <ModuleButton key={idx} text={module.text} path={module.path} webview={module.webview} qa2={module.qa2} />
+          <ModuleButton
+            key={idx}
+            last={idx == modules.length-1}
+            text={module.text}
+            path={module.path}
+            webview={module.webview}
+            qa2={module.qa2}
+          />
         ))}
       </View>
     </View>
   );
 
-  // Show loading state while courseData is null
+  // Loading state
   if (!courseData) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <Text className="text-white">Loading...</Text>
+      <View className="flex-1 justify-center items-center bg-white">
+        <ActivityIndicator size="large" color="#222222" />
       </View>
     );
   }
 
   return (
-    <ScrollView className="flex-1">
-      <View className="max-w-5xl p-5">
-        {/* Semester 2 */}
-        <View className="grid md:grid-cols-3 gap-3 mb-4">
-          {courseData.semester2.map((course, idx) => (
-            <CourseCard
-              key={idx}
-              semester={course.title === 'Maths' ? 'Old Files and Projects' : 'Semester 2'}
-              title={course.title}
-              modules={course.modules}
-              colSpan={course.colSpan}
-            />
-          ))}
+    <View className="flex-1 bg-white">
+      <ScrollView>
+        <View className="max-w-5xl p-5">
+          <View className="grid md:grid-cols-3 gap-3 mb-4">
+            {courseData.semester2.map((course, idx) => (
+              <CourseCard
+                key={idx}
+                title={course.title}
+                modules={course.modules}
+              />
+            ))}
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 

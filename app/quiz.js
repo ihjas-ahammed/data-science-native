@@ -1,12 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, Animated, StatusBar } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, StatusBar, ScrollView } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
-
 import * as SecureStore from 'expo-secure-store';
-
-// Sample questions (would be replaced with your full question set)
-
 
 const QuizScreen = () => {
   const [questions, setQuestions] = useState([]);
@@ -22,12 +18,11 @@ const QuizScreen = () => {
   const [completed, setCompleted] = useState(false);
   const [answerSelected, setAnswerSelected] = useState(false);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(null);
-  const { qs } = useLocalSearchParams()
-  const { name, qa, key } = JSON.parse(qs)
+  const { qs } = useLocalSearchParams();
+  const { name, qa, key } = JSON.parse(qs);
 
-  const title = name
-  const sampleQuestions = qa
-
+  const title = name;
+  const sampleQuestions = qa;
 
   const TARGET_CORRECT_ANSWERS = 10;
 
@@ -40,37 +35,33 @@ const QuizScreen = () => {
 
   const updateScore = () => {
     SecureStore.getItemAsync(key).then(async (scr) => {
-      
-      if (parseInt(scr) < score) {
-        console.log("Saving "+key+":"+score)
-        SecureStore.setItemAsync(key, score+"").then(() => 
-          console.log("Saved "+key+":"+score))
-      }else if(parseInt(scr) > score){
-        console.log("Hi")
-      }else{
-        console.log("Saving "+key+":"+score)
-        SecureStore.setItemAsync(key, score+"").then(() => 
-          console.log("Saved "+key+":"+score))
+      if (parseInt(scr) <= score) {
+        console.log("Saving " + key + ":" + score);
+        SecureStore.setItemAsync(key, score + "").then(() =>
+          console.log("Saved " + key + ":" + score)
+        );
+      } else if (parseInt(scr) > score) {
+        console.log("Hi");
+      } else {
+        console.log("Saving " + key + ":" + score);
+        SecureStore.setItemAsync(key, score + "").then(() =>
+          console.log("Saved " + key + ":" + score)
+        );
       }
     });
-  }
+  };
 
   // Shuffle options when current question changes
   useEffect(() => {
     if (questions.length > 0) {
       const currentQuestion = questions[currentQuestionIndex];
-      // Create array of {text, isCorrect, originalIndex} objects
       const questionOptions = currentQuestion.options.map((option, index) => ({
         text: option,
         isCorrect: index === currentQuestion.correct,
-        originalIndex: index
+        originalIndex: index,
       }));
-
-      // Shuffle options
       const shuffledOptions = [...questionOptions].sort(() => Math.random() - 0.5);
       setOptions(shuffledOptions);
-
-      // Reset answer state
       setAnswerSelected(false);
       setSelectedOptionIndex(null);
     }
@@ -83,8 +74,6 @@ const QuizScreen = () => {
       duration: 300,
       useNativeDriver: false,
     }).start();
-
-    // Color transition from red to yellow to green based on progress
     Animated.timing(progressBarColor, {
       toValue: score / TARGET_CORRECT_ANSWERS,
       duration: 300,
@@ -94,15 +83,12 @@ const QuizScreen = () => {
 
   const interpolatedColor = progressBarColor.interpolate({
     inputRange: [0, 0.5, 1],
-    outputRange: ['#ff4d4d', '#ffde59', '#4CAF50']
+    outputRange: ['#ff4d4d', '#ffde59', '#4CAF50'],
   });
 
   const handleAnswer = (isCorrect, index) => {
-    // Show which options are correct/incorrect
     setAnswerSelected(true);
     setSelectedOptionIndex(index);
-
-    // Record this question as asked
     setAskedQuestions([...askedQuestions, questions[currentQuestionIndex]]);
 
     if (isCorrect) {
@@ -110,56 +96,41 @@ const QuizScreen = () => {
       setFeedbackMessage('Correct! +1 point');
       setFeedbackColor('#28a745');
     } else {
-      // Decrease score but not below 0
       setScore(Math.max(0, score - 1));
       setFeedbackMessage('Incorrect! -1 point');
       setFeedbackColor('#dc3545');
     }
 
     setShowFeedback(true);
+    updateScore();
 
-    // Hide feedback after 2 seconds and move to next question
-    updateScore()
-    // Check if we've reached the target score
-    if (score + (isCorrect ? 1 : 0) >= TARGET_CORRECT_ANSWERS) {
+    if (score >= TARGET_CORRECT_ANSWERS) {
       setCompleted(true);
-      return;
     }
   };
 
   const nextQ = () => {
     setShowFeedback(false);
     moveToNextQuestion();
-  }
+  };
 
   const moveToNextQuestion = useCallback(() => {
-    // If we've gone through all questions, check if we need to reset
     if (currentQuestionIndex >= questions.length - 1) {
-      // We've gone through all questions once
       if (askedQuestions.length >= questions.length) {
-        // Reset and shuffle questions again, but exclude already answered correctly questions
         const remainingQuestions = questions.filter(
-          q => !askedQuestions.some(asked => asked === q && asked.answeredCorrectly)
+          (q) => !askedQuestions.some((asked) => asked === q && asked.answeredCorrectly)
         );
-
-        if (remainingQuestions.length === 0) {
-          // All questions answered correctly, shuffle all again
-          const shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
-          setQuestions(shuffledQuestions);
-        } else {
-          // Shuffle remaining questions
-          const shuffledRemaining = [...remainingQuestions].sort(() => Math.random() - 0.5);
-          setQuestions(shuffledRemaining);
-        }
-
+        const shuffledQuestions =
+          remainingQuestions.length === 0
+            ? [...questions].sort(() => Math.random() - 0.5)
+            : [...remainingQuestions].sort(() => Math.random() - 0.5);
+        setQuestions(shuffledQuestions);
         setAskedQuestions([]);
         setCurrentQuestionIndex(0);
       } else {
-        // We still have some unasked questions in this round
         setCurrentQuestionIndex(0);
       }
     } else {
-      // Move to next question
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
   }, [currentQuestionIndex, questions, askedQuestions]);
@@ -175,28 +146,32 @@ const QuizScreen = () => {
     setCompleted(false);
     setAnswerSelected(false);
     setSelectedOptionIndex(null);
-
-    // Reshuffle questions
     const shuffledQuestions = [...sampleQuestions].sort(() => Math.random() - 0.5);
     setQuestions(shuffledQuestions);
   };
 
   const getOptionClassName = (option, index) => {
     let baseClass = "p-4 rounded-lg mb-3 border border-gray-300";
-
     if (!answerSelected) {
       return `${baseClass} bg-gray-50`;
     }
-
     if (option.isCorrect) {
       return `${baseClass} bg-green-100 border-green-300`;
     }
-
     if (index === selectedOptionIndex && !option.isCorrect) {
       return `${baseClass} bg-red-100 border-red-300`;
     }
-
     return `${baseClass} bg-gray-50 opacity-50`;
+  };
+
+  const getDescriptionClassName = () => {
+    if (!showFeedback) {
+      return "p-4 rounded-lg mb-3 border border-gray-300 bg-gray-50";
+    }
+    const isCorrect = options[selectedOptionIndex]?.isCorrect;
+    return isCorrect
+      ? "p-4 rounded-lg mb-3 border border-green-300 bg-green-100"
+      : "p-4 rounded-lg mb-3 border border-red-300 bg-red-100";
   };
 
   // Render completed screen
@@ -238,40 +213,34 @@ const QuizScreen = () => {
 
   return (
     <View className="flex-1 bg-gray-50">
-
       {/* Action Bar */}
       <View className="h-14 bg-indigo-600 flex-row items-center px-4 shadow-md">
         <TouchableOpacity className="p-2" onPress={handleExit}>
           <MaterialIcons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
         <Text className="text-white text-lg font-bold flex-1 ml-4">{title}</Text>
-
       </View>
 
       {/* Progress Bar */}
       <View className="h-8 bg-gray-200 rounded-lg mx-4 mt-4 overflow-hidden">
         <Animated.View
-          style={[
-            {
-              height: '100%',
-              position: 'absolute',
-              left: 0,
-              top: 0,
-              width: progressAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: ['0%', '100%']
-              }),
-              backgroundColor: interpolatedColor
-            }
-          ]}
+          style={{
+            height: '100%',
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            width: progressAnim.interpolate({
+              inputRange: [0, 1],
+              outputRange: ['0%', '100%'],
+            }),
+            backgroundColor: interpolatedColor,
+          }}
         />
-        <Text className="absolute w-full text-center leading-8 text-xs font-bold text-gray-800">
-          {score}/{TARGET_CORRECT_ANSWERS} correct answers
-        </Text>
+
       </View>
 
       {/* Question Card */}
-      <View className="bg-white rounded-lg p-4 m-4 shadow-sm flex-1">
+      <View className="bg-white rounded-lg p-4 m-4 shadow-sm ">
         <Text className="text-sm text-gray-500 mb-2">
           Question {currentQuestionIndex + 1} of {questions.length}
         </Text>
@@ -280,7 +249,7 @@ const QuizScreen = () => {
         </Text>
 
         {/* Options */}
-        <View className="flex-1">
+        <View >
           {options.map((option, index) => (
             <TouchableOpacity
               key={index}
@@ -288,48 +257,27 @@ const QuizScreen = () => {
               onPress={() => !answerSelected && handleAnswer(option.isCorrect, index)}
               disabled={answerSelected}
             >
-              <Text className="text-base text-gray-700">
-                {option.text}
-              </Text>
-              {answerSelected && option.isCorrect && (
-                <MaterialIcons name="check-circle" size={20} color="#22c55e" className="absolute right-4 top-4" />
-              )}
-              {answerSelected && index === selectedOptionIndex && !option.isCorrect && (
-                <MaterialIcons name="cancel" size={20} color="#ef4444" className="absolute right-4 top-4" />
-              )}
+              <Text className="text-base text-gray-700">{option.text}</Text>
             </TouchableOpacity>
           ))}
         </View>
       </View>
-      {
-        showFeedback && questions[currentQuestionIndex].describe !== options[questions[currentQuestionIndex].correct] && (
-          <View className="flex-1 p-6">
-            <TouchableOpacity
-              className="p-4 rounded-lg border border-gray-300  m-10 h-fit mt-4 "
-              onPress={nextQ}>
-              <Text className="text-base text-gray-700 ">
+
+      {/* Description with Scroll */}
+      {showFeedback && questions[currentQuestionIndex].describe !== options[questions[currentQuestionIndex].correct] && (
+        <View className="px-4 pb-4 flex-1">
+          <TouchableOpacity onPress={nextQ}>
+            <ScrollView className={getDescriptionClassName()} style={{ maxHeight: "100%" }}>
+              <Text className="text-base text-gray-700">
                 {questions[currentQuestionIndex].describe}
               </Text>
-            </TouchableOpacity>
-            <Text className="text-center text-gray-500 mt-2">
-              Click on explanation to move on 
-            </Text>
-          </View>
-        )
-      }
-
-      {/* Feedback Message */}
-      {showFeedback && (
-
-        <View
-          className="absolute bottom-6 left-6 right-6 p-4 rounded-lg items-center justify-center shadow-md"
-          style={{ backgroundColor: feedbackColor }}
-        >
-
-          <Text className="text-white text-base font-bold">{feedbackMessage}</Text>
+            </ScrollView>
+          </TouchableOpacity>
+          <Text className="text-center text-gray-500 mt-auto mb-5">
+            Click on explanation to move on
+          </Text>
         </View>
       )}
-
 
     </View>
   );

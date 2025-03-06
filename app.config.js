@@ -1,6 +1,4 @@
 export default ({ config }) => {
-    const profile = process.env.EAS_BUILD_PROFILE || 'production';
-    const runtimeVersion = profile === 'preview' ? 'preview' : config.version;
   
     return {
       expo: {
@@ -25,7 +23,7 @@ export default ({ config }) => {
           package: "me.ihjas.notes",
           versionCode: 11,
           permissions: ["INTERNET"],
-          runtimeVersion: runtimeVersion
+          runtimeVersion: "1.0.10"
         },
         web: {
           favicon: "./assets/icon.png",
@@ -54,7 +52,7 @@ export default ({ config }) => {
           url: "https://u.expo.dev/f98e6168-8ce2-4498-856d-8dee633447f7"
         },
         ios: {
-          runtimeVersion: runtimeVersion
+          runtimeVersion: "1.0.10"
         }
       }
     };

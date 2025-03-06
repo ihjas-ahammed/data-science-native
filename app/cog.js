@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, ActivityIndicator, ScrollView, TouchableHighlight } from 'react-native';
+import { View, Text, StatusBar, ActivityIndicator, ScrollView, TouchableHighlight, Modal } from 'react-native';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLocalSearchParams, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -19,6 +19,7 @@ const cog = () => {
   const [scores, setScores] = useState({});
   const [allWrongQuestions, setAllWrongQuestions] = useState([]);
   const [activeTab, setActiveTab] = useState('topics');
+  const [modalVisible, setModalVisible] = useState(false);
 
   const filePath = `${FileSystem.documentDirectory}quiz_data/${path}`;
   const directoryPath = filePath.substring(0, filePath.lastIndexOf('/'));
@@ -56,46 +57,67 @@ const cog = () => {
     loadData();
   }, [path]);
 
-  // Load scores and repractice questions every time the screen is focused
+  // Function to load repractice questions
+  const loadRepracticeQuestions = useCallback(async () => {
+    if (data && data[obj]) {
+      const repracticePromises = data[obj].map((section) => {
+        const key = sanitizeKey(title + section.name);
+        const repracticeKey = `repractice-${key}`;
+        return SecureStore.getItemAsync(repracticeKey).then((str) => ({
+          key,
+          questions: str ? JSON.parse(str) : [],
+        }));
+      });
+      const repracticeArray = await Promise.all(repracticePromises);
+      const allQuestions = repracticeArray.flatMap(({ key, questions }) =>
+        questions.map((question, index) => ({ sectionKey: key, question, index }))
+      );
+      setAllWrongQuestions(allQuestions);
+    }
+  }, [data, obj, title]);
+
+  // Load scores and repractice questions when the screen is focused
   useFocusEffect(
     useCallback(() => {
       const loadScoresAndRepractice = async () => {
         if (data && data[obj]) {
           const scorePromises = data[obj].map((section) => {
-            const key = sanitizeKey(section.name);
+            const key = sanitizeKey(title + section.name);
             return SecureStore.getItemAsync(key).then((scr) => ({
               key,
               score: scr ? parseInt(scr, 10) : 0,
             }));
           });
 
-          const repracticePromises = data[obj].map((section) => {
-            const key = sanitizeKey(section.name);
-            const repracticeKey = `repractice-${key}`;
-            return SecureStore.getItemAsync(repracticeKey).then((str) => ({
-              key,
-              questions: str ? JSON.parse(str) : [],
-            }));
-          });
-
-          const [scoresArray, repracticeArray] = await Promise.all([
-            Promise.all(scorePromises),
-            Promise.all(repracticePromises),
-          ]);
-
+          const [scoresArray] = await Promise.all([Promise.all(scorePromises)]);
           const scoresObj = scoresArray.reduce((acc, { key, score }) => {
             acc[key] = score;
             return acc;
           }, {});
           setScores(scoresObj);
 
-          const allQuestions = repracticeArray.flatMap(({ questions }) => questions);
-          setAllWrongQuestions(allQuestions);
+          await loadRepracticeQuestions();
         }
       };
       loadScoresAndRepractice();
-    }, [data, obj])
+    }, [data, obj, loadRepracticeQuestions])
   );
+
+  // Function to remove a question from repractice
+  const removeQuestion = async (sectionKey, questionIndex) => {
+    try {
+      const repracticeKey = `repractice-${sectionKey}`;
+      const str = await SecureStore.getItemAsync(repracticeKey);
+      if (str) {
+        const questions = JSON.parse(str);
+        questions.splice(questionIndex, 1);
+        await SecureStore.setItemAsync(repracticeKey, JSON.stringify(questions));
+        await loadRepracticeQuestions(); // Refresh the state
+      }
+    } catch (err) {
+      console.error('Failed to remove question:', err);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -130,9 +152,9 @@ const cog = () => {
         <ScrollView className="flex-1 p-4 mb-4">
           {activeTab === 'topics' ? (
             data[obj].map((section, index) => {
-              const key = sanitizeKey(section.name);
+              const key = sanitizeKey(title + section.name);
               const score = scores[key] || 0;
-              const total = section.qa.length;
+              const total = section.qa.length < 10 ? section.qa.length : 9;
               return (
                 <TouchableHighlight
                   key={index}
@@ -147,35 +169,48 @@ const cog = () => {
                       {section.name}
                     </Text>
                     <View className="flex-row items-center">
-                      <CustomProgressBar progress={total > 0 ? score / total : 0} height={10} />
+                      {score >= total ? (
+                        <MaterialIcons name="check" size={20} color="#10b981" />
+                      ) : (
+                        <CustomProgressBar progress={total > 0 ? score / total : 0} height={10} />
+                      )}
                     </View>
                   </View>
                 </TouchableHighlight>
               );
             })
           ) : (
-            <TouchableHighlight
-              onPress={() => {
-                if (allWrongQuestions.length > 0) {
-                  router.push('/quiz?qs=' + JSON.stringify({
-                    name: "Repractice",
-                    qa: allWrongQuestions,
-                    key: "repractice",
-                    maxNo: allWrongQuestions.length,
-                  }));
-                } else {
-                  alert("No questions to repractice.");
-                }
-              }}
-              underlayColor="#4b5563"
-              className="p-4 bg-gray-800 rounded-lg mb-4 border border-gray-700"
-            >
-              <View>
-                <Text className="text-xl font-semibold text-gray-200 mb-3">
-                  Repractice ({allWrongQuestions.length} questions)
-                </Text>
+            <View className="p-4 bg-gray-800 rounded-lg mb-4 border border-gray-700">
+              <View className="flex-row justify-between items-center">
+                <TouchableHighlight
+                  onPress={() => {
+                    if (allWrongQuestions.length > 0) {
+                      router.push('/quiz?qs=' + JSON.stringify({
+                        name: "Repractice",
+                        qa: allWrongQuestions.map(item => item.question),
+                        key: "repractice",
+                        maxNo: allWrongQuestions.length,
+                      }));
+                    } else {
+                      alert("No questions to repractice.");
+                    }
+                  }}
+                  underlayColor="#4b5563"
+                  className="flex-1"
+                >
+                  <Text className="text-xl font-semibold text-gray-200 mb-3">
+                    Repractice ({allWrongQuestions.length} questions)
+                  </Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                  onPress={() => setModalVisible(true)}
+                  underlayColor="#4b5563"
+                  className="p-2"
+                >
+                  <MaterialIcons name="edit" size={24} color="#e5e7eb" />
+                </TouchableHighlight>
               </View>
-            </TouchableHighlight>
+            </View>
           )}
         </ScrollView>
         <View className="h-16 bg-gray-800 flex-row items-center justify-around shadow-md">
@@ -217,6 +252,48 @@ const cog = () => {
           </TouchableHighlight>
         </View>
       </View>
+
+      {/* Modal for editing repractice questions */}
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <SafeAreaView className="flex-1 bg-gray-900">
+          <View className="h-14 bg-gray-800 flex-row items-center px-4 shadow-md">
+            <TouchableHighlight
+              underlayColor="#4b5563"
+              onPress={() => setModalVisible(false)}
+              className="p-2"
+            >
+              <MaterialIcons name="close" size={24} color="#e5e7eb" />
+            </TouchableHighlight>
+            <Text className="text-gray-200 text-lg font-bold flex-1 ml-4">
+              Edit Repractice Questions
+            </Text>
+          </View>
+          <ScrollView className="flex-1 p-4">
+            {allWrongQuestions.map((item, idx) => (
+              <View
+                key={`${item.sectionKey}-${item.index}`}
+                className="flex-row justify-between items-center p-2 bg-gray-700 rounded mb-2"
+              >
+                <Text className="text-gray-200 flex-1">
+                  {item.question.question}
+                </Text>
+                <TouchableHighlight
+                  onPress={() => removeQuestion(item.sectionKey, item.index)}
+                  underlayColor="#4b5563"
+                  className="p-2"
+                >
+                  <MaterialIcons name="delete" size={24} color="#e5e7eb" />
+                </TouchableHighlight>
+              </View>
+            ))}
+          </ScrollView>
+        </SafeAreaView>
+      </Modal>
     </SafeAreaView>
   );
 };

@@ -15,6 +15,7 @@ const QuizScreen = () => {
   const [feedbackColor, setFeedbackColor] = useState('#28a745');
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const [askedQuestions, setAskedQuestions] = useState([]);
+  const [gameQuestions, setGameQuestions] = useState([]); // New state for unique questions
   const [progressAnim] = useState(new Animated.Value(0));
   const [progressBarColor] = useState(new Animated.Value(0));
   const [completed, setCompleted] = useState(false);
@@ -27,11 +28,11 @@ const QuizScreen = () => {
 
   // Parse query parameters
   const { qs } = useLocalSearchParams();
-  const { name, qa, key,maxNo } = JSON.parse(qs);
+  const { name, qa, key, maxNo } = JSON.parse(qs);
 
   const title = name;
   const sampleQuestions = qa;
-  const TARGET_CORRECT_ANSWERS = maxNo ? maxNo :10;
+  const TARGET_CORRECT_ANSWERS = maxNo ? maxNo : 10;
 
   // Load sound effect for correct answers
   useEffect(() => {
@@ -58,6 +59,7 @@ const QuizScreen = () => {
     const shuffledQuestions = [...sampleQuestions].sort(() => Math.random() - 0.5);
     setQuestions(shuffledQuestions);
     setAskedQuestions([]);
+    setGameQuestions([]); // Reset on initialization
   }, []);
 
   // Update score in SecureStore
@@ -111,7 +113,17 @@ const QuizScreen = () => {
     setAnswerSelected(true);
     setSelectedOptionIndex(index);
     setAskedQuestions([...askedQuestions, questions[currentQuestionIndex]]);
-  
+
+    // Add to gameQuestions if not already present
+    setGameQuestions(prev => {
+      const currentQuestion = questions[currentQuestionIndex];
+      if (prev.some(q => q === currentQuestion)) {
+        return prev;
+      } else {
+        return [...prev, currentQuestion];
+      }
+    });
+
     const newScore = isCorrect ? score + 1 : Math.max(0, score - 1);
     setScore(newScore);
     setFeedbackMessage(isCorrect ? 'Correct! +1 point' : 'Incorrect! -1 point');
@@ -119,8 +131,7 @@ const QuizScreen = () => {
     setLastAnswerCorrect(isCorrect);
     setShowFeedback(true);
     updateScore();
-  
-    // Play sound or vibrate based on correctness
+
     if (isCorrect && correctSoundRef.current) {
       try {
         await correctSoundRef.current.playAsync();
@@ -130,47 +141,32 @@ const QuizScreen = () => {
     } else {
       Vibration.vibrate(500);
     }
-  
-    // Handle repractice list
+
     const repracticeKey = `repractice-${key}`;
     try {
       const currentRepractice = await SecureStore.getItemAsync(repracticeKey);
       let repracticeList = currentRepractice ? JSON.parse(currentRepractice) : [];
       const currentQuestion = questions[currentQuestionIndex];
-  
+
       if (isCorrect) {
-        // Remove the question from repractice list if it exists
         repracticeList = repracticeList.filter(q => q.question !== currentQuestion.question);
       } else {
-        // Add the question to repractice list if it doesn't exist
         if (!repracticeList.some(q => q.question === currentQuestion.question)) {
           repracticeList.push(currentQuestion);
         }
       }
-  
-      // Save the updated repractice list
       await SecureStore.setItemAsync(repracticeKey, JSON.stringify(repracticeList));
     } catch (error) {
       console.error('Error updating repractice list:', error);
     }
-  
-    // Determine options to keep
+
     const correctOption = options.find(opt => opt.isCorrect);
-    let optionsToKeep;
-    if (isCorrect) {
-      optionsToKeep = [correctOption];
-    } else {
-      const selectedOption = options[index];
-      optionsToKeep = [correctOption, selectedOption];
-    }
-  
-    // Animate the removal of other options
+    let optionsToKeep = isCorrect ? [correctOption] : [correctOption, options[index]];
     if (Platform.OS !== 'web') {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     }
     setOptions(optionsToKeep);
-  
-    // Control description clickability and color
+
     if (isCorrect) {
       setCanProceed(true);
       setIsDescriptionGray(false);
@@ -182,13 +178,12 @@ const QuizScreen = () => {
         setIsDescriptionGray(false);
       }, 2000);
     }
-  
+
     if (newScore >= TARGET_CORRECT_ANSWERS) {
       setCompleted(true);
     }
   };
 
-  
   // Move to next question
   const nextQ = async () => {
     if (correctSoundRef.current) {
@@ -233,6 +228,7 @@ const QuizScreen = () => {
     setScore(0);
     setCurrentQuestionIndex(0);
     setAskedQuestions([]);
+    setGameQuestions([]); // Reset gameQuestions
     setCompleted(false);
     setAnswerSelected(false);
     setSelectedOptionIndex(null);
@@ -256,16 +252,11 @@ const QuizScreen = () => {
   // Dynamic description styling
   const getDescriptionClassName = () => {
     let baseClass = "p-4 rounded-lg mb-3 border";
-    if (!showFeedback) {
+    if (!canProceed) {
       return `${baseClass} border-gray-700 bg-gray-700`;
+    } else {
+      return `${baseClass} border-blue-700 bg-blue-900`;
     }
-    if (!lastAnswerCorrect && isDescriptionGray) {
-      return `${baseClass} border-gray-700 bg-gray-700`;
-    }
-    const colorClass = lastAnswerCorrect
-      ? "border-green-700 bg-green-900"
-      : "border-red-700 bg-red-900";
-    return `${baseClass} ${colorClass}`;
   };
 
   // Completed Screen
@@ -273,23 +264,38 @@ const QuizScreen = () => {
     return (
       <View className="flex-1 bg-gray-900">
         <StatusBar barStyle="light-content" />
-        <View className="flex-1 justify-center items-center p-6">
-          <MaterialIcons name="celebration" size={80} color="#FFD700" />
-          <Text className="text-2xl font-bold text-gray-200 mt-6 mb-4">Congratulations!</Text>
-          <Text className="text-lg text-center text-gray-400 mb-8">
-            You've successfully completed the quiz with {score} correct answers.
-          </Text>
+        <ScrollView className="flex-1">
+          <View className="justify-center items-center p-6">
+            <MaterialIcons name="celebration" size={80} color="#FFD700" />
+            <Text className="text-2xl font-bold text-gray-200 mt-6 mb-4">Congratulations!</Text>
+            <Text className="text-lg text-center text-gray-400 mb-8">
+              You've successfully completed the quiz with {score} correct answers.
+            </Text>
+          </View>
+          <View className="px-4 mb-8">
+            <Text className="text-xl font-bold text-gray-200 mb-4">Summary of Questions Asked</Text>
+            {gameQuestions.map((q, index) => (
+              <View key={index} className="bg-gray-800 rounded-lg p-4 mb-4 shadow-sm border border-gray-700">
+                <Text className="text-lg font-bold text-gray-200 mb-2">Question {index + 1}</Text>
+                <Text className="text-base text-gray-400 mb-2">{q.question}</Text>
+                <Text className="text-base text-gray-200 mb-2">Correct Answer: {q.options[q.correct]}</Text>
+                <Text className="text-base text-gray-200">Description: {q.describe}</Text>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+        <View className="p-4">
           <TouchableHighlight
             underlayColor="#6366f1"
             onPress={handleRestart}
-            className="bg-indigo-500 py-3 px-8 rounded-full mb-4 w-4/5 items-center"
+            className="bg-indigo-500 py-3 px-8 rounded-full mb-4 w-full items-center"
           >
             <Text className="text-white text-lg font-bold">Try Again</Text>
           </TouchableHighlight>
           <TouchableHighlight
             underlayColor="#4b5563"
             onPress={handleExit}
-            className="bg-gray-700 py-3 px-8 rounded-full w-4/5 items-center"
+            className="bg-gray-700 py-3 px-8 rounded-full w-full items-center"
           >
             <Text className="text-white text-lg font-bold">Exit</Text>
           </TouchableHighlight>
@@ -310,15 +316,12 @@ const QuizScreen = () => {
   // Main Quiz UI
   return (
     <View className="flex-1 bg-gray-900">
-      {/* Action Bar */}
       <View className="h-14 bg-gray-800 flex-row items-center px-4 shadow-md">
         <TouchableHighlight underlayColor="#4b5563" onPress={handleExit} className="p-2">
           <MaterialIcons name="arrow-back" size={24} color="#e5e7eb" />
         </TouchableHighlight>
         <Text className="text-gray-200 text-lg font-bold flex-1 ml-4">{title}</Text>
       </View>
-
-      {/* Progress Bar */}
       <View className="h-8 bg-gray-700 rounded-lg mx-4 mt-4 overflow-hidden">
         <Animated.View
           style={{
@@ -334,8 +337,6 @@ const QuizScreen = () => {
           }}
         />
       </View>
-
-      {/* Question Card */}
       <View className="bg-gray-800 rounded-lg p-4 m-4 shadow-sm border border-gray-700">
         <Text className="text-sm text-gray-400 mb-2">
           Question {currentQuestionIndex + 1} of {questions.length}
@@ -343,8 +344,6 @@ const QuizScreen = () => {
         <Text className="text-lg font-bold text-gray-200 mb-6">
           {questions[currentQuestionIndex].question}
         </Text>
-
-        {/* Options */}
         <View>
           {options.map((option, index) => (
             <TouchableHighlight
@@ -359,8 +358,6 @@ const QuizScreen = () => {
           ))}
         </View>
       </View>
-
-      {/* Description with Scroll */}
       {showFeedback && questions[currentQuestionIndex].describe !== options.find(opt => opt.isCorrect)?.text && (
         <View className="px-4 pb-4 flex-1">
           <TouchableOpacity

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Modal, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Modal, StyleSheet, ActivityIndicator } from 'react-native';
 import { getDatabase, ref, set, get } from 'firebase/database';
 import Toast from 'react-native-toast-message';
-
+import { MaterialIcons } from '@expo/vector-icons';
 import * as SecureStore from 'expo-secure-store'; // For offline storage
 
 const ImportExportDialog = ({ open, onClose, firebaseApp, onImportData }) => {
@@ -104,7 +104,10 @@ const ImportExportDialog = ({ open, onClose, firebaseApp, onImportData }) => {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={styles.modalTitle}>Import/Export Progress</Text>
+          <View style={styles.titleContainer}>
+            <MaterialIcons name="import-export" size={24} color="#E0E7FF" />
+            <Text style={styles.modalTitle}>Import/Export Progress</Text>
+          </View>
           
           <View style={styles.inputContainer}>
             <Text style={styles.label}>User ID:</Text>
@@ -113,7 +116,8 @@ const ImportExportDialog = ({ open, onClose, firebaseApp, onImportData }) => {
               value={userId}
               onChangeText={setUserId}
               placeholder="Enter user ID"
-              placeholderTextColor="#aaa"
+              placeholderTextColor="#A5B4FC"
+              selectionColor="#818CF8"
             />
           </View>
           
@@ -123,7 +127,14 @@ const ImportExportDialog = ({ open, onClose, firebaseApp, onImportData }) => {
               onPress={handleImport}
               disabled={loading}
             >
-              <Text style={styles.buttonText}>Import</Text>
+              {loading ? (
+                <ActivityIndicator size="small" color="#ffffff" />
+              ) : (
+                <>
+                  <MaterialIcons name="cloud-download" size={18} color="#ffffff" style={styles.buttonIcon} />
+                  <Text style={styles.buttonText}>Import</Text>
+                </>
+              )}
             </TouchableOpacity>
             
             <TouchableOpacity
@@ -131,7 +142,14 @@ const ImportExportDialog = ({ open, onClose, firebaseApp, onImportData }) => {
               onPress={handleExport}
               disabled={loading}
             >
-              <Text style={styles.buttonText}>Export</Text>
+              {loading ? (
+                <ActivityIndicator size="small" color="#ffffff" />
+              ) : (
+                <>
+                  <MaterialIcons name="cloud-upload" size={18} color="#ffffff" style={styles.buttonIcon} />
+                  <Text style={styles.buttonText}>Export</Text>
+                </>
+              )}
             </TouchableOpacity>
           </View>
           
@@ -152,27 +170,35 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
   modalView: {
-    width: '80%',
-    backgroundColor: 'white',
-    borderRadius: 20,
+    width: '85%',
+    backgroundColor: '#4338CA', // indigo-800
+    borderRadius: 16,
     padding: 20,
-    alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 3,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(224, 231, 255, 0.2)', // indigo-100/20
   },
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 20,
+    color: '#E0E7FF', // indigo-100
+    marginLeft: 8,
   },
   inputContainer: {
     width: '100%',
@@ -181,15 +207,18 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 8,
+    color: '#E0E7FF', // indigo-100
   },
   input: {
     width: '100%',
     height: 50,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#818CF8', // indigo-400
     borderRadius: 10,
     paddingHorizontal: 15,
     fontSize: 16,
+    backgroundColor: 'rgba(224, 231, 255, 0.1)', // indigo-100/10
+    color: '#ffffff',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -203,12 +232,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'row',
+  },
+  buttonIcon: {
+    marginRight: 6,
   },
   importButton: {
-    backgroundColor: '#3498db',
+    backgroundColor: '#6366F1', // indigo-500
   },
   exportButton: {
-    backgroundColor: '#2ecc71',
+    backgroundColor: '#55AA22', // custom green that fits with the theme
   },
   disabledButton: {
     opacity: 0.6,
@@ -224,12 +257,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ecf0f1',
+    backgroundColor: 'rgba(224, 231, 255, 0.15)', // indigo-100/15
+    borderWidth: 1,
+    borderColor: 'rgba(224, 231, 255, 0.3)', // indigo-100/30
   },
   closeButtonText: {
-    color: '#333',
+    color: '#E0E7FF', // indigo-100
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 });
 

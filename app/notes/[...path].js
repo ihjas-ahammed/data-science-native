@@ -171,8 +171,8 @@ const NotesPage = () => {
 
   if (path.endsWith('.html') || path.endsWith('/')) {
     return (
-      <SafeAreaView className="flex-1 bg-black">
-        <StatusBar barStyle="light-content" backgroundColor="#000" />
+      <SafeAreaView className="flex-1 bg-white">
+        <StatusBar barStyle="light-content" backgroundColor="#fff" />
         <WebView
           className="mt-10"
           originWhitelist={['*']}
@@ -580,9 +580,9 @@ const NotesPage = () => {
 
   if (isLoading) {
     return (
-      <View className="flex-1 justify-center items-center bg-black">
-        <ActivityIndicator size="large" color="#ffffff" />
-        <Text className="text-white mt-2">{Math.min(progress, 100).toFixed(0)}%</Text>
+      <View className="flex-1 justify-center items-center bg-white">
+        <ActivityIndicator size="large" color="#000000" />
+        <Text className="text-black mt-2">{Math.min(progress, 100).toFixed(0)}%</Text>
       </View>
     );
   }
@@ -606,8 +606,8 @@ const NotesPage = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-black">
-      <StatusBar barStyle="light-content" backgroundColor="#000" />
+    <SafeAreaView className="flex-1 bg-white">
+      <StatusBar barStyle="light-content" backgroundColor="#ffffff" />
       <View className="absolute top-2 right-0 flex-col items-center justify-end px-2.5 z-10">
         {isEditing ? (
           <>
@@ -668,7 +668,6 @@ const NotesPage = () => {
             baseUrl={`${FileSystem.documentDirectory}notes/`}
             allowFileAccess={true}
             mixedContentMode="always"
-            style={{ flex: 1, backgroundColor: '#000' }}
             onMessage={handleMessage}
             allowUniversalAccessFromFileURLs={true}
             allowFileAccessFromFileURLs={true}

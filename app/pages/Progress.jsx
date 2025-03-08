@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, ScrollView, TouchableOpacity, ActivityIndicator, Text } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { getDatabase, ref, get } from 'firebase/database';
-import { Ionicons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import LearningCard from '../components/progress/LearningCard';
 import TopicProgress from '../components/progress/TopicProgress';
@@ -140,11 +141,22 @@ const Progress = ({ firebaseApp, setPage }) => {
 
     // Progress calculation functions
     const getColorByPercentage = (percentage) => {
-        if (percentage < 0 || percentage > 100) return '#777777';
-        const hue = Math.floor((percentage / 100) * 300);
-        const saturation = 80 + Math.floor(Math.random() * 20);
-        const lightness = 60 + Math.floor(Math.random() * 10);
-        return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+        if (percentage < 0 || percentage > 100) return '#94A3B8'; // Slate color for invalid values
+        
+        // Create a color scale that avoids the indigo/purple spectrum used in backgrounds
+        if (percentage < 25) {
+            // Low progress - red
+            return '#EF4444'; // Tailwind red-500
+        } else if (percentage < 50) {
+            // Some progress - yellow/amber
+            return '#F59E0B'; // Tailwind amber-500
+        } else if (percentage < 75) {
+            // Good progress - teal (avoiding pure green which might be hard to read)
+            return '#14B8A6'; // Tailwind teal-500
+        } else {
+            // Excellent progress - cyan (avoiding blue/indigo used in the UI)
+            return '#55AA22'; // Tailwind cyan-500
+        }
     };
 
     const calculateProgress = (items) => {
@@ -190,23 +202,25 @@ const Progress = ({ firebaseApp, setPage }) => {
     };
 
     return (
-        <View className="flex-1 bg-white">
+        <SafeAreaView className="flex-1 bg-white dark:bg-gray-800">
+            <View className="h-[1px] bg-indigo-100 dark:bg-indigo-800" />
             <ScrollView contentContainerStyle={{ padding: 16 }}>
                 {/* Header */}
-                <View className="flex-row items-center justify-end space-x-3 mr-2">
-                    <TouchableOpacity
-                        onPress={handleCloudButtonClick}
-                        className="bg-black p-2 rounded-lg mr-2"
-                    >
-                        <Ionicons name="cloud" size={24} color="white" />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => isOnline ? setEditDialog(true) : alert('No network available')}
-                        className="bg-black/10 p-2 rounded-lg"
-                        style={{ backgroundColor: '#222', backdropFilter: 'blur(5px)' }}
-                    >
-                        <Ionicons name="pencil" size={24} color="white" />
-                    </TouchableOpacity>
+                <View className="flex-row justify-end items-center mb-4">
+                    <View className="flex-row space-x-3 gap-2">
+                        <TouchableOpacity
+                            onPress={handleCloudButtonClick}
+                            className="bg-indigo-600 dark:bg-indigo-700 p-2 rounded-lg"
+                        >
+                            <MaterialIcons name="cloud" size={24} color="white" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => isOnline ? setEditDialog(true) : alert('No network available')}
+                            className="bg-indigo-600 dark:bg-indigo-700 p-2 rounded-lg"
+                        >
+                            <MaterialIcons name="edit" size={24} color="white" />
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 {/* Progress Stats */}
@@ -219,7 +233,7 @@ const Progress = ({ firebaseApp, setPage }) => {
                 />
 
                 {/* Learning Cards */}
-                <View className="space-y-4">
+                <View className="space-y-4 mt-4">
                     {data.map(book => (
                         <View key={book.name}>
                             <LearningCard
@@ -285,13 +299,10 @@ const Progress = ({ firebaseApp, setPage }) => {
                 onClose={() => {
                     setRoutineModal(false);
                 }}
-
-                onSave={
-                    ()=>{
-                        setRoutineModal(false)
-                        setPage("Routine")
-                    }
-                }
+                onSave={() => {
+                    setRoutineModal(false);
+                    setPage("Routine");
+                }}
             />
 
             {/* Loading Overlay */}
@@ -300,12 +311,12 @@ const Progress = ({ firebaseApp, setPage }) => {
                     className="absolute inset-0 flex justify-center items-center"
                     style={{ backgroundColor: 'rgba(255, 255, 255, 0.7)' }}
                 >
-                    <ActivityIndicator size="large" color="#000000" />
+                    <ActivityIndicator size="large" color="#6366f1" />
                 </View>
             )}
 
             <Toast />
-        </View>
+        </SafeAreaView>
     );
 };
 

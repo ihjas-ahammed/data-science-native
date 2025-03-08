@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, ActivityIndicator, ScrollView, TouchableHighlight, Modal, TextInput, Image } from 'react-native';
+import { View, Text, StatusBar, ActivityIndicator, ScrollView, TouchableHighlight, Modal, TextInput, Image, Linking } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLocalSearchParams, router } from 'expo-router';
@@ -40,6 +40,11 @@ const cog = () => {
   const [allWrongQuestions, setAllWrongQuestions] = useState([]);
   const [activeTab, setActiveTab] = useState('topics');
   const [modalVisible, setModalVisible] = useState(false);
+  const [apiKeyModalVisible, setApiKeyModalVisible] = useState(false);
+  const [apiKey, setApiKey] = useState('');
+  const [savedApiKey, setSavedApiKey] = useState('');
+
+  const [isDiceRolled, setIsDiceRolled] = useState(false)
 
   const filePath = `${FileSystem.documentDirectory}quiz_data/${path}`;
   const directoryPath = filePath.substring(0, filePath.lastIndexOf('/'));
@@ -50,6 +55,21 @@ const cog = () => {
   const sanitizeKey = (name) => {
     return name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
   };
+
+  // Load Google API key from secure storage
+  useEffect(() => {
+    const loadApiKey = async () => {
+      try {
+        const storedApiKey = await SecureStore.getItemAsync('google-api');
+        if (storedApiKey) {
+          setSavedApiKey(storedApiKey);
+        }
+      } catch (err) {
+        console.error('Failed to load API key:', err);
+      }
+    };
+    loadApiKey();
+  }, []);
 
   // Load main quiz data
   useEffect(() => {
@@ -107,9 +127,10 @@ const cog = () => {
             questions: selectedQuestions
           };
         });
-        
+
         await FileSystem.writeAsStringAsync(sampleFilePath, JSON.stringify(generatedSampleQ), { encoding: FileSystem.EncodingType.UTF8 });
         setSampleQ(generatedSampleQ);
+        setIsDiceRolled(true)
       }
     } catch (err) {
       setError('Failed to reload quiz data');
@@ -133,6 +154,8 @@ const cog = () => {
             // Load existing sampleQ
             const fileContent = await FileSystem.readAsStringAsync(sampleFilePath, { encoding: FileSystem.EncodingType.UTF8 });
             setSampleQ(JSON.parse(fileContent));
+
+            setIsDiceRolled(true)
           } else if (data.sample && data.sample.sections) {
             // Generate sampleQ
             const generatedSampleQ = data.sample.sections.map(section => {
@@ -216,6 +239,27 @@ const cog = () => {
     }
   };
 
+  const saveApiKey = async () => {
+    try {
+      if (apiKey.trim()) {
+        await SecureStore.setItemAsync('google-api', apiKey.trim());
+        setSavedApiKey(apiKey.trim());
+        setApiKey('');
+        setApiKeyModalVisible(false);
+        alert('API key saved successfully!');
+      } else {
+        alert('Please enter a valid API key');
+      }
+    } catch (err) {
+      console.error('Failed to save API key:', err);
+      alert('Failed to save API key. Please try again.');
+    }
+  };
+
+  const getApiKey = () => {
+    Linking.openURL('https://aistudio.google.com/app/apikey');
+  };
+
   if (isLoading) {
     return (
       <SafeAreaView className="flex-1 justify-center items-center bg-indigo-50 dark:bg-gray-900">
@@ -279,7 +323,7 @@ const cog = () => {
   return (
     <SafeAreaView className="flex-1 bg-indigo-50 dark:bg-gray-900">
       <StatusBar barStyle="light-content" backgroundColor="#4F46E5" />
-      
+
       {/* Header */}
       <View className="h-14 bg-indigo-600 dark:bg-indigo-800 flex-row items-center px-4 shadow-md">
         <TouchableHighlight underlayColor="#4338CA" onPress={handleExit} className="p-2 rounded-full">
@@ -292,7 +336,7 @@ const cog = () => {
           </TouchableHighlight>
         )}
       </View>
-      
+
       {/* Main Content */}
       <View className="flex-1">
         <ScrollView className="flex-1 p-4 mb-4">
@@ -317,12 +361,12 @@ const cog = () => {
                         {section.name}
                       </Text>
                     </View>
-                    
+
                     <View className="bg-indigo-50 dark:bg-gray-700 p-3 rounded-lg relative">
                       <View className="absolute top-2 right-2 z-10">
                         <GameProgressBar score={score} total={total} />
                       </View>
-                      
+
                       <View style={{ paddingTop: 20 }}>
                         <Text className="text-gray-600 dark:text-gray-300">
                           {score}/{total} completed
@@ -351,7 +395,7 @@ const cog = () => {
                   Tools & Practice
                 </Text>
               </View>
-              
+
               <TouchableHighlight
                 onPress={() => {
                   if (allWrongQuestions.length > 0) {
@@ -382,11 +426,11 @@ const cog = () => {
                   </Text>
                 </View>
               </TouchableHighlight>
-              
+
               <TouchableHighlight
                 onPress={() => setModalVisible(true)}
                 underlayColor="#E0E7FF"
-                className="p-4 bg-indigo-50 dark:bg-gray-700 rounded-lg"
+                className="mb-4 p-4 bg-indigo-50 dark:bg-gray-700 rounded-lg"
               >
                 <View className="flex-row justify-between items-center">
                   <View>
@@ -400,10 +444,29 @@ const cog = () => {
                   <MaterialIcons name="edit" size={24} color="#6366f1" />
                 </View>
               </TouchableHighlight>
+
+              {/* New API Key Management Section */}
+              <TouchableHighlight
+                onPress={() => setApiKeyModalVisible(true)}
+                underlayColor="#E0E7FF"
+                className="p-4 bg-indigo-50 dark:bg-gray-700 rounded-lg"
+              >
+                <View className="flex-row justify-between items-center">
+                  <View>
+                    <Text className="text-gray-800 dark:text-gray-200 font-semibold">
+                      Manage Google API Key
+                    </Text>
+                    <Text className="text-gray-600 dark:text-gray-300 mt-1">
+                      {savedApiKey ? "API key is configured" : "Set your Google API key for AI features"}
+                    </Text>
+                  </View>
+                  <MaterialIcons name="vpn-key" size={24} color="#6366f1" />
+                </View>
+              </TouchableHighlight>
             </View>
           ) : (
             sampleQ.length > 0 ? (
-              <TestComponent sampleQ={sampleQ} />
+              <TestComponent sampleQ={sampleQ} isDiceRolled={isDiceRolled} />
             ) : (
               <View className="flex items-center justify-center p-4">
                 <Text className="text-gray-500">No tests available!</Text>
@@ -411,7 +474,7 @@ const cog = () => {
             )
           )}
         </ScrollView>
-        
+
         {/* Bottom Navigation */}
         <View className="h-16 bg-white dark:bg-gray-800 flex-row items-center justify-around shadow-lg border-t border-indigo-100 dark:border-indigo-800">
           <TouchableHighlight
@@ -432,7 +495,7 @@ const cog = () => {
               </Text>
             </View>
           </TouchableHighlight>
-          
+
           <TouchableHighlight
             underlayColor="#E0E7FF"
             onPress={() => setActiveTab('test')}
@@ -451,7 +514,7 @@ const cog = () => {
               </Text>
             </View>
           </TouchableHighlight>
-          
+
           <TouchableHighlight
             underlayColor="#E0E7FF"
             onPress={() => setActiveTab('tools')}
@@ -493,7 +556,7 @@ const cog = () => {
               Edit Repractice Questions
             </Text>
           </View>
-          
+
           <ScrollView className="flex-1 p-4">
             {allWrongQuestions.length > 0 ? (
               allWrongQuestions.map((item, idx) => (
@@ -527,6 +590,85 @@ const cog = () => {
               </View>
             )}
           </ScrollView>
+        </SafeAreaView>
+      </Modal>
+
+      {/* API Key Modal */}
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={apiKeyModalVisible}
+        onRequestClose={() => setApiKeyModalVisible(false)}
+      >
+        <SafeAreaView className="flex-1 bg-indigo-50 dark:bg-gray-900">
+          <View className="h-14 bg-indigo-600 dark:bg-indigo-800 flex-row items-center px-4 shadow-md">
+            <TouchableHighlight
+              underlayColor="#4338CA"
+              onPress={() => setApiKeyModalVisible(false)}
+              className="p-2 rounded-full"
+            >
+              <MaterialIcons name="close" size={24} color="#E0E7FF" />
+            </TouchableHighlight>
+            <Text className="text-indigo-50 text-lg font-bold flex-1 ml-4">
+              Google API Key
+            </Text>
+          </View>
+
+          <View className="flex-1 p-4">
+            <View className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow mb-4">
+              <Text className="text-gray-800 dark:text-gray-200 font-semibold mb-1">
+                Current Status
+              </Text>
+              <View className="flex-row items-center">
+                <MaterialIcons
+                  name={savedApiKey ? "check-circle" : "error"}
+                  size={20}
+                  color={savedApiKey ? "#10b981" : "#ef4444"}
+                />
+                <Text className={`ml-2 ${savedApiKey ? "text-green-500" : "text-red-500"}`}>
+                  {savedApiKey ? "API Key is configured" : "No API Key set"}
+                </Text>
+              </View>
+            </View>
+
+            <View className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow mb-4">
+              <Text className="text-gray-800 dark:text-gray-200 font-semibold mb-4">
+                Enter Google API Key
+              </Text>
+              <TextInput
+                className="border border-gray-300 dark:border-gray-600 rounded-lg p-3 mb-4 text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-gray-700"
+                placeholder="Paste your API key here"
+                value={apiKey}
+                onChangeText={setApiKey}
+                placeholderTextColor="#9ca3af"
+                secureTextEntry={true}
+              />
+              <TouchableHighlight
+                underlayColor="#4338CA"
+                onPress={saveApiKey}
+                className="bg-indigo-600 dark:bg-indigo-700 rounded-lg p-3 items-center"
+              >
+                <Text className="text-white font-semibold">Save API Key</Text>
+              </TouchableHighlight>
+            </View>
+
+            <TouchableHighlight
+              underlayColor="#E0E7FF"
+              onPress={getApiKey}
+              className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow flex-row items-center justify-between"
+            >
+              <View>
+                <Text className="text-gray-800 dark:text-gray-200 font-semibold">
+                  Get Google API Key
+                </Text>
+                <Text className="text-gray-600 dark:text-gray-300 mt-1">
+                  Opens Google AI Studio website
+                </Text>
+
+                <MaterialIcons name="open-in-new" size={24} color="#6366f1" />
+              </View>
+            </TouchableHighlight>
+          </View>
         </SafeAreaView>
       </Modal>
     </SafeAreaView>

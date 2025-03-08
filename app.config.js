@@ -52,7 +52,8 @@ export default ({ config }) => {
           url: "https://u.expo.dev/f98e6168-8ce2-4498-856d-8dee633447f7"
         },
         ios: {
-          runtimeVersion: "1.0.10"
+          runtimeVersion: "1.1",
+          bundleIdentifier: "me.ihjas.notes"
         }
       }
     };

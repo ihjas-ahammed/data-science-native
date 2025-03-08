@@ -9,17 +9,21 @@ const NavItem = ({ page, icon, label, current, setCurrent }) => {
   const isSelected = page === current;
   return (
     <TouchableOpacity
-      className="px-5 py-2.5 flex-col items-center"
+      className={`px-5 py-2.5 flex-col items-center rounded-lg ${
+        isSelected ? 'bg-indigo-100 dark:bg-indigo-900' : ''
+      }`}
       onPress={() => setCurrent(page)}
       accessibilityLabel={label}
     >
       <MaterialIcons
         name={icon}
         size={24}
-        color={isSelected ? '#4CAF50' : 'white'}
+        color={isSelected ? '#6366f1' : '#9ca3af'}
       />
       <Text
-        className={`text-sm ${isSelected ? 'text-green-500' : 'text-white'}`}
+        className={`text-sm font-medium ${
+          isSelected ? 'text-indigo-700 dark:text-indigo-300' : 'text-gray-500 dark:text-gray-400'
+        }`}
       >
         {label}
       </Text>
@@ -30,8 +34,8 @@ const NavItem = ({ page, icon, label, current, setCurrent }) => {
 // Main NavBar component
 const NavBar = ({ current, setCurrent }) => {
   return (
-    <SafeAreaView style={{ backgroundColor: '#222' }}>
-      <View className="h-[1px] bg-gray-600" />
+    <SafeAreaView className="bg-white dark:bg-gray-800 shadow-md">
+      <View className="h-[1px] bg-indigo-100 dark:bg-indigo-800" />
       <View className="w-full flex-row justify-around py-2">
         <NavItem
           page="Notes"

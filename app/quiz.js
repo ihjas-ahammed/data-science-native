@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { View, Text, TouchableHighlight, Animated, StatusBar, ScrollView, LayoutAnimation, Platform, TouchableOpacity, Vibration } from 'react-native';
+import { View, Text, TouchableHighlight, Animated, StatusBar, ScrollView, LayoutAnimation, Platform, TouchableOpacity, Vibration, Image } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import * as SecureStore from 'expo-secure-store';
 import { Audio } from 'expo-av';
 
-const QuizScreen = () => {
+const quiz = () => {
   // State declarations
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -105,8 +105,9 @@ const QuizScreen = () => {
 
   const interpolatedColor = progressBarColor.interpolate({
     inputRange: [0, 0.5, 1],
-    outputRange: ['#ff4d4d', '#ffde59', '#4CAF50'],
+    outputRange: ['#FF4D4D', '#FFD700', '#32CD32'],
   });
+
 
   // Handle answer selection
   const handleAnswer = async (isCorrect, index) => {
@@ -236,68 +237,55 @@ const QuizScreen = () => {
     setQuestions(shuffledQuestions);
   };
 
-  // Dynamic option styling
-  const getOptionClassName = (option, index) => {
-    let baseClass = "p-4 rounded-lg mb-3 border border-gray-700";
-    if (!answerSelected) {
-      return `${baseClass} bg-gray-700`;
-    }
-    if (option.isCorrect) {
-      return `${baseClass} bg-green-900 border-green-700`;
-    } else {
-      return `${baseClass} bg-red-900 border-red-700`;
-    }
-  };
-
-  // Dynamic description styling
-  const getDescriptionClassName = () => {
-    let baseClass = "p-4 rounded-lg mb-3 border";
-    if (!canProceed) {
-      return `${baseClass} border-gray-700 bg-gray-700`;
-    } else {
-      return `${baseClass} border-blue-700 bg-blue-900`;
-    }
-  };
-
   // Completed Screen
   if (completed) {
     return (
-      <View className="flex-1 bg-gray-900">
+      <View className="flex-1 bg-indigo-50 dark:bg-gray-800">
         <StatusBar barStyle="light-content" />
+        <View className="h-14 bg-indigo-100 dark:bg-indigo-900 flex-row items-center px-4 shadow-md">
+          <TouchableHighlight 
+            underlayColor="#e0e7ff" 
+            onPress={handleExit} 
+            className="p-2 rounded-full"
+          >
+            <MaterialIcons name="arrow-back" size={24} color="#6366f1" />
+          </TouchableHighlight>
+          <Text className="text-indigo-700 dark:text-indigo-300 text-lg font-bold flex-1 ml-4">{title}</Text>
+        </View>
         <ScrollView className="flex-1">
           <View className="justify-center items-center p-6">
-            <MaterialIcons name="celebration" size={80} color="#FFD700" />
-            <Text className="text-2xl font-bold text-gray-200 mt-6 mb-4">Congratulations!</Text>
-            <Text className="text-lg text-center text-gray-400 mb-8">
+            <MaterialIcons name="celebration" size={80} color="#6366f1" />
+            <Text className="text-2xl font-bold text-indigo-700 dark:text-indigo-300 mt-6 mb-4">Congratulations!</Text>
+            <Text className="text-lg text-center text-gray-600 dark:text-gray-300 mb-8">
               You've successfully completed the quiz with {score} correct answers.
             </Text>
           </View>
           <View className="px-4 mb-8">
-            <Text className="text-xl font-bold text-gray-200 mb-4">Summary of Questions Asked</Text>
+            <Text className="text-xl font-bold text-indigo-700 dark:text-indigo-300 mb-4">Summary of Questions Asked</Text>
             {gameQuestions.map((q, index) => (
-              <View key={index} className="bg-gray-800 rounded-lg p-4 mb-4 shadow-sm border border-gray-700">
-                <Text className="text-lg font-bold text-gray-200 mb-2">Question {index + 1}</Text>
-                <Text className="text-base text-gray-400 mb-2">{q.question}</Text>
-                <Text className="text-base text-gray-200 mb-2">Correct Answer: {q.options[q.correct]}</Text>
-                <Text className="text-base text-gray-200">Description: {q.describe}</Text>
+              <View key={index} className="bg-white dark:bg-gray-700 rounded-lg p-4 mb-4 shadow-sm border border-indigo-100 dark:border-indigo-800">
+                <Text className="text-lg font-semibold text-indigo-700 dark:text-indigo-300 mb-2">Question {index + 1}</Text>
+                <Text className="text-base text-gray-600 dark:text-gray-300 mb-2">{q.question}</Text>
+                <Text className="text-base text-indigo-600 dark:text-indigo-400 mb-2">Correct Answer: {q.options[q.correct]}</Text>
+                <Text className="text-base text-gray-700 dark:text-gray-200">Description: {q.describe}</Text>
               </View>
             ))}
           </View>
         </ScrollView>
-        <View className="p-4">
+        <View className="p-4 bg-indigo-50 dark:bg-gray-800">
           <TouchableHighlight
-            underlayColor="#6366f1"
+            underlayColor="#818cf8"
             onPress={handleRestart}
-            className="bg-indigo-500 py-3 px-8 rounded-full mb-4 w-full items-center"
+            className="bg-indigo-600 py-3 px-8 rounded-lg mb-4 w-full items-center"
           >
             <Text className="text-white text-lg font-bold">Try Again</Text>
           </TouchableHighlight>
           <TouchableHighlight
-            underlayColor="#4b5563"
+            underlayColor="#e0e7ff"
             onPress={handleExit}
-            className="bg-gray-700 py-3 px-8 rounded-full w-full items-center"
+            className="bg-indigo-100 dark:bg-indigo-900 py-3 px-8 rounded-lg w-full items-center"
           >
-            <Text className="text-white text-lg font-bold">Exit</Text>
+            <Text className="text-indigo-700 dark:text-indigo-300 text-lg font-bold">Exit</Text>
           </TouchableHighlight>
         </View>
       </View>
@@ -307,22 +295,28 @@ const QuizScreen = () => {
   // Loading State
   if (questions.length === 0 || options.length === 0) {
     return (
-      <View className="flex-1 bg-gray-900 justify-center items-center">
-        <Text className="text-lg text-gray-400">Loading questions...</Text>
+      <View className="flex-1 bg-indigo-50 dark:bg-gray-800 justify-center items-center">
+        <Text className="text-lg text-indigo-600 dark:text-indigo-400">Loading questions...</Text>
       </View>
     );
   }
 
   // Main Quiz UI
   return (
-    <View className="flex-1 bg-gray-900">
-      <View className="h-14 bg-gray-800 flex-row items-center px-4 shadow-md">
-        <TouchableHighlight underlayColor="#4b5563" onPress={handleExit} className="p-2">
-          <MaterialIcons name="arrow-back" size={24} color="#e5e7eb" />
+    <View className="flex-1 bg-indigo-50 dark:bg-gray-800">
+      <View className="h-14 bg-indigo-100 dark:bg-indigo-900 flex-row items-center px-4 shadow-md">
+        <TouchableHighlight 
+          underlayColor="#e0e7ff" 
+          onPress={handleExit} 
+          className="p-2 rounded-full"
+        >
+          <MaterialIcons name="arrow-back" size={24} color="#6366f1" />
         </TouchableHighlight>
-        <Text className="text-gray-200 text-lg font-bold flex-1 ml-4">{title}</Text>
+        <Text className="text-indigo-700 dark:text-indigo-300 text-lg font-bold flex-1 ml-4">{title}</Text>
+        
       </View>
-      <View className="h-8 bg-gray-700 rounded-lg mx-4 mt-4 overflow-hidden">
+      
+      <View className="h-8 bg-indigo-100 dark:bg-gray-700 rounded-lg mx-4 mt-4 overflow-hidden">
         <Animated.View
           style={{
             height: '100%',
@@ -337,42 +331,74 @@ const QuizScreen = () => {
           }}
         />
       </View>
-      <View className="bg-gray-800 rounded-lg p-4 m-4 shadow-sm border border-gray-700">
-        <Text className="text-sm text-gray-400 mb-2">
-          Question {currentQuestionIndex + 1} of {questions.length}
-        </Text>
-        <Text className="text-lg font-bold text-gray-200 mb-6">
+      
+      <View className="bg-white dark:bg-gray-700 rounded-lg p-4 m-4 shadow-sm border border-indigo-100 dark:border-indigo-800">
+        <View className="flex-row justify-between items-center mb-2">
+          <Text className="text-sm text-indigo-600 dark:text-indigo-400">
+            Question {currentQuestionIndex + 1} of {questions.length}
+          </Text>
+          
+          <View className="flex-row items-center">
+            <MaterialIcons name="stars" size={18} color="#6366f1" />
+            <Text className="text-sm font-semibold text-indigo-700 dark:text-indigo-300 ml-1">
+              Score: {score}/{TARGET_CORRECT_ANSWERS}
+            </Text>
+          </View>
+        </View>
+        
+        <Text className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-6">
           {questions[currentQuestionIndex].question}
         </Text>
+        
         <View>
           {options.map((option, index) => (
             <TouchableHighlight
               key={option.originalIndex}
-              underlayColor="#4b5563"
+              underlayColor={answerSelected ? (option.isCorrect ? "#9AE6B4" : "#FEB2B2") : "#e0e7ff"}
               onPress={() => !answerSelected && handleAnswer(option.isCorrect, index)}
               disabled={answerSelected}
-              className={getOptionClassName(option, index)}
+              className={`p-4 rounded-lg mb-3 border ${
+                !answerSelected 
+                  ? "bg-indigo-50 dark:bg-gray-600 border-indigo-200 dark:border-indigo-700" 
+                  : option.isCorrect 
+                    ? "bg-green-100 dark:bg-green-900 border-green-300 dark:border-green-700" 
+                    : "bg-red-100 dark:bg-red-900 border-red-300 dark:border-red-700"
+              }`}
             >
-              <Text className="text-base text-gray-200">{option.text}</Text>
+              <Text className={`text-base ${
+                !answerSelected 
+                  ? "text-gray-800 dark:text-gray-200" 
+                  : option.isCorrect 
+                    ? "text-green-800 dark:text-green-200 font-medium" 
+                    : "text-red-800 dark:text-red-200"
+              }`}>
+                {option.text}
+              </Text>
             </TouchableHighlight>
           ))}
         </View>
       </View>
+      
       {showFeedback && questions[currentQuestionIndex].describe !== options.find(opt => opt.isCorrect)?.text && (
         <View className="px-4 pb-4 flex-1">
           <TouchableOpacity
             onPress={nextQ}
             disabled={!canProceed}
-            className={getDescriptionClassName()}
+            className={`rounded-lg mb-3 border ${
+              !canProceed 
+                ? "bg-indigo-50 dark:bg-gray-600 border-indigo-200 dark:border-indigo-700" 
+                : "bg-indigo-100 dark:bg-indigo-900 border-indigo-300 dark:border-indigo-700"
+            }`}
           >
-            <ScrollView style={{ maxHeight: "100%" }}>
-              <Text className="text-base text-gray-200">
+            <View className="p-4">
+              <Text className="text-base font-medium text-indigo-700 dark:text-indigo-300 mb-1">Explanation:</Text>
+              <Text className="text-base text-gray-700 dark:text-gray-200">
                 {questions[currentQuestionIndex].describe}
               </Text>
-            </ScrollView>
+            </View>
           </TouchableOpacity>
-          <Text className="text-center text-gray-400 mt-auto mb-5">
-            Click on explanation to move on
+          <Text className="text-center text-indigo-600 dark:text-indigo-400 mt-3 mb-5">
+            {canProceed ? "Tap explanation to continue" : "Please wait..."}
           </Text>
         </View>
       )}
@@ -380,4 +406,4 @@ const QuizScreen = () => {
   );
 };
 
-export default QuizScreen;
+export default quiz;

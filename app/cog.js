@@ -1,12 +1,31 @@
-import { View, Text, StatusBar, ActivityIndicator, ScrollView, TouchableHighlight, Modal } from 'react-native';
+import { View, Text, StatusBar, ActivityIndicator, ScrollView, TouchableHighlight, Modal, TextInput, Image } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLocalSearchParams, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as FileSystem from 'expo-file-system';
 import * as SecureStore from 'expo-secure-store';
-import CustomProgressBar from './components/cog/CustomProgressBar';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import Markdown from 'react-native-markdown-display';
+import TestComponent from './components/TestComponent';
+
+// Utility function to shuffle an array (Fisher-Yates algorithm)
+const shuffle = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
+// Define sample sizes for each section
+const sampleSizes = {
+  "Section A": 8,
+  "Section B": 5,
+  "Section C": 1
+};
 
 const cog = () => {
   const { dt } = useLocalSearchParams();
@@ -14,6 +33,7 @@ const cog = () => {
   const { path, obj } = qa;
 
   const [data, setData] = useState([]);
+  const [sampleQ, setSampleQ] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [scores, setScores] = useState({});
@@ -23,12 +43,15 @@ const cog = () => {
 
   const filePath = `${FileSystem.documentDirectory}quiz_data/${path}`;
   const directoryPath = filePath.substring(0, filePath.lastIndexOf('/'));
+  // Use sanitized title for the sample questions file path
+  const sanitizedTitle = title.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+  const sampleFilePath = `${FileSystem.documentDirectory}quiz_data/${sanitizedTitle}/sample_current.json`;
 
   const sanitizeKey = (name) => {
     return name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
   };
 
-  // Load quiz data when the component mounts or path changes
+  // Load main quiz data
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -57,7 +80,85 @@ const cog = () => {
     loadData();
   }, [path]);
 
-  // Function to load repractice questions
+  const reloadSampleQ = async () => {
+    try {
+      setIsLoading(true);
+      await FileSystem.deleteAsync(filePath);
+      await FileSystem.makeDirectoryAsync(directoryPath, { intermediates: true });
+      const downloadUrl = `https://ihjas-ahammed.github.io/${path}`;
+      const downloadResult = await FileSystem.downloadAsync(downloadUrl, filePath);
+      if (downloadResult.status === 200) {
+        const downloadedContent = await FileSystem.readAsStringAsync(filePath, { encoding: FileSystem.EncodingType.UTF8 });
+        setData(JSON.parse(downloadedContent));
+      } else {
+        throw new Error('Download failed');
+      }
+
+      if (data && data.sample && data.sample.sections) {
+        const generatedSampleQ = data.sample.sections.map(section => {
+          const questions = section.questions;
+          const sampleSize = sampleSizes[section.name] || 0;
+          const availableQuestions = questions.length;
+          const numToSelect = Math.min(sampleSize, availableQuestions);
+          const selectedQuestions = shuffle([...questions]).slice(0, numToSelect);
+          return {
+            name: section.name,
+            marks: section.marks || 0,
+            questions: selectedQuestions
+          };
+        });
+        
+        await FileSystem.writeAsStringAsync(sampleFilePath, JSON.stringify(generatedSampleQ), { encoding: FileSystem.EncodingType.UTF8 });
+        setSampleQ(generatedSampleQ);
+      }
+    } catch (err) {
+      setError('Failed to reload quiz data');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Load or generate sampleQ after main data is loaded
+  useEffect(() => {
+    if (data && data[obj]) {
+      const loadSampleQ = async () => {
+        try {
+          // Ensure the directory exists
+          const sampleDirectory = sampleFilePath.substring(0, sampleFilePath.lastIndexOf('/'));
+          await FileSystem.makeDirectoryAsync(sampleDirectory, { intermediates: true });
+
+          const fileInfo = await FileSystem.getInfoAsync(sampleFilePath);
+          if (fileInfo.exists) {
+            // Load existing sampleQ
+            const fileContent = await FileSystem.readAsStringAsync(sampleFilePath, { encoding: FileSystem.EncodingType.UTF8 });
+            setSampleQ(JSON.parse(fileContent));
+          } else if (data.sample && data.sample.sections) {
+            // Generate sampleQ
+            const generatedSampleQ = data.sample.sections.map(section => {
+              const questions = section.questions;
+              const sampleSize = sampleSizes[section.name] || 0;
+              const availableQuestions = questions.length;
+              const numToSelect = Math.min(sampleSize, availableQuestions);
+              const selectedQuestions = shuffle([...questions]).slice(0, numToSelect);
+              return {
+                name: section.name,
+                marks: section.marks || 0,
+                questions: selectedQuestions
+              };
+            });
+            // Save to file
+            await FileSystem.writeAsStringAsync(sampleFilePath, JSON.stringify(generatedSampleQ), { encoding: FileSystem.EncodingType.UTF8 });
+            setSampleQ(generatedSampleQ);
+          }
+        } catch (err) {
+          console.error('Failed to load or generate sample questions:', err);
+        }
+      };
+      loadSampleQ();
+    }
+  }, [data, obj]);
+
   const loadRepracticeQuestions = useCallback(async () => {
     if (data && data[obj]) {
       const repracticePromises = data[obj].map((section) => {
@@ -76,7 +177,6 @@ const cog = () => {
     }
   }, [data, obj, title]);
 
-  // Load scores and repractice questions when the screen is focused
   useFocusEffect(
     useCallback(() => {
       const loadScoresAndRepractice = async () => {
@@ -88,14 +188,12 @@ const cog = () => {
               score: scr ? parseInt(scr, 10) : 0,
             }));
           });
-
           const [scoresArray] = await Promise.all([Promise.all(scorePromises)]);
           const scoresObj = scoresArray.reduce((acc, { key, score }) => {
             acc[key] = score;
             return acc;
           }, {});
           setScores(scoresObj);
-
           await loadRepracticeQuestions();
         }
       };
@@ -103,7 +201,6 @@ const cog = () => {
     }, [data, obj, loadRepracticeQuestions])
   );
 
-  // Function to remove a question from repractice
   const removeQuestion = async (sectionKey, questionIndex) => {
     try {
       const repracticeKey = `repractice-${sectionKey}`;
@@ -112,7 +209,7 @@ const cog = () => {
         const questions = JSON.parse(str);
         questions.splice(questionIndex, 1);
         await SecureStore.setItemAsync(repracticeKey, JSON.stringify(questions));
-        await loadRepracticeQuestions(); // Refresh the state
+        await loadRepracticeQuestions();
       }
     } catch (err) {
       console.error('Failed to remove question:', err);
@@ -121,15 +218,15 @@ const cog = () => {
 
   if (isLoading) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center bg-gray-900">
-        <ActivityIndicator size="large" color="white" />
+      <SafeAreaView className="flex-1 justify-center items-center bg-indigo-50 dark:bg-gray-900">
+        <ActivityIndicator size="large" color="#6366f1" />
       </SafeAreaView>
     );
   }
 
   if (error) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center bg-gray-900">
+      <SafeAreaView className="flex-1 justify-center items-center bg-indigo-50 dark:bg-gray-900">
         <Text className="text-red-500 text-lg">{error}</Text>
       </SafeAreaView>
     );
@@ -139,19 +236,68 @@ const cog = () => {
     router.back();
   };
 
-  return (
-    <SafeAreaView className="flex-1 bg-gray-900">
-      <StatusBar barStyle="light-content" backgroundColor="#2d3748" />
-      <View className="h-14 bg-gray-800 flex-row items-center px-4 shadow-md">
-        <TouchableHighlight underlayColor="#4b5563" onPress={handleExit} className="p-2">
-          <MaterialIcons name="arrow-back" size={24} color="#e5e7eb" />
-        </TouchableHighlight>
-        <Text className="text-gray-200 text-lg font-bold flex-1 ml-4">{title}</Text>
+  // Custom progress bar component to match TestComponent style
+  const GameProgressBar = ({ score, total }) => {
+    // Calculate percentage
+    const percentage = (score / total) * 100;
+
+    // Determine color based on score percentage
+    const getProgressColor = () => {
+      if (percentage < 40) return '#FF4D4D'; // Bright red for low scores
+      if (percentage < 70) return '#FFD700'; // Gold for medium scores
+      return '#32CD32'; // Lime green for high scores
+    };
+
+    // Create array of circles based on total
+    const circles = Array.from({ length: total > 10 ? 10 : total }, (_, i) => i + 1);
+    const filledCircles = Math.ceil((circles.length * score) / total);
+
+    return (
+      <View className="flex-row flex-wrap max-w-full justify-end">
+        {circles.map((circle, index) => {
+          // Determine if this circle should be filled based on score
+          const isActive = index < filledCircles;
+
+          return (
+            <View
+              key={circle}
+              className={`h-2 w-2 rounded-full m-0.5 ${isActive ? 'shadow' : ''}`}
+              style={{
+                backgroundColor: isActive ? getProgressColor() : 'rgba(255,255,255,0.3)',
+                shadowColor: isActive ? getProgressColor() : 'transparent',
+                shadowOffset: { width: 0, height: 0 },
+                shadowOpacity: isActive ? 0.7 : 0,
+                shadowRadius: isActive ? 2 : 0,
+              }}
+            />
+          );
+        })}
       </View>
+    );
+  };
+
+  return (
+    <SafeAreaView className="flex-1 bg-indigo-50 dark:bg-gray-900">
+      <StatusBar barStyle="light-content" backgroundColor="#4F46E5" />
+      
+      {/* Header */}
+      <View className="h-14 bg-indigo-600 dark:bg-indigo-800 flex-row items-center px-4 shadow-md">
+        <TouchableHighlight underlayColor="#4338CA" onPress={handleExit} className="p-2 rounded-full">
+          <MaterialIcons name="arrow-back" size={24} color="#E0E7FF" />
+        </TouchableHighlight>
+        <Text className="text-indigo-50 text-lg font-bold flex-1 ml-4">{title}</Text>
+        {activeTab === 'test' && (
+          <TouchableHighlight underlayColor="#4338CA" onPress={reloadSampleQ} className="p-2 rounded-full">
+            <Ionicons name="dice" size={24} color="#E0E7FF" />
+          </TouchableHighlight>
+        )}
+      </View>
+      
+      {/* Main Content */}
       <View className="flex-1">
         <ScrollView className="flex-1 p-4 mb-4">
           {activeTab === 'topics' ? (
-            data[obj].map((section, index) => {
+            data[obj]?.map((section, index) => {
               const key = sanitizeKey(title + section.name);
               const score = scores[key] || 0;
               const total = section.qa.length < 10 ? section.qa.length : 9;
@@ -161,79 +307,153 @@ const cog = () => {
                   onPress={() => {
                     router.push('/quiz?qs=' + JSON.stringify({ name: section.name, qa: section.qa, key: key }));
                   }}
-                  underlayColor="#4b5563"
-                  className="p-4 bg-gray-800 rounded-lg mb-4 border border-gray-700"
+                  underlayColor="#E0E7FF"
+                  className="mb-4 rounded-lg overflow-hidden"
                 >
-                  <View>
-                    <Text className="text-xl font-semibold text-gray-200 mb-3">
-                      {section.name}
-                    </Text>
-                    <View className="flex-row items-center">
-                      {score >= total ? (
-                        <MaterialIcons name="check" size={20} color="#10b981" />
-                      ) : (
-                        <CustomProgressBar progress={total > 0 ? score / total : 0} height={10} />
-                      )}
+                  <View className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow border border-indigo-100 dark:border-indigo-800">
+                    <View className="flex-row items-center mb-2">
+                      <MaterialIcons name="stars" size={24} color="#6366f1" />
+                      <Text className="text-lg font-semibold text-indigo-700 dark:text-indigo-300 ml-2">
+                        {section.name}
+                      </Text>
+                    </View>
+                    
+                    <View className="bg-indigo-50 dark:bg-gray-700 p-3 rounded-lg relative">
+                      <View className="absolute top-2 right-2 z-10">
+                        <GameProgressBar score={score} total={total} />
+                      </View>
+                      
+                      <View style={{ paddingTop: 20 }}>
+                        <Text className="text-gray-600 dark:text-gray-300">
+                          {score}/{total} completed
+                        </Text>
+                        {score >= total ? (
+                          <View className="flex-row items-center mt-1">
+                            <MaterialIcons name="check-circle" size={18} color="#10b981" />
+                            <Text className="text-green-500 ml-1">Completed!</Text>
+                          </View>
+                        ) : (
+                          <Text className="text-indigo-600 dark:text-indigo-300 mt-1">
+                            Tap to continue quiz
+                          </Text>
+                        )}
+                      </View>
                     </View>
                   </View>
                 </TouchableHighlight>
               );
             })
-          ) : (
-            <View className="p-4 bg-gray-800 rounded-lg mb-4 border border-gray-700">
-              <View className="flex-row justify-between items-center">
-                <TouchableHighlight
-                  onPress={() => {
-                    if (allWrongQuestions.length > 0) {
-                      router.push('/quiz?qs=' + JSON.stringify({
-                        name: "Repractice",
-                        qa: allWrongQuestions.map(item => item.question),
-                        key: "repractice",
-                        maxNo: allWrongQuestions.length,
-                      }));
-                    } else {
-                      alert("No questions to repractice.");
-                    }
-                  }}
-                  underlayColor="#4b5563"
-                  className="flex-1"
-                >
-                  <Text className="text-xl font-semibold text-gray-200 mb-3">
-                    Repractice ({allWrongQuestions.length} questions)
-                  </Text>
-                </TouchableHighlight>
-                <TouchableHighlight
-                  onPress={() => setModalVisible(true)}
-                  underlayColor="#4b5563"
-                  className="p-2"
-                >
-                  <MaterialIcons name="edit" size={24} color="#e5e7eb" />
-                </TouchableHighlight>
+          ) : activeTab === 'tools' ? (
+            <View className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow border border-indigo-100 dark:border-indigo-800">
+              <View className="flex-row items-center mb-3 bg-indigo-100 dark:bg-indigo-900 p-2 rounded-lg">
+                <MaterialIcons name="build" size={24} color="#6366f1" />
+                <Text className="text-lg font-semibold text-indigo-700 dark:text-indigo-300 ml-2">
+                  Tools & Practice
+                </Text>
               </View>
+              
+              <TouchableHighlight
+                onPress={() => {
+                  if (allWrongQuestions.length > 0) {
+                    router.push('/quiz?qs=' + JSON.stringify({
+                      name: "Repractice",
+                      qa: allWrongQuestions.map(item => item.question),
+                      key: "repractice",
+                      maxNo: allWrongQuestions.length,
+                    }));
+                  } else {
+                    alert("No questions to repractice.");
+                  }
+                }}
+                underlayColor="#E0E7FF"
+                className="mb-4 p-4 bg-indigo-50 dark:bg-gray-700 rounded-lg relative"
+              >
+                <View>
+                  <View className="flex-row justify-between items-center">
+                    <Text className="text-gray-800 dark:text-gray-200 font-semibold">
+                      Repractice Questions
+                    </Text>
+                    <Text className="text-indigo-600 dark:text-indigo-300 font-semibold">
+                      {allWrongQuestions.length}
+                    </Text>
+                  </View>
+                  <Text className="text-gray-600 dark:text-gray-300 mt-1">
+                    Review questions you've struggled with
+                  </Text>
+                </View>
+              </TouchableHighlight>
+              
+              <TouchableHighlight
+                onPress={() => setModalVisible(true)}
+                underlayColor="#E0E7FF"
+                className="p-4 bg-indigo-50 dark:bg-gray-700 rounded-lg"
+              >
+                <View className="flex-row justify-between items-center">
+                  <View>
+                    <Text className="text-gray-800 dark:text-gray-200 font-semibold">
+                      Manage Practice Items
+                    </Text>
+                    <Text className="text-gray-600 dark:text-gray-300 mt-1">
+                      Edit your repractice question list
+                    </Text>
+                  </View>
+                  <MaterialIcons name="edit" size={24} color="#6366f1" />
+                </View>
+              </TouchableHighlight>
             </View>
+          ) : (
+            sampleQ.length > 0 ? (
+              <TestComponent sampleQ={sampleQ} />
+            ) : (
+              <View className="flex items-center justify-center p-4">
+                <Text className="text-gray-500">No tests available!</Text>
+              </View>
+            )
           )}
         </ScrollView>
-        <View className="h-16 bg-gray-800 flex-row items-center justify-around shadow-md">
+        
+        {/* Bottom Navigation */}
+        <View className="h-16 bg-white dark:bg-gray-800 flex-row items-center justify-around shadow-lg border-t border-indigo-100 dark:border-indigo-800">
           <TouchableHighlight
-            underlayColor="#4b5563"
+            underlayColor="#E0E7FF"
             onPress={() => setActiveTab('topics')}
             className="flex-1 items-center justify-center"
           >
             <View className="items-center">
               <MaterialIcons
-                name="library-books"
+                name="quiz"
                 size={24}
-                color={activeTab === 'topics' ? '#e5e7eb' : '#9ca3af'}
+                color={activeTab === 'topics' ? '#6366f1' : '#9ca3af'}
               />
               <Text
-                className={`text-sm ${activeTab === 'topics' ? 'text-gray-200' : 'text-gray-400'}`}
+                className={`text-sm ${activeTab === 'topics' ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500'}`}
               >
-                Topics
+                Quiz
               </Text>
             </View>
           </TouchableHighlight>
+          
           <TouchableHighlight
-            underlayColor="#4b5563"
+            underlayColor="#E0E7FF"
+            onPress={() => setActiveTab('test')}
+            className="flex-1 items-center justify-center"
+          >
+            <View className="items-center">
+              <MaterialIcons
+                name="assignment"
+                size={24}
+                color={activeTab === 'test' ? '#6366f1' : '#9ca3af'}
+              />
+              <Text
+                className={`text-sm ${activeTab === 'test' ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500'}`}
+              >
+                Test
+              </Text>
+            </View>
+          </TouchableHighlight>
+          
+          <TouchableHighlight
+            underlayColor="#E0E7FF"
             onPress={() => setActiveTab('tools')}
             className="flex-1 items-center justify-center"
           >
@@ -241,10 +461,10 @@ const cog = () => {
               <MaterialIcons
                 name="build"
                 size={24}
-                color={activeTab === 'tools' ? '#e5e7eb' : '#9ca3af'}
+                color={activeTab === 'tools' ? '#6366f1' : '#9ca3af'}
               />
               <Text
-                className={`text-sm ${activeTab === 'tools' ? 'text-gray-200' : 'text-gray-400'}`}
+                className={`text-sm ${activeTab === 'tools' ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500'}`}
               >
                 Tools
               </Text>
@@ -253,44 +473,59 @@ const cog = () => {
         </View>
       </View>
 
-      {/* Modal for editing repractice questions */}
+      {/* Repractice Questions Modal */}
       <Modal
         animationType="slide"
         transparent={false}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <SafeAreaView className="flex-1 bg-gray-900">
-          <View className="h-14 bg-gray-800 flex-row items-center px-4 shadow-md">
+        <SafeAreaView className="flex-1 bg-indigo-50 dark:bg-gray-900">
+          <View className="h-14 bg-indigo-600 dark:bg-indigo-800 flex-row items-center px-4 shadow-md">
             <TouchableHighlight
-              underlayColor="#4b5563"
+              underlayColor="#4338CA"
               onPress={() => setModalVisible(false)}
-              className="p-2"
+              className="p-2 rounded-full"
             >
-              <MaterialIcons name="close" size={24} color="#e5e7eb" />
+              <MaterialIcons name="close" size={24} color="#E0E7FF" />
             </TouchableHighlight>
-            <Text className="text-gray-200 text-lg font-bold flex-1 ml-4">
+            <Text className="text-indigo-50 text-lg font-bold flex-1 ml-4">
               Edit Repractice Questions
             </Text>
           </View>
+          
           <ScrollView className="flex-1 p-4">
-            {allWrongQuestions.map((item, idx) => (
-              <View
-                key={`${item.sectionKey}-${item.index}`}
-                className="flex-row justify-between items-center p-2 bg-gray-700 rounded mb-2"
-              >
-                <Text className="text-gray-200 flex-1">
-                  {item.question.question}
-                </Text>
-                <TouchableHighlight
-                  onPress={() => removeQuestion(item.sectionKey, item.index)}
-                  underlayColor="#4b5563"
-                  className="p-2"
+            {allWrongQuestions.length > 0 ? (
+              allWrongQuestions.map((item, idx) => (
+                <View
+                  key={`${item.sectionKey}-${item.index}`}
+                  className="mb-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow border border-indigo-100 dark:border-indigo-800"
                 >
-                  <MaterialIcons name="delete" size={24} color="#e5e7eb" />
-                </TouchableHighlight>
+                  <View className="flex-row justify-between items-center">
+                    <Text className="text-gray-800 dark:text-gray-200 flex-1 mr-2">
+                      {item.question.question}
+                    </Text>
+                    <TouchableHighlight
+                      onPress={() => removeQuestion(item.sectionKey, item.index)}
+                      underlayColor="#E0E7FF"
+                      className="p-2 bg-indigo-100 dark:bg-indigo-700 rounded-full"
+                    >
+                      <MaterialIcons name="delete" size={20} color="#6366f1" />
+                    </TouchableHighlight>
+                  </View>
+                </View>
+              ))
+            ) : (
+              <View className="items-center justify-center p-8 my-8">
+                <MaterialIcons name="assignment-turned-in" size={48} color="#9ca3af" />
+                <Text className="text-gray-500 text-center mt-4 text-lg">
+                  No repractice questions available
+                </Text>
+                <Text className="text-gray-400 text-center mt-2">
+                  Questions you struggle with will appear here
+                </Text>
               </View>
-            ))}
+            )}
           </ScrollView>
         </SafeAreaView>
       </Modal>

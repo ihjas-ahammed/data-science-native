@@ -32,11 +32,14 @@ export default function App() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#222222]">
-      <StatusBar barStyle="light-content" backgroundColor="#222" />
-      <Text className="text-2xl font-bold text-white text-center mt-4 h-14">
-        {pageTitles[current]}
-      </Text>
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-800">
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      <View className="h-[1px] bg-indigo-100 dark:bg-indigo-800" />
+      <View className="py-4 px-5 border-b border-indigo-100 dark:border-indigo-800">
+        <Text className="text-2xl font-bold text-indigo-700 dark:text-indigo-300 text-center">
+          {pageTitles[current]}
+        </Text>
+      </View>
       <View className="flex-1">
         {current === 'Notes' && <Home />}
         {current === 'Routine' && <Routine firebaseApp={app} />}

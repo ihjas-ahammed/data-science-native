@@ -22,8 +22,8 @@ export default ({ config }) => {
           },
           package: "me.ihjas.notes",
           versionCode: 11,
-          permissions: ["INTERNET"],
-          runtimeVersion: "1.0.10"
+          permissions: ["INTERNET","CAMERA"],
+          runtimeVersion: "1.1"
         },
         web: {
           favicon: "./assets/icon.png",

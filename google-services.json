@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "1010841233830",
+    "firebase_url": "https://data-science-ef878-default-rtdb.firebaseio.com",
+    "project_id": "data-science-ef878",
+    "storage_bucket": "data-science-ef878.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010841233830:android:5ac634fece943e21720767",
+        "android_client_info": {
+          "package_name": "me.ihjas.notes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKDa1qUvYYfu9MpO2_nRpiMHoYzKHxLQ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010841233830:android:41d8b9362deef1bf720767",
+        "android_client_info": {
+          "package_name": "me.ihjas.serius"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKDa1qUvYYfu9MpO2_nRpiMHoYzKHxLQ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

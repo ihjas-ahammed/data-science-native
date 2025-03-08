@@ -5,21 +5,21 @@ import { MaterialIcons } from '@expo/vector-icons';
 const LearningCard = ({ title, progress, onClick, isActive }) => {
   const getProgressColor = (percentage) => {
     if (percentage < 0 || percentage > 100) return '#94A3B8'; // Slate color for invalid values
-    
-    // Create a color scale that avoids the indigo/purple spectrum used in backgrounds
-    if (percentage < 25) {
-      // Low progress - red
-      return '#EF4444'; // Tailwind red-500
-    } else if (percentage < 50) {
-      // Some progress - yellow/amber
-      return '#F59E0B'; // Tailwind amber-500
-    } else if (percentage < 75) {
-      // Good progress - teal (avoiding pure green which might be hard to read)
-      return '#14B8A6'; // Tailwind teal-500
-    } else {
-      // Excellent progress - cyan (avoiding blue/indigo used in the UI)
-      return '#55AA22'; // Tailwind cyan-500
-    }
+        
+        // Create a color scale that avoids the indigo/purple spectrum used in backgrounds
+        if (percentage < 25) {
+            // Low progress - red
+            return '#7bed9f'; // Tailwind red-500
+        } else if (percentage < 50) {
+            // Some progress - yellow/amber
+            return '#2ed573'; // Tailwind amber-500
+        } else if (percentage < 75) {
+            // Good progress - teal (avoiding pure green which might be hard to read)
+            return '#1e90ff'; // Tailwind teal-500
+        } else {
+            // Excellent progress - cyan (avoiding blue/indigo used in the UI)
+            return '#1e90ff'; // Tailwind cyan-500
+        }
   };
 
   const progressColor = getProgressColor(progress);

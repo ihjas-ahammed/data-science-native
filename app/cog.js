@@ -42,7 +42,7 @@ const cog = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [apiKeyModalVisible, setApiKeyModalVisible] = useState(false);
   const [apiKey, setApiKey] = useState('');
-  const [savedApiKey, setSavedApiKey] = useState('');
+  const [savedApiKey, setSavedApiKey] = useState('AIzaSyBpxFwmq8_b9snWnAaRnyeUmmy3FzT-7rM');
 
   const [isDiceRolled, setIsDiceRolled] = useState(false)
 
@@ -63,6 +63,8 @@ const cog = () => {
         const storedApiKey = await SecureStore.getItemAsync('google-api');
         if (storedApiKey) {
           setSavedApiKey(storedApiKey);
+        }else{
+          setSavedApiKey('AIzaSyBpxFwmq8_b9snWnAaRnyeUmmy3FzT-7rM')
         }
       } catch (err) {
         console.error('Failed to load API key:', err);
@@ -639,6 +641,7 @@ const cog = () => {
                 className="border border-gray-300 dark:border-gray-600 rounded-lg p-3 mb-4 text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-gray-700"
                 placeholder="Paste your API key here"
                 value={apiKey}
+                defaultValue=''
                 onChangeText={setApiKey}
                 placeholderTextColor="#9ca3af"
                 secureTextEntry={true}

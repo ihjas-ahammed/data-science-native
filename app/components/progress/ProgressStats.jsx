@@ -20,7 +20,7 @@ const ProgressStats = ({ stats, onAddTask }) => {
                             {() => (
                                 <Text
                                     className="text-base font-bold"
-                                    style={{ color: stats[0].color }}
+                                    style={{ color: 'white' }}
                                 >
                                     {`${stats[0].value}%`}
                                 </Text>
@@ -61,7 +61,7 @@ const ProgressStats = ({ stats, onAddTask }) => {
                                 {() => (
                                     <Text
                                         className="text-sm font-bold"
-                                        style={{ color: stat.color }}
+                                        style={{ color: 'white' }}
                                     >
                                         {`${stat.value}%`}
                                     </Text>

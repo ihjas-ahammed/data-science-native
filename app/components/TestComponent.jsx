@@ -227,6 +227,7 @@ const TestComponent = ({ sampleQ, isDiceRolled = false }) => {
             });
 
             const fullPrompt = `Question: ${currentQuestion}\nMax Marks: ${maxMarks}\n\nUser's Answer: ${prompt}\n\nPlease evaluate the user's answer and provide a score out of ${maxMarks}. If an image is provided, consider it as part of the answer. {give only a raw json {with explanation and score as output}, explanation must be like a teacher explaining to a student. explanaton should be pain with no markdown or anything}`;
+            console.log(fullPrompt)
 
             let imagePart = null;
             let savedImageUri = null;
@@ -253,6 +254,9 @@ const TestComponent = ({ sampleQ, isDiceRolled = false }) => {
             const processed = responseText.startsWith('```')
                 ? responseText.substring(7, responseText.length - 3)
                 : responseText;
+            
+            console.log(result)
+
             const dt = JSON.parse(processed);
             
             const newEvaluation = { 
@@ -275,6 +279,7 @@ const TestComponent = ({ sampleQ, isDiceRolled = false }) => {
             
         } catch (err) {
             setErrorMessage(err.message || 'An error occurred. Please try again.');
+            alert(err.message)
         } finally {
             setIsApiLoading(false);
             setActiveQuestion(null);

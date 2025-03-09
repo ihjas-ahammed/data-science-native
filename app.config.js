@@ -16,15 +16,10 @@ export default ({ config }) => {
       },
       newArchEnabled: true,
       android: {
-        adaptiveIcon: {
-          foregroundImage: "./assets/icon.png",
-          backgroundColor: "#ffffff"
-        },
         package: "me.ihjas.notes",
         versionCode: 12,
         permissions: ["INTERNET", "CAMERA"],
-        runtimeVersion: "1.1.1",
-        googleServicesFile: "./google-services.json"
+        runtimeVersion: "1.1.1"
       },
       web: {
         favicon: "./assets/icon.png",
@@ -39,8 +34,7 @@ export default ({ config }) => {
             icon: "./assets/icon.png",
             color: "#ffffff"
           }
-        ],
-        "@react-native-firebase/app"
+        ]
       ],
       extra: {
         router: {

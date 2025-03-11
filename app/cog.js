@@ -641,7 +641,6 @@ const cog = () => {
                 className="border border-gray-300 dark:border-gray-600 rounded-lg p-3 mb-4 text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-gray-700"
                 placeholder="Paste your API key here"
                 value={apiKey}
-                defaultValue=''
                 onChangeText={setApiKey}
                 placeholderTextColor="#9ca3af"
                 secureTextEntry={true}

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import Routine from './pages/Routine';
 import { initializeApp } from 'firebase/app';
 import Progress from './pages/Progress';
+import Extras from './pages/Misc';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAnjWWep4dtxvn1YKtmdU7A002X2NAvlX0',
@@ -25,7 +26,6 @@ const app = initializeApp(firebaseConfig);
 
 export default function App() {
   const [current, setCurrent] = useState('Notes');
-
   
 
   return (
@@ -34,7 +34,7 @@ export default function App() {
       <View className="h-[1px] bg-indigo-100 dark:bg-indigo-800" />
       <View className="py-4 px-5 border-b border-indigo-100 dark:border-indigo-800">
         <Text className="text-2xl font-bold text-indigo-700 dark:text-indigo-300 text-center">
-          {pageTitles[current]}
+          {current}
         </Text>
       </View>
       <View className="flex-1">
@@ -43,6 +43,9 @@ export default function App() {
         {current === 'Progress' && (
           <Progress firebaseApp={app} setPage={setCurrent} />
         )}
+        {current == 'Extras'&& (
+          <Extras/>
+        )} 
       </View>
       <NavBar current={current} setCurrent={setCurrent} />
     </SafeAreaView>

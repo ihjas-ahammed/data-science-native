@@ -223,7 +223,7 @@ const TestComponent = ({ sampleQ, isDiceRolled = false }) => {
 
             const genAI = new GoogleGenerativeAI(apiKey);
             const model = genAI.getGenerativeModel({
-                model: selectedImage ? 'gemini-1.5-pro' : 'gemini-2.0-flash-lite'
+                model: selectedImage ? 'gemini-2.0-flash' : 'gemini-2.0-flash-lite'
             });
 
             const fullPrompt = `Question: ${currentQuestion}\nMax Marks: ${maxMarks}\n\nUser's Answer: ${prompt}\n\nPlease evaluate the user's answer and provide a score out of ${maxMarks}. If an image is provided, consider it as part of the answer. {give only a raw json {with explanation and score as output}, explanation must be like a teacher explaining to a student. explanaton should be pain with no markdown or anything}`;
@@ -371,7 +371,7 @@ const TestComponent = ({ sampleQ, isDiceRolled = false }) => {
     }
 
     return (
-        <View className="bg-indigo-50 dark:bg-gray-800 rounded-xl p-4 shadow-md">
+        <View className="bg-indigo-50 dark:bg-gray-800 rounded-xl  shadow-md">
             {sampleQ.map((section, sectionIndex) => (
                 <View key={sectionIndex} className="mb-6">
                     <LinearGradient
@@ -425,10 +425,10 @@ const TestComponent = ({ sampleQ, isDiceRolled = false }) => {
                                                 
                                                 {/* Display saved image if available */}
                                                 {evaluation.savedImageUri && (
-                                                    <View className="mt-2 border border-indigo-200 dark:border-indigo-700 rounded-lg overflow-hidden">
+                                                    <View className="mt-2 border border-indigo-200 dark:border-indigo-700 rounded-lg ">
                                                         <Image 
                                                             source={{ uri: evaluation.savedImageUri }} 
-                                                            style={{ width: '100%', height: 150 }} 
+                                                            style={{ width: '100%',height:"150" }} 
                                                             className="rounded" 
                                                         />
                                                     </View>
@@ -439,7 +439,7 @@ const TestComponent = ({ sampleQ, isDiceRolled = false }) => {
                                             <View className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-indigo-100 dark:border-indigo-700">
                                                 <View className="flex-row items-center mb-2">
                                                     <MaterialIcons name="psychology" size={20} color="#6366f1" />
-                                                    <Text className="text-indigo-700 dark:text-indigo-300 font-bold ml-2">Teacher's Feedback</Text>
+                                                    <Text className="text-indigo-700 dark:text-indigo-300 font-bold ml-2">Feedback</Text>
                                                 </View>
                                                 <Text className="text-gray-700 dark:text-gray-300">{evaluation.explanation}</Text>
                                             </View>

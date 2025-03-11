@@ -58,6 +58,13 @@ const NavBar = ({ current, setCurrent }) => {
           current={current}
           setCurrent={setCurrent}
         />
+        <NavItem
+          page="Extras"
+          icon="science"
+          label="Extras"
+          current={current}
+          setCurrent={setCurrent}
+        />
       </View>
     </SafeAreaView>
   );

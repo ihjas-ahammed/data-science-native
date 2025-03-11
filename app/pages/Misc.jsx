@@ -6,7 +6,7 @@ import { router } from 'expo-router'
 const Extras = () => {
     return (
         <View className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow border border-indigo-100 dark:border-indigo-800">
-            <View className="flex-row items-center mb-3 bg-indigo-100 dark:bg-indigo-900 p-2 rounded-lg">
+            <View className="flex-row items-center mb-3 p-2 rounded-lg">
             <TouchableHighlight
                 underlayColor="#E0E7FF"
                 onPress={()=>router.push("pages/BusTracker")}
@@ -18,7 +18,7 @@ const Extras = () => {
                             Bus Tracker
                         </Text>
                     </View> 
-                    <Ionicons name="bus" size={24} color="#6366f1" />
+                    <Ionicons name="location" size={24} color="#6366f1" />
                 </View>
             </TouchableHighlight>
         </View>

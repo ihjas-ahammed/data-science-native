@@ -4,28 +4,63 @@ import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import * as SecureStore from 'expo-secure-store';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
-const calculateLevel = (score) => {
-  if (score < 120) return { level: 1, progress: (score / 120) * 100 };
-  if (score < 240) return { level: 2, progress: ((score - 120) / 120) * 100 };
-  if (score < 480) return { level: 3, progress: ((score - 240) / 240) * 100 };
-  if (score < 960) return { level: 4, progress: ((score - 480) / 480) * 100 };
+const calculateLevel = (score,maxScore) => {
 
-  return { level: 5, progress: 100 }; // Max level
+  let l = 1;
+  let s = score;
+  
+  let m = score
+
+  while(s > 0){
+    s -= maxScore*Math.pow(2,l-1)
+
+    if(m > maxScore*Math.pow(2,l-1)) m = s
+    if(s > 0) l++
+  }
+
+  return { level: l, progress: m}// Max level
 };
 
-const getLevelColor = (level) => {
-  const colors = {
-    1: '#4F46E5', // Indigo
-    2: '#10B981', // Emerald
-    3: '#F59E0B', // Amber
-    4: '#EF4444', // Red
-    5: '#8B5CF6', // Purple
-  };
-  return colors[level] || colors[1];
+const getLevelColor = (level, totalLevels = 100) => {
+  // Make sure level is within bounds
+  level = Math.max(1, Math.min(level, totalLevels));
+  
+  // Define base colors for interpolation
+  const baseColors = [
+    { r: 79, g: 70, b: 229 },   // Indigo (#4F46E5) - Starting color
+    { r: 16, g: 185, b: 129 },  // Emerald (#10B981)
+    { r: 245, g: 158, b: 11 },  // Amber (#F59E0B)
+    { r: 239, g: 68, b: 68 },   // Red (#EF4444)
+    { r: 139, g: 92, b: 246 }   // Purple (#8B5CF6) - Ending color
+  ];
+  
+  
+  // For dynamic levels, interpolate between base colors
+  const segment = (baseColors.length - 1) / (totalLevels - 1);
+  const segmentIndex = (level - 1) * segment;
+  const lowerIndex = Math.floor(segmentIndex);
+  const upperIndex = Math.ceil(segmentIndex);
+  
+  // If we're exactly on a base color, return it
+  if (lowerIndex === upperIndex) {
+    const { r, g, b } = baseColors[lowerIndex];
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  }
+  
+  // Otherwise interpolate between the two closest base colors
+  const weight = segmentIndex - lowerIndex;
+  const lowerColor = baseColors[lowerIndex];
+  const upperColor = baseColors[upperIndex];
+  
+  const r = Math.round(lowerColor.r + (upperColor.r - lowerColor.r) * weight);
+  const g = Math.round(lowerColor.g + (upperColor.g - lowerColor.g) * weight);
+  const b = Math.round(lowerColor.b + (upperColor.b - lowerColor.b) * weight);
+  
+  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
 };
-
-const Learn = ({ firebaseApp, navigation }) => {
+const Learn = ({ firebaseApp }) => {
   const [learn, setLearn] = useState([]);
   const [scores, setScores] = useState([]);
   const [levels, setLevels] = useState([]);
@@ -55,11 +90,12 @@ const Learn = ({ firebaseApp, navigation }) => {
         const newLevels = [];
         
         for (let i = 0; i < learn.length; i++) {
-          const score = await SecureStore.getItemAsync('score-' + i);
+          const score = await SecureStore.getItemAsync("score-"+i)
+
           const scoreValue = score ? parseInt(score) : 0;
           newScores[i] = scoreValue;
           
-          const levelInfo = calculateLevel(scoreValue);
+          const levelInfo = calculateLevel(scoreValue,learn[i].maxScore);
           newLevels[i] = levelInfo;
         }
         
@@ -75,12 +111,14 @@ const Learn = ({ firebaseApp, navigation }) => {
 
   const handleCardPress = (index) => {
     // Navigate to lesson or show more details
-    navigation && navigation.navigate('LessonDetails', { 
-      lesson: learn[index],
+    const exp = JSON.stringify({ 
+      subject: learn[index],
       index,
       score: scores[index],
       level: levels[index]
-    });
+    })
+
+    router.push(`/sub?exp=${exp}`)
   };
 
   if (loading) {
@@ -115,7 +153,7 @@ const Learn = ({ firebaseApp, navigation }) => {
           <View className="flex-1 mr-4">
             <Text className="text-lg font-semibold text-gray-800 mb-1">{item.name}</Text>
             <Text className="text-sm text-gray-500">
-              {scores[index] || 0} / {item.maxScore} points
+              {levelInfo.progress || 0} / {(item.maxScore*Math.pow(2,levelInfo.level-1))} points
             </Text>
           </View>
           
@@ -123,7 +161,7 @@ const Learn = ({ firebaseApp, navigation }) => {
             <AnimatedCircularProgress
               size={80}
               width={8}
-              fill={levelInfo.progress}
+              fill={levelInfo.progress*100/(item.maxScore*Math.pow(2,levelInfo.level-1))}
               tintColor={levelColor}
               backgroundColor="#E0E7FF"
               rotation={0}

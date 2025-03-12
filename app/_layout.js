@@ -12,6 +12,10 @@ const RootLayout = () => {
             <Stack.Screen name="cog" options={{ headerShown: false }}/>
             <Stack.Screen name="quiz" options={{ headerShown: false }}/>
             <Stack.Screen name="pages/BusTracker" options={{ headerShown: false }}/>
+            <Stack.Screen name="sub" options={{ headerShown: false }}/>
+            <Stack.Screen name="lesson" options={{ headerShown: false }}/>
+            
+            <Stack.Screen name="tools/arabic-reader" options={{ headerShown: false }}/>
         </Stack>
     )
 }

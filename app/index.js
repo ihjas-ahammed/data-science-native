@@ -7,6 +7,7 @@ import Routine from './pages/Routine';
 import { initializeApp } from 'firebase/app';
 import Progress from './pages/Progress';
 import Extras from './pages/Misc';
+import Learn from './pages/Learn';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAnjWWep4dtxvn1YKtmdU7A002X2NAvlX0',
@@ -46,6 +47,9 @@ export default function App() {
         {current == 'Extras'&& (
           <Extras/>
         )} 
+        {current == 'Learn' && (
+          <Learn firebaseApp={app}/>
+        )}
       </View>
       <NavBar current={current} setCurrent={setCurrent} />
     </SafeAreaView>

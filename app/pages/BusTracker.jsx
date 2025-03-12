@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, StatusBar, SafeAreaView, ImageBackground } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StatusBar, SafeAreaView, ImageBackground } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -46,17 +46,17 @@ const busSchedules = {
 
 // Calculate EDAVANNAPPARA to AREEKODE (18 + 2 = 20 minutes travel time)
 busSchedules["EDAVANNAPPARA"]["AREEKODE"] = busSchedules["EDAVANNAPPARA"]["S.S College"].map(time => {
-  return addMinutesToTime(time, 20);
+  return addMinutesToTime(time, 0);
 });
 
 // Calculate AREEKODE to S.S College (direct, approx 2 minutes)
-busSchedules["AREEKODE"]["S.S College"] = busSchedules["S.S College"]["AREEKODE"].map(time => {
-  return addMinutesToTime(time, 30); // Adding 30 min for return journey
+busSchedules["AREEKODE"]["S.S College"] = busSchedules["S.S College"]["EDAVANNAPPARA"].map(time => {
+  return addMinutesToTime(time, -2); // Adding 30 min for return journey
 });
 
 // Calculate AREEKODE to EDAVANNAPPARA (approx 18 minutes)
-busSchedules["AREEKODE"]["EDAVANNAPPARA"] = busSchedules["S.S College"]["AREEKODE"].map(time => {
-  return addMinutesToTime(time, 28); // Adding 28 min for return journey
+busSchedules["AREEKODE"]["EDAVANNAPPARA"] = busSchedules["S.S College"]["EDAVANNAPPARA"].map(time => {
+  return addMinutesToTime(time, -2); // Adding 28 min for return journey
 });
 
 // Helper function to add minutes to a time string
@@ -206,7 +206,7 @@ export default function BusScheduleApp() {
     if (origin === "S.S College" && destination === "EDAVANNAPPARA") {
       return "Direct - 18 min";
     } else if (origin === "S.S College" && destination === "AREEKODE") {
-      return "Direct - 20 min";
+      return "Direct - 2 min";
     } else if (origin === "EDAVANNAPPARA" && destination === "S.S College") {
       return "Direct - 18 min";
     } else if (origin === "EDAVANNAPPARA" && destination === "AREEKODE") {
@@ -214,45 +214,38 @@ export default function BusScheduleApp() {
     } else if (origin === "AREEKODE" && destination === "S.S College") {
       return "Direct - 2 min";
     } else if (origin === "AREEKODE" && destination === "EDAVANNAPPARA") {
-      return "Direct - 18 min";
+      return "Direct - 20 min";
     }
     return "Route info unavailable";
   };
   
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="light-content" />
+    <SafeAreaView className="flex-1">
+      <StatusBar barStyle="light-content" backgroundColor="#000" />
       <ImageBackground
-        source={{ uri: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80' }}
-        style={styles.backgroundImage}
-        blurRadius={3}
+        source={{ uri: 'https://images.unsplash.com/photo-1741016825495-1faf2afc19d6?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }}
+        className="flex-1"
       >
         <LinearGradient
           colors={['rgba(0,0,0,0.7)', 'rgba(20,20,40,0.9)']}
-          style={styles.container}
+          className="flex-1 px-5 pt-5"
         >
-          <View style={styles.header}>
-            <Text style={styles.title}>BusTime</Text>
-            <Text style={styles.currentTime}>{currentTime}</Text>
+          <View className="flex-row justify-between pb-5">
+            <Text className="font-bold text-3xl text-white">BusTime</Text>
+            <Text className="text-base text-white bg-black/30 px-3 py-1.5 rounded-16">{currentTime}</Text>
           </View>
           
-          <View style={styles.routeSelector}>
-            <View style={styles.locationSelector}>
-              <Text style={styles.selectorLabel}>From</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.locationScroll}>
+          <View className="bg-white/5 rounded-lg p-4 mb-4">
+            <View className="mb-3">
+              <Text className="text-sm text-gray-400 mb-2">From</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {locations.map((loc) => (
                   <TouchableOpacity
                     key={`origin-${loc}`}
-                    style={[
-                      styles.locationButton,
-                      origin === loc && styles.locationButtonActive
-                    ]}
+                    className={`px-4 py-2 mr-2 rounded-lg  ${origin === loc ? 'bg-[#3f51b5]' : 'bg-white/10'}`}
                     onPress={() => handleOriginChange(loc)}
                   >
-                    <Text style={[
-                      styles.locationButtonText,
-                      origin === loc && styles.locationButtonTextActive
-                    ]}>
+                    <Text className={`text-white  ${origin === loc ? 'font-bold' : 'font-medium'}`}>
                       {loc}
                     </Text>
                   </TouchableOpacity>
@@ -261,7 +254,7 @@ export default function BusScheduleApp() {
             </View>
             
             <TouchableOpacity 
-              style={styles.swapButton}
+              className="self-center bg-white/10 rounded-lg w-10 h-10 justify-center items-center my-1.5"
               onPress={() => {
                 const temp = origin;
                 setOrigin(destination);
@@ -271,25 +264,17 @@ export default function BusScheduleApp() {
               <Ionicons name="swap-vertical" size={24} color="#fff" />
             </TouchableOpacity>
             
-            <View style={styles.locationSelector}>
-              <Text style={styles.selectorLabel}>To</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.locationScroll}>
+            <View className="mb-3">
+              <Text className="text-sm text-gray-400 mb-2">To</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {locations.map((loc) => (
                   <TouchableOpacity
                     key={`dest-${loc}`}
-                    style={[
-                      styles.locationButton,
-                      destination === loc && styles.locationButtonActive,
-                      loc === origin && styles.locationButtonDisabled
-                    ]}
+                    className={`px-4 py-2 mr-2 rounded-lg  ${destination === loc ? 'bg-[#3f51b5]' : `${loc === origin ? 'bg-white/5' : 'bg-white/10'}`}`}
                     onPress={() => handleDestinationChange(loc)}
                     disabled={loc === origin}
                   >
-                    <Text style={[
-                      styles.locationButtonText,
-                      destination === loc && styles.locationButtonTextActive,
-                      loc === origin && styles.locationButtonTextDisabled
-                    ]}>
+                    <Text className={` ${destination === loc ? 'font-bold' : ' font-medium'} ${loc === origin ? 'text-white/30' : 'text-white'}`}>
                       {loc}
                     </Text>
                   </TouchableOpacity>
@@ -298,40 +283,40 @@ export default function BusScheduleApp() {
             </View>
           </View>
           
-          <View style={styles.nextBusCard}>
-            <Text style={styles.nextBusTitle}>Next Bus</Text>
+          <View className="bg-[#3f51b5]/30 rounded-lg p-4 mb-4">
+            <Text className="text-base text-gray-400 mb-2">Next Bus</Text>
             {nextBus ? (
               <>
-                <View style={styles.nextBusTimeContainer}>
-                  <Text style={styles.nextBusTime}>{nextBus.time}</Text>
+                <View className="flex-row items-baseline mb-3">
+                  <Text className="text-[32px] font-bold text-white">{nextBus.time}</Text>
                   {nextBus.tomorrow && (
-                    <Text style={styles.tomorrowIndicator}>Tomorrow</Text>
+                    <Text className="text-xs text-orange-500 ml-2 px-2 py-0.5 bg-orange-500/20 rounded">Tomorrow</Text>
                   )}
                 </View>
                 
-                <View style={styles.busInfoContainer}>
-                  <View style={styles.busInfoItem}>
+                <View className="flex-row justify-between bg-black/20 rounded-lg p-2">
+                  <View className="flex-row items-center">
                     <Ionicons name="time-outline" size={20} color="#fff" />
-                    <Text style={styles.busInfoText}>
+                    <Text className="text-white ml-1">
                       {formatTimeRemaining(nextBus.minutes)} remaining
                     </Text>
                   </View>
                   
-                  <View style={styles.busInfoItem}>
+                  <View className="flex-row items-center">
                     <Ionicons name="git-network-outline" size={20} color="#fff" />
-                    <Text style={styles.busInfoText}>{getRouteInfo()}</Text>
+                    <Text className="text-white ml-1">{getRouteInfo()}</Text>
                   </View>
                 </View>
               </>
             ) : (
-              <Text style={styles.noBusText}>No bus schedule available for this route</Text>
+              <Text className="text-white text-base text-center my-4">No bus schedule available for this route</Text>
             )}
           </View>
           
-          <View style={styles.scheduleContainer}>
-            <Text style={styles.scheduleTitle}>Today's Schedule</Text>
+          <View className="flex-1 bg-white/5 rounded-lg p-4 mb-10">
+            <Text className="text-base text-gray-400 mb-3">Today's Schedule</Text>
             {busSchedules[origin] && busSchedules[origin][destination] && busSchedules[origin][destination].length > 0 ? (
-              <ScrollView style={styles.scheduleList}>
+              <ScrollView className="flex-1">
                 {busSchedules[origin][destination].map((time, index) => {
                   const isPassed = timeToMinutes(time) < timeToMinutes(currentTime);
                   const isNext = nextBus && time === nextBus.time;
@@ -339,23 +324,15 @@ export default function BusScheduleApp() {
                   return (
                     <View 
                       key={index} 
-                      style={[
-                        styles.scheduleItem,
-                        isPassed && styles.scheduleItemPassed,
-                        isNext && styles.scheduleItemNext
-                      ]}
+                      className={`flex-row justify-between items-center py-2.5 border-b border-white/5 ${isPassed ? 'opacity-50' : ''} ${isNext ? 'bg-[#3f51b5]/20 rounded-lg px-2' : ''}`}
                     >
-                      <Text style={[
-                        styles.scheduleTime,
-                        isPassed && styles.scheduleTimePassed,
-                        isNext && styles.scheduleTimeNext
-                      ]}>
+                      <Text className={`text-white text-base ${isPassed ? 'line-through' : ''} ${isNext ? 'font-bold' : ''}`}>
                         {time}
                       </Text>
                       
                       {isNext && (
-                        <View style={styles.nextIndicator}>
-                          <Text style={styles.nextIndicatorText}>NEXT</Text>
+                        <View className="bg-[#3f51b5] px-2 py-0.5 rounded">
+                          <Text className="text-white text-xs font-bold">NEXT</Text>
                         </View>
                       )}
                     </View>
@@ -363,7 +340,7 @@ export default function BusScheduleApp() {
                 })}
               </ScrollView>
             ) : (
-              <Text style={styles.noScheduleText}>No schedule available for this route</Text>
+              <Text className="text-white text-base text-center my-4">No schedule available for this route</Text>
             )}
           </View>
         </LinearGradient>
@@ -371,194 +348,3 @@ export default function BusScheduleApp() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-  backgroundImage: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 16,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  currentTime: {
-    fontSize: 16,
-    color: '#fff',
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-  },
-  routeSelector: {
-    backgroundColor: 'rgba(255,255,255,0.05)',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
-  },
-  locationSelector: {
-    marginBottom: 12,
-  },
-  selectorLabel: {
-    fontSize: 14,
-    color: '#aaa',
-    marginBottom: 8,
-  },
-  locationScroll: {
-    flexDirection: 'row',
-  },
-  locationButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    marginRight: 8,
-    borderRadius: 8,
-    backgroundColor: 'rgba(255,255,255,0.1)',
-  },
-  locationButtonActive: {
-    backgroundColor: '#3f51b5',
-  },
-  locationButtonDisabled: {
-    backgroundColor: 'rgba(255,255,255,0.05)',
-  },
-  locationButtonText: {
-    color: '#fff',
-    fontWeight: '500',
-  },
-  locationButtonTextActive: {
-    fontWeight: 'bold',
-  },
-  locationButtonTextDisabled: {
-    color: 'rgba(255,255,255,0.3)',
-  },
-  swapButton: {
-    alignSelf: 'center',
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    borderRadius: 20,
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 6,
-  },
-  nextBusCard: {
-    backgroundColor: 'rgba(63, 81, 181, 0.3)',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
-  },
-  nextBusTitle: {
-    fontSize: 16,
-    color: '#aaa',
-    marginBottom: 8,
-  },
-  nextBusTimeContainer: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    marginBottom: 12,
-  },
-  nextBusTime: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  tomorrowIndicator: {
-    fontSize: 12,
-    color: '#ff9800',
-    marginLeft: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    backgroundColor: 'rgba(255, 152, 0, 0.2)',
-    borderRadius: 4,
-  },
-  busInfoContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    borderRadius: 8,
-    padding: 8,
-  },
-  busInfoItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  busInfoText: {
-    color: '#fff',
-    marginLeft: 4,
-  },
-  noBusText: {
-    color: '#fff',
-    fontSize: 16,
-    textAlign: 'center',
-    marginVertical: 16,
-  },
-  scheduleContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.05)',
-    borderRadius: 16,
-    padding: 16,
-  },
-  scheduleTitle: {
-    fontSize: 16,
-    color: '#aaa',
-    marginBottom: 12,
-  },
-  scheduleList: {
-    flex: 1,
-  },
-  scheduleItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.05)',
-  },
-  scheduleItemPassed: {
-    opacity: 0.5,
-  },
-  scheduleItemNext: {
-    backgroundColor: 'rgba(63, 81, 181, 0.2)',
-    borderRadius: 8,
-    paddingHorizontal: 8,
-  },
-  scheduleTime: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  scheduleTimePassed: {
-    textDecorationLine: 'line-through',
-  },
-  scheduleTimeNext: {
-    fontWeight: 'bold',
-  },
-  nextIndicator: {
-    backgroundColor: '#3f51b5',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 4,
-  },
-  nextIndicatorText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  noScheduleText: {
-    color: '#fff',
-    fontSize: 16,
-    textAlign: 'center',
-    marginVertical: 16,
-  }
-});

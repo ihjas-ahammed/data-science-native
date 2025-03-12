@@ -5,7 +5,7 @@ export default ({ config }) => {
       name: "Sirius",
       slug: "data-science-native",
       scheme: "org",
-      version: "1.1.1",
+      version: "1.1.2",
       orientation: "portrait",
       icon: "./assets/icon.png",
       userInterfaceStyle: "light",
@@ -17,9 +17,9 @@ export default ({ config }) => {
       newArchEnabled: true,
       android: {
         package: "me.ihjas.notes",
-        versionCode: 12,
+        versionCode: 13,
         permissions: ["INTERNET", "CAMERA"],
-        runtimeVersion: "1.1.1"
+        runtimeVersion: "1.1.2"
       },
       web: {
         favicon: "./assets/icon.png",

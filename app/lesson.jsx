@@ -25,13 +25,15 @@ const Lesson = () => {
     const getToolIcon = (toolName) => {
         const toolIcons = {
             quiz: "help-circle",
+            memory: "help-circle",
             video: "videocam",
             reader: "document-text",
             practice: "pencil",
             calculator: "calculator",
             flashcards: "card",
             default: "apps",
-            fib:"pencil"
+            fib:"pencil",
+            program:"calculator"
         }
         
         // Check if tool name contains any of the keys

@@ -47,6 +47,17 @@ const ArabicReader = () => {
         const fetchData = async () => {
             try {
                 setLoading(true)
+                
+                const apiKey = await SecureStore.getItemAsync('google-api')
+                
+
+                if (!apiKey) {
+                    console.error('Google API key not found in secure storage')
+                    router.back()
+                    alert("Please set API Key in tools at home")
+                    return
+                }
+
                 setProcessStatus('Checking cached data...')
                 const storageKey = `arabic-reader-${subInt}-${index}`
                 let storedData = await SecureStore.getItemAsync(storageKey)
@@ -72,12 +83,6 @@ const ArabicReader = () => {
                 setSentence(sentenceData)
                 setProcessingProgress(0.2)
 
-                const apiKey = await SecureStore.getItemAsync('google-api')
-                if (!apiKey) {
-                    console.error('Google API key not found in secure storage')
-                    setProcessStatus('Error: API key not found, Set API Key in Tools')
-                    return
-                }
 
                 const processedData = await processArabicTextInBatches(sentenceData, apiKey)
                 await SecureStore.setItemAsync(storageKey, JSON.stringify(processedData))

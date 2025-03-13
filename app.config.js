@@ -5,7 +5,7 @@ export default ({ config }) => {
       name: "Sirius",
       slug: "data-science-native",
       scheme: "org",
-      version: "1.1.3",
+      version: "1.2.1",
       orientation: "portrait",
       icon: "./assets/icon.png",
       userInterfaceStyle: "light",
@@ -17,9 +17,10 @@ export default ({ config }) => {
       newArchEnabled: true,
       android: {
         package: "me.ihjas.notes",
-        versionCode: 14,
+        versionCode: 15,
         permissions: ["INTERNET", "CAMERA"],
-        runtimeVersion: "1.1.3"
+        runtimeVersion: "1.2.1",
+        
       },
       web: {
         favicon: "./assets/icon.png",
@@ -31,10 +32,26 @@ export default ({ config }) => {
         [
           "expo-notifications",
           {
-            icon: "./assets/icon.png",
+            icon: "./assets/image.png",
             color: "#ffffff"
           }
-        ]
+        ],
+        [
+          'expo-build-properties',
+          {
+            android: {
+              compileSdkVersion: 35,
+              targetSdkVersion: 35,
+              buildToolsVersion: '35.0.0',
+              packagingOptions: {
+                abiFilters: ['armeabi-v7a', 'arm64-v8a']
+              }
+            },
+            ios: {
+              deploymentTarget: '15.1',
+            },
+          },
+        ],
       ],
       extra: {
         router: {

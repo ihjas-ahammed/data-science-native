@@ -10,6 +10,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import Markdown from 'react-native-markdown-display';
 import TestComponent from './components/TestComponent';
+import ApiKeyManager from './components/cog/ApiKeyManager';
 
 // Utility function to shuffle an array (Fisher-Yates algorithm)
 const shuffle = (array) => {
@@ -40,9 +41,9 @@ const cog = () => {
   const [allWrongQuestions, setAllWrongQuestions] = useState([]);
   const [activeTab, setActiveTab] = useState('topics');
   const [modalVisible, setModalVisible] = useState(false);
-  const [apiKeyModalVisible, setApiKeyModalVisible] = useState(false);
   const [apiKey, setApiKey] = useState('');
-  const [savedApiKey, setSavedApiKey] = useState('AIzaSyBpxFwmq8_b9snWnAaRnyeUmmy3FzT-7rM');
+  const [apiKeyModalVisible, setApiKeyModalVisible] = useState(false);
+  const [savedApiKey, setSavedApiKey] = useState('');
 
   const [isDiceRolled, setIsDiceRolled] = useState(false)
 
@@ -63,7 +64,7 @@ const cog = () => {
         const storedApiKey = await SecureStore.getItemAsync('google-api');
         if (storedApiKey) {
           setSavedApiKey(storedApiKey);
-        }else{
+        } else {
           setSavedApiKey('AIzaSyBpxFwmq8_b9snWnAaRnyeUmmy3FzT-7rM')
         }
       } catch (err) {
@@ -241,26 +242,7 @@ const cog = () => {
     }
   };
 
-  const saveApiKey = async () => {
-    try {
-      if (apiKey.trim()) {
-        await SecureStore.setItemAsync('google-api', apiKey.trim());
-        setSavedApiKey(apiKey.trim());
-        setApiKey('');
-        setApiKeyModalVisible(false);
-        alert('API key saved successfully!');
-      } else {
-        alert('Please enter a valid API key');
-      }
-    } catch (err) {
-      console.error('Failed to save API key:', err);
-      alert('Failed to save API key. Please try again.');
-    }
-  };
 
-  const getApiKey = () => {
-    Linking.openURL('https://aistudio.google.com/app/apikey');
-  };
 
   if (isLoading) {
     return (
@@ -595,84 +577,12 @@ const cog = () => {
         </SafeAreaView>
       </Modal>
 
-      {/* API Key Modal */}
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={apiKeyModalVisible}
-        onRequestClose={() => setApiKeyModalVisible(false)}
-      >
-        <SafeAreaView className="flex-1 bg-indigo-50 dark:bg-gray-900">
-          <View className="h-14 bg-indigo-600 dark:bg-indigo-800 flex-row items-center px-4 shadow-md">
-            <TouchableHighlight
-              underlayColor="#4338CA"
-              onPress={() => setApiKeyModalVisible(false)}
-              className="p-2 rounded-full"
-            >
-              <MaterialIcons name="close" size={24} color="#E0E7FF" />
-            </TouchableHighlight>
-            <Text className="text-indigo-50 text-lg font-bold flex-1 ml-4">
-              Google API Key
-            </Text>
-          </View>
-
-          <View className="flex-1 p-4">
-            <View className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow mb-4">
-              <Text className="text-gray-800 dark:text-gray-200 font-semibold mb-1">
-                Current Status
-              </Text>
-              <View className="flex-row items-center">
-                <MaterialIcons
-                  name={savedApiKey ? "check-circle" : "error"}
-                  size={20}
-                  color={savedApiKey ? "#10b981" : "#ef4444"}
-                />
-                <Text className={`ml-2 ${savedApiKey ? "text-green-500" : "text-red-500"}`}>
-                  {savedApiKey ? "API Key is configured" : "No API Key set"}
-                </Text>
-              </View>
-            </View>
-
-            <View className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow mb-4">
-              <Text className="text-gray-800 dark:text-gray-200 font-semibold mb-4">
-                Enter Google API Key
-              </Text>
-              <TextInput
-                className="border border-gray-300 dark:border-gray-600 rounded-lg p-3 mb-4 text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-gray-700"
-                placeholder="Paste your API key here"
-                value={apiKey}
-                onChangeText={setApiKey}
-                placeholderTextColor="#9ca3af"
-                secureTextEntry={true}
-              />
-              <TouchableHighlight
-                underlayColor="#4338CA"
-                onPress={saveApiKey}
-                className="bg-indigo-600 dark:bg-indigo-700 rounded-lg p-3 items-center"
-              >
-                <Text className="text-white font-semibold">Save API Key</Text>
-              </TouchableHighlight>
-            </View>
-
-            <TouchableHighlight
-              underlayColor="#E0E7FF"
-              onPress={getApiKey}
-              className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow flex-row items-center justify-between"
-            >
-              <View>
-                <Text className="text-gray-800 dark:text-gray-200 font-semibold">
-                  Get Google API Key
-                </Text>
-                <Text className="text-gray-600 dark:text-gray-300 mt-1">
-                  Opens Google AI Studio website
-                </Text>
-
-                <MaterialIcons name="open-in-new" size={24} color="#6366f1" />
-              </View>
-            </TouchableHighlight>
-          </View>
-        </SafeAreaView>
-      </Modal>
+      <ApiKeyManager
+        isVisible={apiKeyModalVisible}
+        onClose={() => setApiKeyModalVisible(false)}
+        savedApiKey={savedApiKey}
+        onApiKeySaved={(newKey) => setSavedApiKey(newKey)}
+      />
     </SafeAreaView>
   );
 };

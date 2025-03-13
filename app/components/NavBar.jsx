@@ -94,7 +94,7 @@ const NavBar = ({ current, setCurrent }) => {
         <NavItem
           page="Extras"
           icon="science"
-          label="Extras"
+          label="Tools"
           current={current}
           setCurrent={setCurrent}
         />

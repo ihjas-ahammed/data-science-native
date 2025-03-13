@@ -20,7 +20,7 @@ const calculateLevel = (score, maxScore) => {
   return { level: l, progress: m }; // Max level
 };
 
-const getLevelColor = (level, totalLevels = 100) => {
+const getLevelColor = (level, totalLevels = 15) => {
   // Make sure level is within bounds
   level = Math.max(1, Math.min(level, totalLevels));
   

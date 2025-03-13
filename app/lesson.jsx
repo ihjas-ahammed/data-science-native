@@ -30,7 +30,8 @@ const Lesson = () => {
             practice: "pencil",
             calculator: "calculator",
             flashcards: "card",
-            default: "apps"
+            default: "apps",
+            fib:"pencil"
         }
         
         // Check if tool name contains any of the keys

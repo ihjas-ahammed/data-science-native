@@ -1,26 +1,23 @@
 import { get, getDatabase, ref } from 'firebase/database';
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import * as SecureStore from 'expo-secure-store';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { router, useNavigation, useFocusEffect } from 'expo-router';
 
-const calculateLevel = (score,maxScore) => {
-
+const calculateLevel = (score, maxScore) => {
   let l = 1;
   let s = score;
-  
-  let m = score
+  let m = score;
 
-  while(s > 0){
-    s -= maxScore*Math.pow(2,l-1)
-
-    if(m > maxScore*Math.pow(2,l-1)) m = s
-    if(s > 0) l++
+  while(s > 0) {
+    s -= maxScore * Math.pow(2, l-1);
+    if(m > maxScore * Math.pow(2, l-1)) m = s;
+    if(s > 0) l++;
   }
 
-  return { level: l, progress: m}// Max level
+  return { level: l, progress: m }; // Max level
 };
 
 const getLevelColor = (level, totalLevels = 100) => {
@@ -35,7 +32,6 @@ const getLevelColor = (level, totalLevels = 100) => {
     { r: 239, g: 68, b: 68 },   // Red (#EF4444)
     { r: 139, g: 92, b: 246 }   // Purple (#8B5CF6) - Ending color
   ];
-  
   
   // For dynamic levels, interpolate between base colors
   const segment = (baseColors.length - 1) / (totalLevels - 1);
@@ -60,65 +56,121 @@ const getLevelColor = (level, totalLevels = 100) => {
   
   return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
 };
+
 const Learn = ({ firebaseApp }) => {
   const [learn, setLearn] = useState([]);
   const [scores, setScores] = useState([]);
   const [levels, setLevels] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [isOnline, setIsOnline] = useState(false);
 
-  useEffect(() => {
-    const loadLearn = async () => {
-      try {
-        const db = getDatabase(firebaseApp);
-        const learnRf = ref(db, 'learn');
-        const snapshot = await get(learnRf);
-        if (snapshot.exists()) setLearn(snapshot.val());
-        setLoading(false);
-      } catch (e) {
-        console.error('Error loading learn data:', e);
-        setLoading(false);
+  const loadCachedData = async () => {
+    try {
+      const cachedLearnData = await SecureStore.getItemAsync('learn');
+      if (cachedLearnData) {
+        setLearn(JSON.parse(cachedLearnData));
       }
-    };
+    } catch (e) {
+      console.error('Error loading cached learn data:', e);
+    }
+  };
 
-    loadLearn();
+  const loadFirebaseData = async (forceOnline = false) => {
+    try {
+      if (forceOnline) setIsOnline(true);
+      
+      const db = getDatabase(firebaseApp);
+      const learnRef = ref(db, 'learn');
+      const snapshot = await get(learnRef);
+      
+      if (snapshot.exists()) {
+        const learnData = snapshot.val();
+        setLearn(learnData);
+        
+        // Cache the data for offline use
+        await SecureStore.setItemAsync('learn', JSON.stringify(learnData));
+      }
+      
+      setIsOnline(true);
+    } catch (e) {
+      console.error('Error loading Firebase data:', e);
+      // If we can't connect to Firebase, use cached data
+      if (forceOnline) {
+        setIsOnline(false);
+        await loadCachedData();
+      }
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  const loadData = async (forceOnline = false) => {
+    setLoading(true);
+    
+    // First try to load cached data for immediate display
+    if (!forceOnline) {
+      await loadCachedData();
+    }
+    
+    // Then try to load fresh data from Firebase
+    await loadFirebaseData(forceOnline);
+  };
+
+  const loadScores = async () => {
+    try {
+      const newScores = [];
+      const newLevels = [];
+      
+      for (let i = 0; i < learn.length; i++) {
+        const score = await SecureStore.getItemAsync("score-" + i);
+        const scoreValue = score ? parseInt(score) : 0;
+        newScores[i] = scoreValue;
+        
+        const levelInfo = calculateLevel(scoreValue, learn[i].maxScore);
+        newLevels[i] = levelInfo;
+      }
+      
+      setScores(newScores);
+      setLevels(newLevels);
+    } catch (e) {
+      console.error('Error loading scores:', e);
+    }
+  };
+
+  // Initial load
+  useEffect(() => {
+    loadData();
   }, []);
 
+  // Load scores whenever learn data changes
   useEffect(() => {
-    const loadScores = async () => {
-      try {
-        const newScores = [];
-        const newLevels = [];
-        
-        for (let i = 0; i < learn.length; i++) {
-          const score = await SecureStore.getItemAsync("score-"+i)
-
-          const scoreValue = score ? parseInt(score) : 0;
-          newScores[i] = scoreValue;
-          
-          const levelInfo = calculateLevel(scoreValue,learn[i].maxScore);
-          newLevels[i] = levelInfo;
-        }
-        
-        setScores(newScores);
-        setLevels(newLevels);
-      } catch (e) {
-        console.error('Error loading scores:', e);
-      }
-    };
-
     if (learn.length > 0) loadScores();
   }, [learn]);
 
+  // Refresh data when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+      return () => {}; // Cleanup function
+    }, [])
+  );
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    loadData(true); // Force online refresh
+  }, []);
+
   const handleCardPress = (index) => {
-    // Navigate to lesson or show more details
     const exp = JSON.stringify({ 
       subject: learn[index],
       index,
       score: scores[index],
       level: levels[index]
-    })
+    });
 
-    router.push(`/sub?exp=${exp}`)
+    router.push(`/sub?exp=${exp}`);
   };
 
   if (loading) {
@@ -135,6 +187,12 @@ const Learn = ({ firebaseApp }) => {
       <View className="flex-1 justify-center items-center bg-gray-50 p-6">
         <Ionicons name="school-outline" size={64} color="#9CA3AF" />
         <Text className="mt-4 text-lg text-gray-500 text-center">No courses available yet</Text>
+        <TouchableOpacity 
+          className="mt-6 bg-indigo-600 py-3 px-6 rounded-full"
+          onPress={onRefresh}
+        >
+          <Text className="text-white font-medium">Refresh</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -182,12 +240,25 @@ const Learn = ({ firebaseApp }) => {
 
   return (
     <View className="flex-1 p-4 bg-gray-50">
+      {!isOnline && (
+        <View className="bg-amber-100 p-3 mb-4 rounded-lg">
+          <Text className="text-amber-800 text-sm">You're viewing offline data. Pull down to refresh when back online.</Text>
+        </View>
+      )}
       <FlatList
         data={learn}
         renderItem={renderItem}
         keyExtractor={(_, index) => `learn-${index}`}
         contentContainerStyle={{ paddingBottom: 16 }}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={["#4F46E5"]}
+            tintColor="#4F46E5"
+          />
+        }
       />
     </View>
   );

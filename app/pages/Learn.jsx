@@ -79,6 +79,7 @@ const Learn = ({ firebaseApp }) => {
   const loadFirebaseData = async (forceOnline = false) => {
     try {
       if (forceOnline) setIsOnline(true);
+      else if(!isOnline) return
       
       const db = getDatabase(firebaseApp);
       const learnRef = ref(db, 'learn');

@@ -7,8 +7,6 @@ import * as FileSystem from 'expo-file-system';
 import * as SecureStore from 'expo-secure-store';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import Markdown from 'react-native-markdown-display';
 import TestComponent from './components/TestComponent';
 import ApiKeyManager from './components/cog/ApiKeyManager';
 

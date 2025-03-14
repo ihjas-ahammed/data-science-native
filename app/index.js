@@ -26,7 +26,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export default function App() {
-  const [current, setCurrent] = useState('Notes');
+  const [current, setCurrent] = useState('Learn');
   
 
   return (

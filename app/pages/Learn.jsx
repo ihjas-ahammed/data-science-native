@@ -201,6 +201,11 @@ const Learn = ({ firebaseApp }) => {
   const renderItem = ({ item, index }) => {
     const levelInfo = levels[index] || { level: 1, progress: 0 };
     const levelColor = getLevelColor(levelInfo.level);
+    if(!item) return (
+      <View>
+        
+      </View>
+    )
     
     return (
       <TouchableOpacity 

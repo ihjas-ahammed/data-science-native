@@ -246,11 +246,6 @@ const Learn = ({ firebaseApp }) => {
 
   return (
     <View className="flex-1 p-4 bg-gray-50">
-      {!isOnline && (
-        <View className="bg-amber-100 p-3 mb-4 rounded-lg">
-          <Text className="text-amber-800 text-sm">You're viewing offline data. Pull down to refresh when back online.</Text>
-        </View>
-      )}
       <FlatList
         data={learn}
         renderItem={renderItem}

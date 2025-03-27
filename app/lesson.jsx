@@ -72,7 +72,11 @@ const Lesson = () => {
                 {lesson.tools.map((tool, i) => (
                     <TouchableOpacity 
                         key={i} 
-                        onPress={() => router.push(`/tools/${tool.name}?exp=${exp}`)}
+                        onPress={() => {
+                            const e = JSON.parse(exp)
+                            e.toolInt = i
+                            router.push(`/tools/${tool.name}?exp=${JSON.stringify(e)}`)
+                        }}
                         className="bg-white rounded-xl shadow-sm mb-4 overflow-hidden border border-gray-100"
                     >
                         <View className="flex-row items-center p-4">

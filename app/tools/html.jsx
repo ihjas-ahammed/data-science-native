@@ -9,11 +9,12 @@ import { WebView } from 'react-native-webview'
 const HtmlTool = () => {
     const { exp } = useLocalSearchParams()
     const router = useRouter()
-    const { subject, index, subInt, lesson } = JSON.parse(exp)
+    const { subject, index, subInt, lesson, toolInt } = JSON.parse(exp)
     const dataUrl = lesson.data
 
-    const toolName = 'html'
-    const tool = lesson.tools.filter((t,i) => t.name == toolName)[0]
+    const tool = lesson.tools[toolInt];
+    
+    const toolName = tool.name
     
     const [score, setScore] = useState(0)
     const [accuracy, setAccuracy] = useState(0)

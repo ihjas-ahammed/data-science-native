@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, StatusBar, Image } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 
@@ -20,6 +20,14 @@ const Lesson = () => {
         }
         return colors[subject.name?.toLowerCase()] || colors.default
     }
+
+    useEffect(()=>{
+      if(lesson.tools.length == 1){
+            const e = JSON.parse(exp)
+            e.toolInt = 0
+            router.push(`/tools/${lesson.tools[0].name}?exp=${JSON.stringify(e)}`)
+      }  
+    },[])
 
     // Get an icon based on tool type
     const getToolIcon = (toolName) => {

@@ -23,7 +23,8 @@ const HtmlTool = () => {
     const [showGameOver, setShowGameOver] = useState(false)
     const webViewRef = useRef(null)
 
-    const localFilePath = `${FileSystem.cacheDirectory}${tool.webpage.split('/').pop()}`
+    const localFilePath = `${FileSystem.cacheDirectory}${subInt}${lesson.name}${tool.webpage.split('/').pop()}`
+    
     const loadScore = async () => {
         let storedScore = await getItemAsync('score-'+subInt)
         if(storedScore) setScore(parseInt(storedScore))

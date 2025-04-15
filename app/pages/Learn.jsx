@@ -91,6 +91,10 @@ const Learn = ({ firebaseApp }) => {
         
         // Cache the data for offline use
         await SecureStore.setItemAsync('learn', JSON.stringify(learnData));
+      }else if(forceOnline) {
+        await SecureStore.deleteItemAsync('learn');
+        setLearn([]);
+        return;
       }
       
       setIsOnline(true);

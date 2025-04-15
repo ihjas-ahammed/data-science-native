@@ -57,26 +57,10 @@ const NavBar = ({ current, setCurrent }) => {
           // IconComponent={MaterialIcons} // Default, so optional
         />
         <NavItem
-          page="Progress"
-          icon="bar-chart" // MaterialIcons
-          label="Progress"
-          current={current}
-          setCurrent={setCurrent}
-          // IconComponent={MaterialIcons} // Default, so optional
-        />
-        <NavItem
           page="Learn"
           // Changed icon to a MaterialIcons equivalent for 'flash'
           icon="flash-on" // Or 'bolt' from MaterialIcons
           label="Learn"
-          current={current}
-          setCurrent={setCurrent}
-          // IconComponent={MaterialIcons} // Default, so optional
-        />
-        <NavItem
-          page="Routine"
-          icon="calendar-today" // MaterialIcons
-          label="Routine"
           current={current}
           setCurrent={setCurrent}
           // IconComponent={MaterialIcons} // Default, so optional

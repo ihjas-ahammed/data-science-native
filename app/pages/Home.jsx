@@ -6,10 +6,8 @@ import * as FileSystem from 'expo-file-system';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 
-// Define initial course data (unchanged) - TRUNCATED FOR BREVITY
-const initialCourseData = { /* ... same as before ... */ };
+const initialCourseData = {  };
 
-// --- Constants ---
 const COURSE_DATA_FILE = `${FileSystem.documentDirectory}course.json`;
 const PROGRESS_DATA_FILE = `${FileSystem.documentDirectory}progress.json`;
 const PROFILE_DATA_FILE = `${FileSystem.documentDirectory}profile.json`;

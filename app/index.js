@@ -3,9 +3,7 @@ import './global.css';
 import NavBar from './components/NavBar';
 import Home from './pages/Home';
 import { useState } from 'react';
-import Routine from './pages/Routine';
 import { initializeApp } from 'firebase/app';
-import Progress from './pages/Progress';
 import Extras from './pages/Misc';
 import Learn from './pages/Learn';
 
@@ -40,10 +38,7 @@ export default function App() {
       </View>
       <View className="flex-1">
         {current === 'Notes' && <Home />}
-        {current === 'Routine' && <Routine firebaseApp={app} />}
-        {current === 'Progress' && (
-          <Progress firebaseApp={app} setPage={setCurrent} />
-        )}
+        
         {current == 'Extras'&& (
           <Extras/>
         )} 

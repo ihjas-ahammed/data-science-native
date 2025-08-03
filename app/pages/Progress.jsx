@@ -12,6 +12,7 @@ import ProgressStats from '../components/progress/ProgressStats';
 import EditDialog from '../components/progress/EditDialog';
 import ImportExportDialog from '../components/progress/ImportExportDialog';
 import RoutineModal from '../components/progress/RoutineModal';
+import UploadSyllabusDialog from '../components/progress/UploadSyllabusDialog';
 
 const checkNetworkStatus = async () => {
     try {
@@ -34,6 +35,7 @@ const Progress = ({ firebaseApp, setPage }) => {
     const [editDialog, setEditDialog] = useState(false);
     const [importExportDialog, setImportExportDialog] = useState(false);
     const [routineModal, setRoutineModal] = useState(false);
+    const [isUploadSyllabusModalVisible, setUploadSyllabusModalVisible] = useState(false);
     const [currentModule, setCurrentModule] = useState([]);
     const [isOnline, setIsOnline] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -209,6 +211,12 @@ const Progress = ({ firebaseApp, setPage }) => {
                 <View className="flex-row justify-end items-center mb-4">
                     <View className="flex-row space-x-3 gap-2">
                         <TouchableOpacity
+                            onPress={() => setUploadSyllabusModalVisible(true)}
+                            className="bg-indigo-600 dark:bg-indigo-700 p-2 rounded-lg"
+                        >
+                            <MaterialIcons name="upload-file" size={24} color="white" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
                             onPress={handleCloudButtonClick}
                             className="bg-indigo-600 dark:bg-indigo-700 p-2 rounded-lg"
                         >
@@ -303,6 +311,12 @@ const Progress = ({ firebaseApp, setPage }) => {
                     setRoutineModal(false);
                     setPage("Routine");
                 }}
+            />
+
+            <UploadSyllabusDialog
+                visible={isUploadSyllabusModalVisible}
+                onClose={() => setUploadSyllabusModalVisible(false)}
+                firebaseApp={firebaseApp}
             />
 
             {/* Loading Overlay */}

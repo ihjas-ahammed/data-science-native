@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StatusBar, ActivityIndicator, SafeAreaView, ScrollView, KeyboardAvoidingView, Platform, Modal, Switch, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StatusBar, ActivityIndicator, SafeAreaView, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { WebView } from 'react-native-webview';
 import * as FileSystem from 'expo-file-system';
 import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as SecureStore from 'expo-secure-store';
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, set, get, child, remove, query, orderByChild, equalTo, limitToFirst } from 'firebase/database';
+import { getDatabase, ref, set, get, child, remove, query, equalTo, limitToFirst } from 'firebase/database';
+
+import LoginModal from '../components/auth/LoginModal';
+import ChannelModal from '../components/notes/ChannelModal';
+import UploadModal from '../components/notes/UploadModal';
 
 // Markdown placeholder for template
 const MARKDOWN_PLACEHOLDER = "%MARKDOWN_CONTENT%";
@@ -27,12 +31,12 @@ const database = getDatabase(app);
 
 const sanitizePath = (path) => {
   return path
-    .replace(/#/g, '%23')    // Replace # with %23
-    .replace(/\./g, '%2E')    // Replace . with %2E
-    .replace(/\$/g, '%24')    // Replace $ with %24
-    .replace(/\[/g, '%5B')    // Replace [ with %5B
-    .replace(/\]/g, '%5D')    // Replace ] with %5D
-    .replace(/%/g, '%25');    // Replace % with %25 (to handle already encoded characters)
+    .replace(/#/g, '%23')
+    .replace(/\./g, '%2E')
+    .replace(/\$/g, '%24')
+    .replace(/\[/g, '%5B')
+    .replace(/\]/g, '%5D')
+    .replace(/%/g, '%25');
 };
 
 const INDEX_HTML_CONTENT_TEMPLATE = `
@@ -194,22 +198,53 @@ const NotesPage = () => {
   const [error, setError] = useState(null);
   const [markdownLoaded, setMarkdownLoaded] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("Preparing...");
-  const [showChannelModal, setShowChannelModal] = useState(false);
+
+  // User and Channel State
   const [channels, setChannels] = useState([]);
   const [selectedChannel, setSelectedChannel] = useState('default');
   const [userId, setUserId] = useState('');
   const [pin, setPin] = useState('');
-  const [isPublic, setIsPublic] = useState(true);
+  const [userClass, setUserClass] = useState('');
+
+  // Modal Visibility State
+  const [showChannelModal, setShowChannelModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const fetchChannels = async () => {
+    try {
+        const dbRef = ref(database);
+        const snapshot = await get(child(dbRef, `notes/${sanitizedPath}`));
+        
+        const storedUserId = await SecureStore.getItemAsync('userId');
+        const storedPin = await SecureStore.getItemAsync('pin');
+  
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const channelList = Object.entries(data).map(([key, value]) => ({
+            id: key,
+            ...value,
+            visible: value.type === 'public' || (storedUserId && value.name === storedUserId && value.pin === storedPin),
+            canDelete: storedUserId && value.name === storedUserId && value.pin === storedPin
+          })).filter(channel => channel.visible);
+          setChannels(channelList);
+        } else {
+          setChannels([]);
+        }
+      } catch (err) {
+        setError(`Failed to fetch channels: ${err.message}`);
+      }
+  };
 
   useEffect(() => {
     const loadCredentials = async () => {
       const storedUserId = await SecureStore.getItemAsync('userId');
       const storedPin = await SecureStore.getItemAsync('pin');
+      const storedClass = await SecureStore.getItemAsync('userClass');
       if (storedUserId && storedPin) {
         setUserId(storedUserId);
         setPin(storedPin);
+        setUserClass(storedClass || '');
         await fetchChannels();
       }
     };
@@ -255,153 +290,97 @@ const NotesPage = () => {
 
   const handleDeleteChannel = async (channelId) => {
     if (!userId || !pin) {
-      setError('Please log in to delete notes');
-      setShowLoginModal(true);
-      return;
-    }
-
-    try {
-      const dbRef = ref(database, `notes/${sanitizedPath}/${channelId}`);
-      const snapshot = await get(dbRef);
-
-      if (!snapshot.exists()) {
-        setError('Note not found');
+        setError('Please log in to delete notes');
+        setShowLoginModal(true);
         return;
-      }
-
-      const channelData = snapshot.val();
-
-      if (channelData.name !== userId || channelData.pin !== pin) {
-        setError('You can only delete your own notes');
-        return;
-      }
-
-      Alert.alert(
-        "Confirm Delete",
-        "Are you sure you want to delete this note?",
-        [
-          { text: "Cancel", style: "cancel" },
-          {
-            text: "Delete",
-            style: "destructive",
-            onPress: async () => {
-              setIsLoading(true);
-              try {
-                await remove(dbRef);
-                await fetchChannels();
-                if (selectedChannel === channelId) {
-                  setMarkdown('');
-                  const dataDir = `${FileSystem.documentDirectory}notes`;
-                  const htmlPath = `${dataDir}/index.html`;
-                  const htmlContent = INDEX_HTML_CONTENT_TEMPLATE.replace(MARKDOWN_PLACEHOLDER, JSON.stringify(''));
-                  await FileSystem.writeAsStringAsync(htmlPath, htmlContent, { encoding: FileSystem.EncodingType.UTF8 });
-                  setLocalHtmlPath(htmlPath);
-                  webViewRef.current?.reload();
-                }
-              } catch (err) {
-                setError(`Failed to delete note: ${err.message}`);
-              } finally {
-                setIsLoading(false);
-              }
-            }
-          }
-        ]
-      );
-    } catch (err) {
-      setError(`Error verifying note ownership: ${err.message}`);
     }
-  };
 
-  const fetchChannels = async () => {
     try {
-      const dbRef = ref(database);
-      const snapshot = await get(child(dbRef, `notes/${sanitizedPath}`));
-      
-      const storedUserId = await SecureStore.getItemAsync('userId');
-      const storedPin = await SecureStore.getItemAsync('pin');
+        const dbRef = ref(database, `notes/${sanitizedPath}/${channelId}`);
+        const snapshot = await get(dbRef);
 
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-        const channelList = Object.entries(data).map(([key, value]) => ({
-          id: key,
-          ...value,
-          visible: value.type === 'public' || (userId && value.name === userId && value.pin === pin),
-          canDelete: storedUserId && value.name === storedUserId && value.pin === storedPin
-        })).filter(channel => channel.visible);
-        setChannels(channelList);
-      } else {
-        setChannels([]);
-      }
-    } catch (err) {
-      setError(`Failed to fetch channels: ${err.message}`);
-    }
-  };
-
-  const handleLogin = async () => {
-    if (!userId || !pin) {
-      setError('Please enter both User ID and PIN');
-      return;
-    }
-    setIsLoading(true);
-    try {
-      await SecureStore.setItemAsync('userId', userId);
-      await SecureStore.setItemAsync('pin', pin);
-      await fetchChannels();
-      setShowLoginModal(false);
-    } catch (err) {
-      setError(`Login failed: ${err.message}`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleUpload = async () => {
-    if (!userId || !pin) {
-      setShowLoginModal(true);
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const userNotesQuery = query(
-        ref(database, `notes/${sanitizedPath}`),
-        equalTo(userId),
-        limitToFirst(1)
-      );
-
-      const snapshot = await get(userNotesQuery);
-      let existingChannelId = null;
-
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-        existingChannelId = Object.keys(data)[0];
-        const existingNote = Object.values(data)[0];
-        if (existingNote.pin !== pin) {
-          setError('PIN does not match existing note');
-          setIsLoading(false);
-          return;
+        if (!snapshot.exists()) {
+            setError('Note not found');
+            return;
         }
-      }
 
-      const channelId = existingChannelId || `${sanitizePath(userId)}`;
-      const channelData = {
-        name: userId,
-        pin: pin,
-        note: markdown,
-        type: isPublic ? 'public' : 'private'
-      };
+        const channelData = snapshot.val();
+        if (channelData.name !== userId || channelData.pin !== pin) {
+            setError('You can only delete your own notes');
+            return;
+        }
 
-      await set(ref(database, `notes/${sanitizedPath}/${channelId}`), channelData);
-      await fetchChannels();
-      setSelectedChannel(channelId);
-      setShowUploadModal(false);
+        Alert.alert(
+            "Confirm Delete", "Are you sure you want to delete this note?",
+            [{ text: "Cancel", style: "cancel" }, {
+                text: "Delete", style: "destructive",
+                onPress: async () => {
+                    setIsLoading(true);
+                    try {
+                        await remove(dbRef);
+                        await fetchChannels();
+                        if (selectedChannel === channelId) {
+                            await handleChannelSelect('default');
+                        }
+                    } catch (err) {
+                        setError(`Failed to delete note: ${err.message}`);
+                    } finally {
+                        setIsLoading(false);
+                    }
+                }
+            }]
+        );
     } catch (err) {
-      setError(`Upload failed: ${err.message}`);
-    } finally {
-      setIsLoading(false);
+        setError(`Error verifying note ownership: ${err.message}`);
     }
   };
 
+  const handleLoginSuccess = async (credentials) => {
+    setUserId(credentials.userId);
+    setPin(credentials.pin);
+    setUserClass(credentials.userClass);
+    await fetchChannels();
+    setShowLoginModal(false);
+  };
+
+  const handleUpload = async (isPublic) => {
+    if (!userId || !pin) {
+        setShowUploadModal(false);
+        setShowLoginModal(true);
+        return;
+    }
+
+    setIsLoading(true);
+    setShowUploadModal(false);
+    try {
+        const uClass = await SecureStore.getItemAsync('userClass');
+        const userNotesQuery = query(ref(database, `notes/${sanitizedPath}`), equalTo(userId), limitToFirst(1));
+        const snapshot = await get(userNotesQuery);
+        let existingChannelId = null;
+
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            existingChannelId = Object.keys(data)[0];
+            const existingNote = Object.values(data)[0];
+            if (existingNote.pin !== pin) {
+                setError('PIN does not match existing note');
+                setIsLoading(false);
+                return;
+            }
+        }
+
+        const channelId = existingChannelId || `${sanitizePath(userId)}`;
+        const channelData = { name: userId, pin: pin, class: uClass, note: markdown, type: isPublic ? 'public' : 'private' };
+        await set(ref(database, `notes/${sanitizedPath}/${channelId}`), channelData);
+        await fetchChannels();
+        setSelectedChannel(channelId);
+    } catch (err) {
+        setError(`Upload failed: ${err.message}`);
+    } finally {
+        setIsLoading(false);
+    }
+  };
+  
   const handleChannelSelect = async (channelId) => {
     setIsLoading(true);
     try {
@@ -630,7 +609,7 @@ const NotesPage = () => {
               <Ionicons name="cloud-upload" size={18} color="black" />
             </TouchableOpacity>
             {userId && pin ? (
-              <TouchableOpacity className="p-2" onPress={() => { setUserId(''); setPin(''); SecureStore.deleteItemAsync('userId'); SecureStore.deleteItemAsync('pin'); }}>
+              <TouchableOpacity className="p-2" onPress={() => { setUserId(''); setPin(''); setUserClass(''); SecureStore.deleteItemAsync('userId'); SecureStore.deleteItemAsync('pin'); SecureStore.deleteItemAsync('userClass'); setChannels([]); }}>
                 <Ionicons name="log-out" size={18} color="black" />
               </TouchableOpacity>
             ) : (
@@ -689,99 +668,25 @@ const NotesPage = () => {
           ) : null}
         </View>
       )}
-      <Modal visible={showChannelModal} transparent animationType="slide">
-        <View className="flex-1 justify-center items-center bg-black/50">
-          <View className="bg-white p-5 rounded-lg w-3/4">
-            <Text className="text-lg font-bold mb-4">Select Channel</Text>
-            <TouchableOpacity
-              className="p-2 border-b"
-              onPress={() => handleChannelSelect('default')}
-            >
-              <Text>Default</Text>
-            </TouchableOpacity>
-            {channels.map(channel => (
-              <View key={channel.id} className="p-2 border-b flex-row justify-between items-center">
-                <TouchableOpacity
-                  onPress={() => handleChannelSelect(channel.id)}
-                  className="flex-1"
-                >
-                  <Text>{channel.name} ({channel.type})</Text>
-                </TouchableOpacity>
-                {channel.canDelete && (
-                  <TouchableOpacity
-                    className="p-2"
-                    onPress={() => handleDeleteChannel(channel.id)}
-                  >
-                    <Ionicons name="trash" size={18} color="red" />
-                  </TouchableOpacity>
-                )}
-              </View>
-            ))}
-            <TouchableOpacity
-              className="p-2 mt-4 bg-gray-200 rounded"
-              onPress={() => setShowChannelModal(false)}
-            >
-              <Text>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-      <Modal visible={showUploadModal} transparent animationType="slide">
-        <View className="flex-1 justify-center items-center bg-black/50">
-          <View className="bg-white p-5 rounded-lg w-3/4">
-            <Text className="text-lg font-bold mb-4">Upload Note</Text>
-            <Text className="mb-2">User: {userId}</Text>
-            <View className="flex-row items-center mb-4">
-              <Text className="mr-2">Public</Text>
-              <Switch value={isPublic} onValueChange={setIsPublic} />
-            </View>
-            <TouchableOpacity
-              className="p-2 bg-blue-500 rounded"
-              onPress={handleUpload}
-            >
-              <Text className="text-white text-center">Upload</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="p-2 mt-2 bg-gray-200 rounded"
-              onPress={() => setShowUploadModal(false)}
-            >
-              <Text className="text-center">Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-      <Modal visible={showLoginModal} transparent animationType="slide">
-        <View className="flex-1 justify-center items-center bg-black/50">
-          <View className="bg-white p-5 rounded-lg w-3/4">
-            <Text className="text-lg font-bold mb-4">Login</Text>
-            <TextInput
-              className="border p-2 mb-2"
-              placeholder="User ID"
-              value={userId}
-              onChangeText={setUserId}
-            />
-            <TextInput
-              className="border p-2 mb-2"
-              placeholder="PIN"
-              value={pin}
-              onChangeText={setPin}
-              secureTextEntry
-            />
-            <TouchableOpacity
-              className="p-2 bg-blue-500 rounded"
-              onPress={handleLogin}
-            >
-              <Text className="text-white text-center">Login</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="p-2 mt-2 bg-gray-200 rounded"
-              onPress={() => setShowLoginModal(false)}
-            >
-              <Text className="text-center">Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+
+      <ChannelModal 
+        visible={showChannelModal}
+        onClose={() => setShowChannelModal(false)}
+        channels={channels}
+        onSelectChannel={handleChannelSelect}
+        onDeleteChannel={handleDeleteChannel}
+      />
+      <UploadModal 
+        visible={showUploadModal}
+        onClose={() => setShowUploadModal(false)}
+        onUpload={handleUpload}
+        userId={userId}
+      />
+      <LoginModal 
+        visible={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onLoginSuccess={handleLoginSuccess}
+      />
     </SafeAreaView>
   );
 };
